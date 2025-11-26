@@ -5,49 +5,32 @@ services:
   db:
     image: postgres:15-alpine
     container_name: maid_postgres
-    restart: unless-stopped #always ou unless-stopped
-    ports:
-      - "${DB_PORT_LOCAL:-5432}:5432"
+    restart: always
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - maid_network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
 
   #Backend
   backend:
     build: ./backend
     container_name: maid_backend
-    restart: unless-stopped
+    restart: always
     ports:
-      - "${PORT:-3000}:${PORT:-3000}"
+      - "3000:3000"
+    depends_on:
+      - db
     environment:
       DB_HOST: db
       DB_PORT: 5432
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
-      PORT: ${PORT:-3000}
-      FRONTEND_URL: ${FRONTEND_URL}
-      JWT_SECRET: ${JWT_SECRET}
-    networks:
-      - maid_network
-    depends_on: #Inicia após o health check do banco
-      db:
-        condition: service_healthy
-
-#Rede privada para comunicação entre os containers
-networks:
-  maid_network:
-    driver: bridge
+      PORT: 3000
 
 volumes:
   postgres_data:
