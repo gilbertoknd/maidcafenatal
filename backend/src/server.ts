@@ -10,15 +10,16 @@ const PORT = process.env.PORT || 3000;
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
-    methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    methods: ["GET, PUT, PATCH, POST, DELETE"],
+    allowedHeaders: ["Content-Type, Authorization"],
     credentials: true,
   })
 );
 app.use(express.json());
 
-//Rota de Teste do Banco
-app.get("/", async (req, res) => {
+// Rota de Teste do Banco
+app.get("/db", async (req, res) => {
   try {
     const result = await pool.query("SELECT NOW() as hora_atual");
 
@@ -29,16 +30,16 @@ app.get("/", async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ erro: "Falha ao conectar no banco" });
+    res.status(500).json({ error: "Falha ao conectar no banco" });
   }
 });
 
-// app.get("/", (req: Request, res: Response) => {
-//   res.json({
-//     mensagem: "Backend do Maid Café Mew Mew!",
-//     status: "Positivo e operante 🚀",
-//   });
-// });
+app.get("/", (req: Request, res: Response) => {
+  res.json({
+    mensagem: "Backend do Maid Café Mew Mew!",
+    status: "Positivo e operante 🚀",
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`☕ Servidor rodando na porta ${PORT}`);
