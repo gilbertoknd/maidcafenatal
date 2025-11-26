@@ -6,18 +6,13 @@
 
 - docker run -p 3000:3000 maid-backend
 
-## Stopping only backend:
+## Running only frontend:
 
-- docker stop maid-backend
+- docker build -t maid-frontend ./frontend
+
+- docker run -p 5173:5173 maid-frontend
 
 ## Running all project:
 
 - docker-compose up --build
 
-## Stopping all project:
-
-- docker-compose down
-
-## Stopping all project and remove volumes:
-
-- docker-compose down -v
