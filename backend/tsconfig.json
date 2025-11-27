@@ -9,7 +9,8 @@
     "strict": true /*Ativa verificações rigorosas*/,
     "noImplicitAny": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "skipLibCheck": true //Evita o erro devido ao Vitest
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]
