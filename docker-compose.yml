@@ -12,7 +12,7 @@ services:
       POSTGRES_DB: ${DB_NAME}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      #- ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - maid_network
     healthcheck:
@@ -37,6 +37,10 @@ services:
       PORT: ${PORT:-3000}
       FRONTEND_URL: ${FRONTEND_URL}
       JWT_SECRET: ${JWT_SECRET}
+    command: pnpm dev
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
     networks:
       - maid_network
     depends_on: #Inicia após o health check do banco
@@ -51,6 +55,9 @@ services:
       - "${FRONTEND_PORT:-5173}:${FRONTEND_PORT:-5173}"
     env_file:
       - ./frontend/.env
+    volumes:
+      - ./frontend:/app #Permite o Hot Reload
+      - /app/node_modules
     networks:
       - maid_network
     depends_on: #Inicia após o backend
