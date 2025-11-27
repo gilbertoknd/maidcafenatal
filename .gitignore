@@ -6,6 +6,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+.pnpm-store/
 
 # ===========================
 # 2. Variáveis de Ambiente (CRÍTICO DE SEGURANÇA)
@@ -35,6 +36,9 @@ frontend/.eslintcache
 # Relatórios de cobertura de testes
 coverage/
 backend/coverage/
+# Build de produção
+dist/
+build/
 
 # Logs gerados pelo servidor (opcional, mas recomendado)
 logs/
