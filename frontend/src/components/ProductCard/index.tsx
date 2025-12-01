@@ -1,16 +1,18 @@
 import { useState } from "react";
 import styles from "./styles.module.css";
 import type { Produto } from "../../types";
+import { formatCurrency } from "../../utils/formatters";
+import { toggleProductLike } from "../../services/api";
 
 interface ProductCardProps {
   data: Produto;
 }
 
-// Chave para salvar no navegador
+//Chave para salvar no navegador
 const STORAGE_KEY = "mewmew_liked_products";
 
 export function ProductCard({ data }: ProductCardProps) {
-  // 1. INICIALIZAÇÃO INTELIGENTE
+  //INICIALIZAÇÃO INTELIGENTE
   const [hasLiked, setHasLiked] = useState(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     const likedArray: number[] = stored ? JSON.parse(stored) : [];
@@ -22,59 +24,35 @@ export function ProductCard({ data }: ProductCardProps) {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const fullImageUrl = `${backendUrl}${data.imagem_url}`;
 
-  const precoFormatado = new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  }).format(Number(data.preco));
+  const precoFormatado = formatCurrency(data.preco);
 
   async function handleLike() {
-    // 1. Define qual ação tomar baseada no estado atual
-    // Se já deu like, a ação agora é 'unlike'. Se não, é 'like'.
     const action = hasLiked ? "unlike" : "like";
 
-    // 2. Optimistic UI: Atualiza a tela ANTES do servidor responder
-    // Isso faz o clique parecer instantâneo
+    //Optimistic UI (Muda a tela antes)
     setHasLiked(!hasLiked);
     setLikesCount((prev) => (hasLiked ? prev - 1 : prev + 1));
 
     try {
-      // Chama a rota dinâmica (/like ou /unlike)
-      const res = await fetch(
-        `${backendUrl}/api/produtos/${data.id}/${action}`,
-        {
-          method: "PATCH",
-        }
-      );
+      //Chama a API para o fetch
+      const novasCurtidas = await toggleProductLike(data.id, action);
 
-      const responseData = await res.json();
+      //Salva no LocalStorage o valor correto
+      setLikesCount(novasCurtidas);
 
-      if (res.ok) {
-        // Confirma o valor real vindo do banco (para garantir sincronia)
-        setLikesCount(responseData.novas_curtidas);
+      //Lógica do LocalStorage
+      const stored = localStorage.getItem(STORAGE_KEY);
+      let likedArray: number[] = stored ? JSON.parse(stored) : [];
 
-        // 3. Atualiza o LocalStorage
-        const stored = localStorage.getItem(STORAGE_KEY);
-        let likedArray: number[] = stored ? JSON.parse(stored) : [];
-
-        if (action === "like") {
-          // Adiciona o ID se não existir
-          if (!likedArray.includes(data.id)) likedArray.push(data.id);
-        } else {
-          // Remove o ID (Filtra a lista)
-          likedArray = likedArray.filter((id) => id !== data.id);
-        }
-
-        // Salva a lista atualizada
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(likedArray));
+      if (action === "like") {
+        if (!likedArray.includes(data.id)) likedArray.push(data.id);
       } else {
-        // Se o servidor der erro, desfaz a mudança visual (Rollback)
-        setHasLiked(!hasLiked);
-        setLikesCount((prev) => (hasLiked ? prev + 1 : prev - 1));
-        console.error("Erro no servidor:", responseData);
+        likedArray = likedArray.filter((id) => id !== data.id);
       }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(likedArray));
     } catch (error) {
-      console.error("Erro de rede ao dar like:", error);
-      // Rollback em caso de erro de rede
+      console.error("Erro:", error);
+      //Rollback (Desfaz a mudança visual)
       setHasLiked(!hasLiked);
       setLikesCount((prev) => (hasLiked ? prev + 1 : prev - 1));
     }
@@ -103,7 +81,6 @@ export function ProductCard({ data }: ProductCardProps) {
           <button
             onClick={handleLike}
             className={`${styles.likeButton} ${hasLiked ? styles.liked : ""}`}
-            // REMOVIDO: disabled={hasLiked} -> Agora pode clicar sempre
             title={hasLiked ? "Descurtir" : "Curtir"}
             style={{ display: "flex", alignItems: "center", gap: "5px" }}
           >

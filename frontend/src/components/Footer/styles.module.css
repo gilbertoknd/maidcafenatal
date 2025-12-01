@@ -1,0 +1,75 @@
+.footer {
+  background-color: #fbd1dd; /*A cor que você pediu*/
+  color: #c15070; /*Um rosa bem escuro para o texto (contraste)*/
+  padding: 2rem 1rem;
+  text-align: center;
+  margin-top: 4rem; /*Empurra o footer para baixo do conteúdo*/
+  border-top: 4px solid #f8bbd0; /*Um detalhe visual fofo no topo*/
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+
+  border-radius: 50%;
+
+  border: 4px solid #fff;
+  box-shadow: 0 4px 10px rgba(136, 14, 79, 0.2);
+
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.phrase {
+  font-size: 1rem;
+  font-style: italic;
+  opacity: 0.9;
+  margin-bottom: 0.5rem;
+}
+
+.socials {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.iconLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f1648c; /*Cor inicial dos ícones*/
+  background-color: rgba(255, 255, 255, 0.6);
+  padding: 10px;
+  border-radius: 50%; /* Bolinha */
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.iconLink:hover {
+  background-color: #f1648c;
+  color: white; /*Ícone fica branco no hover*/
+  transform: translateY(-5px); /*Pulinho*/
+  box-shadow: 0 4px 8px rgba(241, 100, 140, 0.3);
+}
