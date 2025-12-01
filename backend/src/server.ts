@@ -8,7 +8,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const publicPath = path.join(__dirname, "../public/images");
+const publicPath = path.join(process.cwd(), "public", "images");
 
 app.use(express.json()); //Middleware para processar JSON
 app.use("/images", express.static(publicPath)); //Middleware para servir arquivos estáticos
@@ -21,19 +21,65 @@ app.use(
   }) //Middleware para CORS
 );
 
-//Rota de Teste do Banco
-app.get("/db", async (req, res) => {
+//Rota para listar produtos
+app.get("/api/produtos", async (req, res) => {
   try {
-    const result = await pool.query("SELECT NOW() as hora_atual");
+    console.log("Rota /api/produtos chamada");
 
-    res.json({
-      status: "Sucesso",
-      mensagem: "Backend conectado ao PostgreSQL",
-      horario_banco: result.rows[0].hora_atual,
-    });
+    //Executa o SQL direto no banco
+    const result = await pool.query("SELECT * FROM produtos ORDER BY id ASC");
+
+    console.log(`Encontrados ${result.rows.length} produtos.`);
+
+    //Retorna as linhas do banco como JSON
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Erro ao buscar produtos:", error);
+    res.status(500).json({ error: "Erro interno do servidor" });
+  }
+});
+
+app.patch("/api/produtos/:id/like", async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    // Comando SQL atômico: O próprio banco soma +1 (evita erros de concorrência)
+    const result = await pool.query(
+      "UPDATE produtos SET curtidas = curtidas + 1 WHERE id = $1 RETURNING curtidas",
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Produto não encontrado" });
+    }
+
+    // Devolve o novo número atualizado para o Frontend
+    res.json({ novas_curtidas: result.rows[0].curtidas });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Falha ao conectar no banco" });
+    res.status(500).json({ error: "Erro ao dar like" });
+  }
+});
+
+// Rota para REMOVER LIKE (Decrementar)
+app.patch("/api/produtos/:id/unlike", async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    // Usamos GREATEST(..., 0) para garantir que o número nunca fique negativo
+    const result = await pool.query(
+      "UPDATE produtos SET curtidas = GREATEST(curtidas - 1, 0) WHERE id = $1 RETURNING curtidas",
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Produto não encontrado" });
+    }
+
+    res.json({ novas_curtidas: result.rows[0].curtidas });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Erro ao remover like" });
   }
 });
 

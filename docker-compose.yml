@@ -41,6 +41,7 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
+      - ./backend/public/images:/app/public/images
     networks:
       - maid_network
     depends_on: #Inicia após o health check do banco

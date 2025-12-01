@@ -1,37 +1,51 @@
 import { useEffect, useState } from "react";
-import "./App.css";
+import { ProductCard } from "./components/ProductCard";
+import type { Produto } from "./types";
 
 function App() {
-  const [statusBackend, setStatusBackend] = useState<string>("Carregando...");
+  const [produtos, setProdutos] = useState<Produto[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    //Busca a URL do .env
     const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
-    //Tenta bater na raiz do backend
-    fetch(`${apiUrl}/`)
+    fetch(`${apiUrl}/api/produtos`)
       .then((res) => res.json())
       .then((data) => {
-        setStatusBackend(`Success: "${data.mensagem}"`);
+        setProdutos(data);
+        setLoading(false);
       })
-      .catch((erro) => {
-        console.error(erro);
-        setStatusBackend("Error: API Connection failed");
+      .catch((err) => {
+        console.error("Erro ao buscar produtos:", err);
+        setLoading(false);
       });
   }, []);
 
   return (
-    <div style={{ padding: "2rem", textAlign: "center" }}>
-      <h1>Mew Mew Maid Cafe</h1>
-      <div
-        style={{
-          backgroundColor: statusBackend.includes("Success")
-            ? "#d4edda"
-            : "#f8d7da",
-        }}
-      >
-        <strong>Status do Backend:</strong> {statusBackend}
-      </div>
+    <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "2rem" }}>
+      <header style={{ textAlign: "center", marginBottom: "3rem" }}>
+        <h1 style={{ color: "#e91e63", fontSize: "2.5rem" }}>
+          🌸 Cardápio Mew Mew 🌸
+        </h1>
+      </header>
+
+      {loading ? (
+        <p style={{ textAlign: "center" }}>Carregando refeições...</p>
+      ) : (
+        <main
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+            gap: "2rem",
+            justifyItems: "center",
+          }}
+        >
+          {/*Mapeia a lista e cria um card pra cada produto*/}
+          {produtos.map((produto) => (
+            <ProductCard key={produto.id} data={produto} />
+          ))}
+        </main>
+      )}
     </div>
   );
 }
