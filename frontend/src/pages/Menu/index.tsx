@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { ProductCard } from "../../components/ProductCard";
-import { getProducts } from "../../services/api"; // Usando o service!
+import { getProducts } from "../../services/api";
 import type { Produto } from "../../types";
 import styles from "./styles.module.css";
 import { Footer } from "../../components/Footer";
+import { Header } from "../../components/Header";
 
 export function MenuPage() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
@@ -23,8 +24,9 @@ export function MenuPage() {
 
   return (
     <>
+      <Header />
       <div className={styles.container}>
-        <header className={styles.header}>
+        <header className={styles.header} id="cardapio">
           <h1 className={styles.title}>🌸 Cardápio Mew Mew 🌸</h1>
         </header>
 

@@ -1,0 +1,110 @@
+/* Estado inicial (topo da página) */
+.header {
+  background-color: #fff0f5; /* Um rosa bem clarinho, quase branco, igual à imagem */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  border-bottom: 1px solid transparent; /* Prepara para a borda */
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.8rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* --- LOGO E MARCA --- */
+.brandContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 10px rgba(233, 30, 99, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
+.brandName {
+  font-size: 1.4rem;
+  font-weight: 800; /* Bem negrito */
+  color: #e91e63; /* Cor rosa forte */
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* --- NAVEGAÇÃO --- */
+.nav {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.navLink {
+  text-decoration: none;
+  color: #555; /* Cor cinza neutra para links normais */
+  font-weight: 600;
+  font-size: 1rem;
+  transition: color 0.2s;
+}
+
+.navLink:hover {
+  color: #e91e63;
+}
+
+/* Link Ativo (Home) */
+.active {
+  color: #e91e63; /* Rosa forte */
+  font-weight: 800;
+}
+
+/* --- MOBILE --- */
+.mobileBtn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #e91e63;
+}
+
+@media (max-width: 768px) {
+  .mobileBtn {
+    display: block;
+  }
+
+  .nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #fff0f5; /* Fundo sólido no mobile */
+    flex-direction: column;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    gap: 1.5rem;
+  }
+
+  .nav.open {
+    display: flex;
+  }
+
+  /* Ajuste para o menu mobile ficar translúcido também se rolado */
+  .header.scrolled .nav {
+    background-color: rgba(255, 240, 245, 0.95);
+    backdrop-filter: blur(10px);
+  }
+}
