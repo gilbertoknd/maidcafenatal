@@ -66,40 +66,30 @@
   color: var(--color-primary);
 }
 
-/* Link Ativo */
+/*Link Ativo*/
 .active {
   color: var(--color-primary);
   font-weight: 800;
 }
 
 /* --- MOBILE --- */
-.mobileBtn {
-  display: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--color-primary);
-}
-
+/* --- MOBILE --- */
 @media (max-width: 768px) {
-  .mobileBtn {
-    display: block;
-  }
-
   .nav {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background-color: #fff0f5;
-    flex-direction: column;
-    padding: 1.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    gap: 1.5rem;
+    display: flex;
+    gap: 1rem;
   }
 
-  .nav.open {
-    display: flex;
+  .brandName {
+    font-size: 1.2rem;
+  }
+
+  .logo {
+    width: 60px;
+    height: 60px;
+  }
+
+  .container {
+    padding: 0.5rem 1rem;
   }
 }
