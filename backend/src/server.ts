@@ -18,7 +18,7 @@ app.use(
     methods: ["GET, PUT, PATCH, POST, DELETE"],
     allowedHeaders: ["Content-Type, Authorization"],
     credentials: true,
-  }) //Middleware para CORS
+  }) //Middleware para CORS que faz a conexão entre o frontend e o backend por rotas
 );
 
 //Rota para listar produtos
@@ -69,7 +69,7 @@ app.patch("/api/produtos/:id/like", async (req, res) => {
   const id = req.params.id;
 
   try {
-    // Comando SQL atômico: O próprio banco soma +1 (evita erros de concorrência)
+    //Comando SQL atômico: O próprio banco soma +1 (evita erros de concorrência)
     const result = await pool.query(
       "UPDATE produtos SET curtidas = curtidas + 1 WHERE id = $1 RETURNING curtidas",
       [id]
@@ -79,7 +79,7 @@ app.patch("/api/produtos/:id/like", async (req, res) => {
       return res.status(404).json({ error: "Produto não encontrado" });
     }
 
-    // Devolve o novo número atualizado para o Frontend
+    //Devolve o novo número atualizado para o Frontend
     res.json({ novas_curtidas: result.rows[0].curtidas });
   } catch (error) {
     console.error(error);
@@ -87,12 +87,12 @@ app.patch("/api/produtos/:id/like", async (req, res) => {
   }
 });
 
-// Rota para REMOVER LIKE (Decrementar)
+//Rota para REMOVER LIKE (Decrementar)
 app.patch("/api/produtos/:id/unlike", async (req, res) => {
   const id = req.params.id;
 
   try {
-    // Usamos GREATEST(..., 0) para garantir que o número nunca fique negativo
+    //Usamos GREATEST(..., 0) para garantir que o número nunca fique negativo
     const result = await pool.query(
       "UPDATE produtos SET curtidas = GREATEST(curtidas - 1, 0) WHERE id = $1 RETURNING curtidas",
       [id]
