@@ -2,11 +2,13 @@ import styles from "./styles.module.css";
 import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
 import { Link } from "react-router-dom";
+import { Banner } from "../../components/Banner";
 
 export function Home() {
   return (
     <>
       <Header />
+      <Banner />
       <main className={styles.container}>
         <h1 className={styles.title}>Bem-vindo ao Mew Mew Café</h1>
         <p className={styles.subtitle}>

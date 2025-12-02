@@ -1,11 +1,11 @@
 .card {
-  background: #fef0f4;
+  background: var(--color-white);
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px var(--color-shadow);
   overflow: hidden;
   transition: transform 0.2s;
   width: 100%;
-  max-width: 280px; /*Tamanho máximo do card*/
+  max-width: 280px;
   display: flex;
   flex-direction: column;
 }
@@ -37,14 +37,16 @@
   font-size: 1.1rem;
   font-weight: bold;
   margin: 0 0 0.5rem 0;
-  color: #333;
+  color: var(--color-text);
+  font-family: var(--font-main);
 }
 
 .description {
   font-size: 0.9rem;
-  color: #666;
+  color: var(--color-text);
   margin-bottom: 1rem;
   flex: 1;
+  opacity: 0.8;
 }
 
 .footer {
@@ -57,21 +59,23 @@
 .price {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #e91e63;
+  color: var(--color-primary);
+  font-family: var(--font-main);
 }
 
 .button {
-  background-color: #e91e63;
-  color: white;
+  background-color: var(--color-primary);
+  color: var(--color-white);
   border: none;
   padding: 8px 16px;
   border-radius: 20px;
   cursor: pointer;
   font-weight: 600;
+  font-family: var(--font-main);
 }
 
 .button:hover {
-  background-color: #c2185b;
+  background-color: var(--color-primary-dark);
 }
 
 .likeButton {

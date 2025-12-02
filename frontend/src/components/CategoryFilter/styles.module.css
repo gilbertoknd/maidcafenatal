@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.button {
+  padding: 0.5rem 1.5rem;
+  border: 2px solid var(--color-primary);
+  border-radius: 25px;
+  background-color: var(--color-white);
+  color: var(--color-primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-main);
+  font-size: 1rem;
+}
+
+.button:hover {
+  background-color: var(--color-background);
+  transform: translateY(-2px);
+}
+
+.active {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  box-shadow: 0 4px 6px var(--color-shadow);
+}
+
+.active:hover {
+  background-color: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+}

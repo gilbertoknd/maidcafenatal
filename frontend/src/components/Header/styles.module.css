@@ -1,11 +1,11 @@
 /* Estado inicial (topo da página) */
 .header {
-  background-color: #fff0f5; /* Um rosa bem clarinho, quase branco, igual à imagem */
+  background-color: var(--color-tertiary-background);
   position: sticky;
   top: 0;
   z-index: 1000;
   width: 100%;
-  border-bottom: 1px solid transparent; /* Prepara para a borda */
+  border-bottom: 1px solid transparent;
 }
 
 .container {
@@ -30,8 +30,8 @@
   height: 80px;
   object-fit: cover;
   border-radius: 50%;
-  border: 3px solid #fff;
-  box-shadow: 0 4px 10px rgba(233, 30, 99, 0.2);
+  border: 3px solid var(--color-white);
+  box-shadow: 0 4px 10px var(--color-shadow);
   transition: transform 0.3s ease;
 }
 
@@ -41,9 +41,9 @@
 
 .brandName {
   font-size: 1.4rem;
-  font-weight: 800; /* Bem negrito */
-  color: #e91e63; /* Cor rosa forte */
-  font-family: "Segoe UI", sans-serif;
+  font-weight: 700;
+  color: var(--color-primary);
+  font-family: var(--font-main);
 }
 
 /* --- NAVEGAÇÃO --- */
@@ -55,19 +55,20 @@
 
 .navLink {
   text-decoration: none;
-  color: #555; /* Cor cinza neutra para links normais */
+  color: var(--color-text);
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.1rem;
   transition: color 0.2s;
+  font-family: var(--font-main);
 }
 
 .navLink:hover {
-  color: #e91e63;
+  color: var(--color-primary);
 }
 
-/* Link Ativo (Home) */
+/* Link Ativo */
 .active {
-  color: #e91e63; /* Rosa forte */
+  color: var(--color-primary);
   font-weight: 800;
 }
 
@@ -77,7 +78,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: #e91e63;
+  color: var(--color-primary);
 }
 
 @media (max-width: 768px) {
@@ -91,7 +92,7 @@
     top: 100%;
     left: 0;
     width: 100%;
-    background-color: #fff0f5; /* Fundo sólido no mobile */
+    background-color: #fff0f5;
     flex-direction: column;
     padding: 1.5rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -100,11 +101,5 @@
 
   .nav.open {
     display: flex;
-  }
-
-  /* Ajuste para o menu mobile ficar translúcido também se rolado */
-  .header.scrolled .nav {
-    background-color: rgba(255, 240, 245, 0.95);
-    backdrop-filter: blur(10px);
   }
 }

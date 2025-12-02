@@ -12,28 +12,31 @@
 
 .title {
   font-size: 3rem;
-  color: #e91e63;
+  color: var(--color-primary);
   margin-bottom: 1rem;
+  font-family: var(--font-main);
 }
 
 .subtitle {
   font-size: 1.5rem;
-  color: #555;
+  color: var(--color-text);
   margin-bottom: 2rem;
 }
 
 .button {
-  background-color: #e91e63;
-  color: white;
+  background-color: var(--color-primary);
+  color: var(--color-white);
   padding: 1rem 2rem;
   border-radius: 2rem;
   text-decoration: none;
   font-weight: bold;
   font-size: 1.2rem;
   transition: transform 0.2s, background-color 0.2s;
+  font-family: var(--font-main);
+  box-shadow: 0 4px 10px var(--color-shadow);
 }
 
 .button:hover {
-  background-color: #c2185b;
+  background-color: var(--color-primary-dark);
   transform: scale(1.05);
 }

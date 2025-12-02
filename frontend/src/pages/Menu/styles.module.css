@@ -10,14 +10,15 @@
 }
 
 .title {
-  color: #e91e63;
+  color: var(--color-primary);
   font-size: 2.5rem;
+  font-family: var(--font-main);
 }
 
 .loading {
   text-align: center;
   font-size: 1.2rem;
-  color: #666;
+  color: var(--color-text);
 }
 
 .grid {
