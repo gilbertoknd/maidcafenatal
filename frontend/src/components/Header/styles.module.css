@@ -72,8 +72,6 @@
   font-weight: 800;
 }
 
-/* --- MOBILE --- */
-/* --- MOBILE --- */
 @media (max-width: 768px) {
   .nav {
     display: flex;
