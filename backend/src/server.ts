@@ -39,6 +39,32 @@ app.get("/api/produtos", async (req, res) => {
   }
 });
 
+//Rota para produtos populares (Top 6 likes)
+app.get("/api/produtos/populares", async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT * FROM produtos ORDER BY curtidas DESC LIMIT 6"
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Erro ao buscar populares:", error);
+    res.status(500).json({ error: "Erro interno do servidor" });
+  }
+});
+
+//Rota para novidades (Top 3 mais recentes)
+app.get("/api/produtos/novidades", async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT * FROM produtos ORDER BY criado_em DESC LIMIT 3"
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Erro ao buscar novidades:", error);
+    res.status(500).json({ error: "Erro interno do servidor" });
+  }
+});
+
 app.patch("/api/produtos/:id/like", async (req, res) => {
   const id = req.params.id;
 
