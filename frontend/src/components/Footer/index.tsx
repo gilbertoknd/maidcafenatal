@@ -15,7 +15,7 @@ export function Footer() {
 
         <h2 className={styles.title}>Mew Mew Maid Café</h2>
 
-        <p className={styles.phrase}>Lema, frase ou slogan</p>
+        <p className={styles.phrase}>O lugar mais mágico da cidade ✨️💖</p>
 
         <div className={styles.socials}>
           <a

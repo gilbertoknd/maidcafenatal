@@ -1,16 +1,93 @@
 .bannerContainer {
   width: 100%;
   height: auto;
-  max-height: 600px;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: var(--color-background);
+  position: relative;
 }
 
-.bannerImage {
+.videoMode {
+  max-height: 100vh;
+}
+
+.imageMode {
+  max-height: 640px;
+}
+
+.bannerMedia {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  bottom: 10%;
+  left: 5%;
+  z-index: 10;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  max-width: 600px;
+  animation: fadeIn 1s ease-out;
+}
+
+.overlayTitle {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  line-height: 1.1;
+  margin-bottom: 2rem;
+  color: var(--color-white);
+  text-shadow: 2px 2px 4px rgba(25, 25, 25, 0.5);
+}
+
+.scrollButton {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 1rem 2.5rem;
+  font-size: 1.2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  font-family: var(--font-main);
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.scrollButton:hover {
+  background-color: var(--color-primary-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .overlay {
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    text-align: center;
+  }
+  .overlayTitle {
+    font-size: 2rem;
+  }
+  .scrollButton {
+    margin: 0 auto;
+  }
 }

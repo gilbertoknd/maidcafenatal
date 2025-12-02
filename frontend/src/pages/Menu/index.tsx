@@ -5,7 +5,7 @@ import type { Produto } from "../../types";
 import styles from "./styles.module.css";
 import { Footer } from "../../components/Footer";
 import { Header } from "../../components/Header";
-import { Banner } from "../../components/Banner";
+import { ImageBanner } from "../../components/Banner";
 import { Search } from "../../components/Search";
 import { CategoryFilter } from "../../components/CategoryFilter";
 
@@ -43,7 +43,7 @@ export function MenuPage() {
 
   return (
     <>
-      <Banner />
+      <ImageBanner />
       <Header />
       <div className={styles.container}>
         <header className={styles.header} id="cardapio">

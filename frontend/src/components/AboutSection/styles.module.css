@@ -1,0 +1,78 @@
+.section {
+  padding: 4rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.sectionTitle {
+  font-family: var(--font-title);
+  color: var(--color-primary);
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.sectionTitle::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: var(--color-secondary);
+  margin: 0.5rem auto 0;
+  border-radius: 2px;
+}
+
+.cardsContainer {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.infoCard {
+  background: var(--color-white);
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px var(--color-shadow);
+  text-align: center;
+  width: 280px;
+  transition: transform 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.infoCard:hover {
+  transform: translateY(-10px);
+  border-color: var(--color-secondary);
+}
+
+.iconWrapper {
+  background: var(--color-background);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  color: var(--color-primary);
+}
+
+.infoCard h3 {
+  font-family: var(--font-title);
+  color: var(--color-primary);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.infoCard p {
+  color: var(--color-text);
+  margin: 0.25rem 0;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .sectionTitle {
+    font-size: 2rem;
+  }
+}

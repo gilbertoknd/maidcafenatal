@@ -3,6 +3,7 @@ import styles from "./styles.module.css";
 import type { Produto } from "../../types";
 import { formatCurrency } from "../../utils/formatters";
 import { toggleProductLike } from "../../services/api";
+import { StarIcon } from "../../assets/icons/StarIcon";
 
 interface ProductCardProps {
   data: Produto;
@@ -88,19 +89,15 @@ export function ProductCard({ data }: ProductCardProps) {
               {likesCount}
             </span>
 
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
+            <StarIcon
               width="24"
               height="24"
-              viewBox="0 0 24 24"
               fill={hasLiked ? "currentColor" : "none"}
               stroke="currentColor"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-            >
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-            </svg>
+            />
           </button>
         </div>
       </div>

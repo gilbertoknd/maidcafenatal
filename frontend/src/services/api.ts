@@ -10,6 +10,22 @@ export async function getProducts(): Promise<Produto[]> {
   return response.json();
 }
 
+export async function getPopularProducts(): Promise<Produto[]> {
+  const response = await fetch(`${BASE_URL}/api/produtos/populares`);
+  if (!response.ok) {
+    throw new Error("Erro ao buscar produtos populares");
+  }
+  return response.json();
+}
+
+export async function getNewProducts(): Promise<Produto[]> {
+  const response = await fetch(`${BASE_URL}/api/produtos/novidades`);
+  if (!response.ok) {
+    throw new Error("Erro ao buscar novidades");
+  }
+  return response.json();
+}
+
 export async function toggleProductLike(
   id: number,
   action: "like" | "unlike"

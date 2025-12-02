@@ -1,9 +1,24 @@
 .container {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 1rem;
   margin-bottom: 2rem;
-  flex-wrap: wrap;
+  overflow-x: auto;
+  padding: 0.5rem 1rem;
+  width: 100%;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  cursor: grab;
+}
+
+.container:active {
+  cursor: grabbing;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.container::-webkit-scrollbar {
+  display: none;
 }
 
 .button {
@@ -17,6 +32,8 @@
   transition: all 0.3s ease;
   font-family: var(--font-main);
   font-size: 1rem;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .button:hover {
