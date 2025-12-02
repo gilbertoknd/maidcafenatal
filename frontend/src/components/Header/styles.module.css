@@ -9,7 +9,7 @@
 }
 
 .container {
-  max-width: 1200px;
+  max-width: var(--container-max-width);
   margin: 0 auto;
   padding: 0.8rem 1.5rem;
   display: flex;
@@ -40,8 +40,8 @@
 }
 
 .brandName {
-  font-size: 1.4rem;
-  font-weight: 700;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
   color: var(--color-primary);
   font-family: var(--font-main);
 }
@@ -56,8 +56,8 @@
 .navLink {
   text-decoration: none;
   color: var(--color-text);
-  font-weight: 600;
-  font-size: 1.1rem;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-lg);
   transition: color 0.2s;
   font-family: var(--font-main);
 }
@@ -69,7 +69,7 @@
 /*Link Ativo*/
 .active {
   color: var(--color-primary);
-  font-weight: 800;
+  font-weight: var(--font-weight-extrabold);
 }
 
 @media (max-width: 768px) {

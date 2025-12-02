@@ -12,11 +12,45 @@
   --color-white: #ffffff;
   --color-shadow: rgba(241, 100, 140, 0.3);
 
+  /* New Variables */
+  /* Layout */
+  --container-max-width: 1200px;
+  --radius-card: 20px;
+  --radius-button: 50px;
+  --radius-circle: 50%;
+  --shadow-card: 0 4px 6px var(--color-shadow);
+  --shadow-card-hover: 0 6px 12px var(--color-shadow);
+  --transition-default: all 0.3s ease;
+
+  /* Colors */
+  --color-placeholder: #aaa;
+  --color-image-background: #f0f0f0;
+  --color-icon-inactive: #ccc;
+  --color-star-active: #ffd700;
+  --color-star-shadow: rgba(255, 215, 0, 0.5);
+
+  /* Typography */
   --font-main: "Fredoka", sans-serif;
+
+  --font-size-sm: 0.9rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.1rem;
+  --font-size-xl: 1.2rem;
+  --font-size-2xl: 1.4rem;
+  --font-size-2xl-plus: 1.5rem;
+  --font-size-3xl: 1.8rem;
+  --font-size-4xl: 2rem;
+  --font-size-5xl: 2.5rem;
+  --font-size-6xl: 3rem;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
 
   font-family: var(--font-main);
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
 
   color-scheme: light dark;
   color: var(--color-text);

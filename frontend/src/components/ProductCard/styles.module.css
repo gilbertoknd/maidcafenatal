@@ -1,7 +1,7 @@
 .card {
   background: var(--color-white);
   border-radius: 12px;
-  box-shadow: 0 4px 6px var(--color-shadow);
+  box-shadow: var(--shadow-card);
   overflow: hidden;
   transition: transform 0.2s;
   width: 100%;
@@ -17,7 +17,7 @@
 .imageContainer {
   height: 180px;
   overflow: hidden;
-  background-color: #f0f0f0;
+  background-color: var(--color-image-background);
 }
 
 .image {
@@ -34,15 +34,15 @@
 }
 
 .title {
-  font-size: 1.1rem;
-  font-weight: bold;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
   margin: 0 0 0.5rem 0;
   color: var(--color-text);
   font-family: var(--font-main);
 }
 
 .description {
-  font-size: 0.9rem;
+  font-size: var(--font-size-sm);
   color: var(--color-text);
   margin-bottom: 1rem;
   flex: 1;
@@ -57,8 +57,8 @@
 }
 
 .price {
-  font-size: 1.2rem;
-  font-weight: bold;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
   color: var(--color-primary);
   font-family: var(--font-main);
 }
@@ -68,9 +68,9 @@
   color: var(--color-white);
   border: none;
   padding: 8px 16px;
-  border-radius: 20px;
+  border-radius: var(--radius-card);
   cursor: pointer;
-  font-weight: 600;
+  font-weight: var(--font-weight-medium);
   font-family: var(--font-main);
 }
 
@@ -87,7 +87,7 @@
   align-items: center;
   justify-content: center;
   transition: transform 0.1s ease;
-  color: #ccc;
+  color: var(--color-icon-inactive);
 }
 
 .likeButton:hover {
@@ -96,6 +96,6 @@
 
 /* Quando a estrela estiver ativa (amarela) */
 .liked {
-  color: #ffd700;
-  filter: drop-shadow(0 0 2px rgba(255, 215, 0, 0.5));
+  color: var(--color-star-active);
+  filter: drop-shadow(0 0 2px var(--color-star-shadow));
 }

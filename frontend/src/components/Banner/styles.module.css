@@ -36,7 +36,7 @@
 
 .overlayTitle {
   font-family: var(--font-title);
-  font-size: 2rem;
+  font-size: var(--font-size-4xl);
   line-height: 1.1;
   margin-bottom: 2rem;
   color: var(--color-white);
@@ -48,11 +48,11 @@
   color: white;
   border: none;
   padding: 1rem 2.5rem;
-  font-size: 1.2rem;
-  border-radius: 50px;
+  font-size: var(--font-size-xl);
+  border-radius: var(--radius-button);
   cursor: pointer;
   font-family: var(--font-main);
-  font-weight: bold;
+  font-weight: var(--font-weight-bold);
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   display: flex;

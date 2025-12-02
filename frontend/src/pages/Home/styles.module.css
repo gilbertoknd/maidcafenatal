@@ -1,5 +1,5 @@
 .container {
-  max-width: 1200px;
+  max-width: var(--container-max-width);
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
@@ -11,14 +11,14 @@
 }
 
 .title {
-  font-size: 3rem;
+  font-size: var(--font-size-6xl);
   color: var(--color-primary);
   margin-bottom: 1rem;
   font-family: var(--font-main);
 }
 
 .subtitle {
-  font-size: 1.5rem;
+  font-size: var(--font-size-2xl-plus);
   color: var(--color-text);
   margin-bottom: 2rem;
 }
@@ -29,8 +29,8 @@
   padding: 1rem 2rem;
   border-radius: 2rem;
   text-decoration: none;
-  font-weight: bold;
-  font-size: 1.2rem;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-xl);
   transition: transform 0.2s, background-color 0.2s;
   font-family: var(--font-main);
   box-shadow: 0 4px 10px var(--color-shadow);

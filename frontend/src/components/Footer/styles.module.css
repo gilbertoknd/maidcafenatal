@@ -8,7 +8,7 @@
 }
 
 .container {
-  max-width: 1200px;
+  max-width: var(--container-max-width);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -33,14 +33,14 @@
 }
 
 .title {
-  font-size: 1.8rem;
+  font-size: var(--font-size-3xl);
   font-weight: bold;
   margin: 0;
   font-family: var(--font-main);
 }
 
 .phrase {
-  font-size: 1rem;
+  font-size: var(--font-size-md);
   font-style: italic;
   opacity: 0.9;
   margin-bottom: 0.5rem;
