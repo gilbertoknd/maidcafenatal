@@ -32,6 +32,9 @@ export async function likeProduct(id: string) {
     [id]
   );
 
+  if (result.rows.length === 0) {
+    return null;
+  }
   return result.rows[0].curtidas;
 }
 
@@ -41,5 +44,8 @@ export async function unlikeProduct(id: string) {
     [id]
   );
 
+  if (result.rows.length === 0) {
+    return null;
+  }
   return result.rows[0].curtidas;
 }
