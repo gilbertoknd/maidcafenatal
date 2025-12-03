@@ -100,11 +100,14 @@ describe("Product Routes", () => {
   });
 
   it("should handle database errors gracefully", async () => {
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     (pool.query as any).mockRejectedValue(new Error("DB Error"));
 
     const response = await request(app).get("/api/produtos");
 
     expect(response.status).toBe(500);
     expect(response.body).toEqual({ error: "Erro interno do servidor" });
+    expect(consoleSpy).toHaveBeenCalled();
+    consoleSpy.mockRestore();
   });
 });

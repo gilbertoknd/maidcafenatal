@@ -1,7 +1,5 @@
-import { useEffect, useState, useMemo } from "react";
+import { useProducts } from "../../hooks/useProducts";
 import { ProductCard } from "../../components/ProductCard";
-import { getProducts } from "../../services/api";
-import type { Produto } from "../../types";
 import styles from "./styles.module.css";
 import { Footer } from "../../components/Footer";
 import { Header } from "../../components/Header";
@@ -10,36 +8,15 @@ import { Search } from "../../components/Search";
 import { CategoryFilter } from "../../components/CategoryFilter";
 
 export function MenuPage() {
-  const [produtos, setProdutos] = useState<Produto[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("Todos");
-
-  useEffect(() => {
-    getProducts()
-      .then((data) => {
-        setProdutos(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
-  }, []);
-
-  const categories = useMemo(() => {
-    const allCategories = produtos.map((p) => p.categoria);
-    return ["Todos", ...new Set(allCategories)];
-  }, [produtos]);
-
-  const filteredProducts = produtos.filter((produto) => {
-    const matchesSearch = produto.nome
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      selectedCategory === "Todos" || produto.categoria === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  const {
+    loading,
+    categories,
+    searchTerm,
+    setSearchTerm,
+    selectedCategory,
+    setSelectedCategory,
+    filteredProducts,
+  } = useProducts();
 
   return (
     <>
