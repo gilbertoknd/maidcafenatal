@@ -11,10 +11,21 @@ CREATE TABLE IF NOT EXISTS produtos (
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS usuarios (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    senha VARCHAR(100) NOT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 --Limpa dados antigos para desenvolvimento
 TRUNCATE TABLE produtos RESTART IDENTITY;
+TRUNCATE TABLE usuarios RESTART IDENTITY;
 
 --Inserindo dados de teste
+INSERT INTO usuarios (nome, senha) VALUES
+('admin', 'admin');
+
 INSERT INTO produtos (nome, descricao, preco, categoria, imagem_url, destaque) VALUES
 -- Happy Hour
 ('2 Corn Dogs', 'Promoção de Happy Hour: 2 unidades deliciosas.', 18.90, 'Happy Hour', '/images/2_corn_dogs.webp', FALSE),

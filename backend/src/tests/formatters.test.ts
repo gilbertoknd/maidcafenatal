@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { formatDate } from "../utils/formatters";
+import { formatDate } from "../utils/formatters.js";
 
 describe("Formatters", () => {
   it("should format date correctly to pt-BR", () => {

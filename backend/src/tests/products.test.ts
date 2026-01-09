@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import request from "supertest";
-import app from "../app";
+import app from "../app.js";
 
 // Mock the database pool
 vi.mock("../config/db", () => ({
@@ -9,7 +9,7 @@ vi.mock("../config/db", () => ({
   },
 }));
 
-import { pool } from "../config/db";
+import { pool } from "../config/db.js";
 
 describe("Product Routes", () => {
   beforeEach(() => {

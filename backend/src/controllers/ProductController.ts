@@ -5,7 +5,7 @@ import {
   listNewProducts,
   listPopularProducts,
   unlikeProduct,
-} from "../models/ProductModel";
+} from "../models/ProductModel.js";
 
 export class ProductController {
   static async getAll(req: Request, res: Response, next: NextFunction) {

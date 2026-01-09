@@ -1,4 +1,4 @@
-import { pool } from "../config/db";
+import { pool } from "../config/db.js";
 
 //TODO: Product model responsável por interagir com a tabela produtos no banco de dados
 
