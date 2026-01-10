@@ -10,8 +10,8 @@ const publicPath = path.join(process.cwd(), "public", "images");
 app.use(
   cors({
     origin: process.env.FRONTEND_URL || "http://localhost:5173",
-    methods: ["GET, PUT, PATCH, POST, DELETE"],
-    allowedHeaders: ["Content-Type, Authorization"],
+    methods: ["GET", "PUT", "PATCH", "POST", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );

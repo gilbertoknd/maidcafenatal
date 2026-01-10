@@ -1,21 +1,17 @@
 import multer from "multer";
 import path from "path";
-import { fileURLToPath } from "url";
+import fs from "fs";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const uploadFolder = path.join(process.cwd(), "public", "images");
+
+if (!fs.existsSync(uploadFolder)) {
+  fs.mkdirSync(uploadFolder, { recursive: true });
+}
 
 const storage = multer.diskStorage({
-  destination: path.resolve(
-    __dirname,
-    "..",
-    "..",
-    "public",
-    "images",
-    "produtos"
-  ),
+  destination: uploadFolder,
   filename: (req, file, cb) => {
-    //Nome único: data-atual + nome-original (ex: 123456-bolo.jpg)
+    //Adiciona Date.now() para evitar nomes duplicados
     const uniqueName = `${Date.now()}-${file.originalname.replace(/\s/g, "_")}`;
     cb(null, uniqueName);
   },
