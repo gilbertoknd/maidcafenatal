@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
-import productRoutes from "./routes/ProductRoutes";
-import { errorHandler } from "./middlewares/errorHandler";
+import productRoutes from "./routes/ProductRoutes.js";
+import { errorHandler } from "./middlewares/errorHandler.js";
 import path from "path";
 
 const app = express();
@@ -10,8 +10,8 @@ const publicPath = path.join(process.cwd(), "public", "images");
 app.use(
   cors({
     origin: process.env.FRONTEND_URL || "http://localhost:5173",
-    methods: ["GET, PUT, PATCH, POST, DELETE"],
-    allowedHeaders: ["Content-Type, Authorization"],
+    methods: ["GET", "PUT", "PATCH", "POST", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );

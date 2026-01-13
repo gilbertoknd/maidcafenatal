@@ -1,8 +1,18 @@
-import { pool } from "../config/db";
+import { pool } from "../config/db.js";
 
 //TODO: Product model responsável por interagir com a tabela produtos no banco de dados
 
-//Products
+//Tipagem
+interface ProductData {
+  nome: string;
+  descricao: string;
+  preco: number;
+  categoria: string;
+  imagemUrl: string | null; // Aqui recebemos apenas o nome do arquivo
+  destaque: boolean;
+}
+
+//Products gets
 export async function listAllProducts() {
   const result = await pool.query("SELECT * FROM produtos ORDER BY id ASC");
 
@@ -23,6 +33,70 @@ export async function listNewProducts() {
   );
 
   return result.rows;
+}
+
+//Products posts
+export async function createProduct(data: ProductData) {
+  const query = `
+    INSERT INTO produtos (nome, descricao, preco, categoria, imagem_url, destaque)
+    VALUES ($1, $2, $3, $4, $5, $6)
+    RETURNING *;
+  `;
+
+  const values = [
+    data.nome,
+    data.descricao,
+    data.preco,
+    data.categoria,
+    data.imagemUrl, // Mapeia para a coluna 'imagem_url' do banco
+    data.destaque,
+  ];
+
+  const result = await pool.query(query, values);
+
+  return result.rows[0];
+}
+
+//Product update
+export async function updateProduct(id: string, data: ProductData) {
+  const query = `
+    UPDATE produtos
+    SET nome = $1,
+        descricao = $2,
+        preco = $3,
+        categoria = $4,
+        imagem_url = COALESCE($5, imagem_url),
+        destaque = $6
+    WHERE id = $7
+    RETURNING *;
+  `;
+
+  const values = [
+    data.nome,
+    data.descricao,
+    data.preco,
+    data.categoria,
+    data.imagemUrl,
+    data.destaque,
+    id,
+  ];
+
+  const result = await pool.query(query, values);
+
+  return result.rows[0];
+}
+
+//Product delete
+export async function deleteProduct(id: string) {
+  const result = await pool.query(
+    "DELETE FROM produtos WHERE id = $1 RETURNING *",
+    [id]
+  );
+
+  if (result.rows.length === 0) {
+    return null;
+  }
+  return result.rows[0]; //Retorna o produto deletado
 }
 
 //Likes
