@@ -64,6 +64,19 @@ services:
     depends_on: #Inicia após o backend
       - backend
 
+  #Tunnel cloudflare
+  tunnel:
+    container_name: maid_tunnel
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    networks:
+      - maid_network
+    depends_on:
+      - backend
+
 #Rede privada para comunicação entre os containers
 networks:
   maid_network:
