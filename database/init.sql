@@ -11,20 +11,21 @@ CREATE TABLE IF NOT EXISTS produtos (
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS usuarios (
+-- Criando tabela users
+CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    senha VARCHAR(100) NOT NULL,
+    nickname VARCHAR(50) UNIQUE NOT NULL,
+    senha VARCHAR(255) NOT NULL,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
---Limpa dados antigos para desenvolvimento
+-- Limpa dados antigos, apaga tudo ao reiniciar o container
 TRUNCATE TABLE produtos RESTART IDENTITY;
-TRUNCATE TABLE usuarios RESTART IDENTITY;
+TRUNCATE TABLE users RESTART IDENTITY;
 
---Inserindo dados de teste
-INSERT INTO usuarios (nome, senha) VALUES
-('admin', 'admin');
+-- Inserindo o Admin
+INSERT INTO users (nickname, senha) VALUES
+('admin', '$2b$10$9TthNunqdYip31itYDZXkOPNQ0zPXI5iBj8R.ZvVRLld5HsrDrQVO'); -- senha hash para 'admin'
 
 INSERT INTO produtos (nome, descricao, preco, categoria, imagem_url, destaque) VALUES
 -- Happy Hour

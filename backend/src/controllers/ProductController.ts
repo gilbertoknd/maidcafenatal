@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { AppError } from "../errors/AppError.js";
 import path from "path";
 import fs from "fs";
 import {
@@ -44,8 +45,7 @@ export class ProductController {
   //Products posts
   static async create(req: Request, res: Response, next: NextFunction) {
     try {
-      //Pega o arquivo do Multer
-      const imagemUrl = req.file ? req.file.filename : null;
+      const imagemUrl = req.file ? `/images/${req.file.filename}` : null;
 
       //Converte os dados (FormData envia tudo como string)
       const { nome, descricao, categoria } = req.body;
@@ -58,11 +58,13 @@ export class ProductController {
           fs.unlinkSync(req.file.path); //Deleta o arquivo físico
         }
 
-        return res.status(400).json({
-          error: "Dados inválidos. Verifique nome, preço e categoria.",
-        });
+        throw new AppError(
+          "Dados inválidos. Verifique nome, preço e categoria.",
+          400,
+        );
       }
 
+      //imagemUrl já vai com a barra (ex: /images/foto.jpg)
       const product = await createProduct({
         nome,
         descricao,
@@ -88,7 +90,10 @@ export class ProductController {
   static async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const imagemUrl = req.file ? req.file.filename : null; //null aqui significa "não mudou a foto"
+
+      //Se tiver arquivo novo, monta o caminho completo.
+      //Se não tiver, envia null (para o model ignorar e manter a foto antiga)
+      const imagemUrl = req.file ? `/images/${req.file.filename}` : null;
 
       const { nome, descricao, categoria } = req.body;
       const preco = req.body.preco ? parseFloat(req.body.preco) : undefined;
@@ -97,24 +102,23 @@ export class ProductController {
       const product = await updateProduct(id, {
         nome,
         descricao,
-        preco: preco as number, //model deve tratar undefined mantendo o antigo
+        preco: preco as number,
         categoria,
-        imagemUrl,
+        imagemUrl, //Se null, o COALESCE no SQL mantém o valor original
         destaque,
       });
 
       if (!product) {
-        //Se o produto não existe, mas subiu uma foto nova para tentar atualizar, precisa apagar
+        //Se o produto não existe, mas subiu uma foto nova, apaga
         if (req.file) {
           fs.unlinkSync(req.file.path);
         }
-        res.status(404).json({ error: "Produto não encontrado" });
-        return;
+        throw new AppError("Produto não encontrado", 404);
       }
 
       res.json(product);
     } catch (error) {
-      //Se der erro no update (banco), apaga a foto nova que subiu
+      //Se der erro no update, apaga a foto nova
       if (req.file) {
         fs.unlink(req.file.path, (err) => {});
       }
@@ -129,25 +133,25 @@ export class ProductController {
       const product = await deleteProduct(id);
 
       if (!product) {
-        res.status(404).json({ error: "Produto não encontrado" });
-        return;
+        throw new AppError("Produto não encontrado", 404);
       }
 
       //Apagar a imagem do disco quando deletar o produto do banco
       if (product.imagem_url) {
+        const nomeArquivo = product.imagem_url.split("/").pop();
         //Caminho absoluto da imagem
         const imagePath = path.resolve(
           process.cwd(),
           "public",
           "images",
-          product.imagem_url
+          nomeArquivo,
         );
 
-        // Verifica se arquivo existe antes de tentar apagar
+        //Verifica se arquivo existe antes de tentar apagar
         fs.access(imagePath, fs.constants.F_OK, (err) => {
           if (!err) {
             fs.unlink(imagePath, () =>
-              console.log("Imagem deletada do disco:", product.imagem_url)
+              console.log("Imagem deletada do disco:", product.imagem_url),
             );
           }
         });
@@ -166,8 +170,7 @@ export class ProductController {
       const newLikes = await likeProduct(id);
 
       if (!newLikes && newLikes !== 0) {
-        res.status(404).json({ error: "Produto não encontrado" });
-        return;
+        throw new AppError("Produto não encontrado", 404);
       }
 
       res.json({ novas_curtidas: newLikes });
@@ -182,8 +185,7 @@ export class ProductController {
       const newLikes = await unlikeProduct(id);
 
       if (!newLikes && newLikes !== 0) {
-        res.status(404).json({ error: "Produto não encontrado" });
-        return;
+        throw new AppError("Produto não encontrado", 404);
       }
 
       res.json({ novas_curtidas: newLikes });
