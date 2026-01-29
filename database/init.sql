@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS produtos (
     preco DECIMAL(10, 2) NOT NULL,   
     imagem_url VARCHAR(255),         
     categoria VARCHAR(50) NOT NULL,  
-    destaque BOOLEAN DEFAULT FALSE,  
+    promocao BOOLEAN DEFAULT FALSE,  
     curtidas INTEGER DEFAULT 0,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -27,7 +27,7 @@ TRUNCATE TABLE users RESTART IDENTITY;
 INSERT INTO users (nickname, senha) VALUES
 ('admin', '$2b$10$9TthNunqdYip31itYDZXkOPNQ0zPXI5iBj8R.ZvVRLld5HsrDrQVO'); -- senha hash para 'admin'
 
-INSERT INTO produtos (nome, descricao, preco, categoria, imagem_url, destaque) VALUES
+INSERT INTO produtos (nome, descricao, preco, categoria, imagem_url, promocao) VALUES
 -- Happy Hour
 ('2 Corn Dogs', 'Promoção de Happy Hour: 2 unidades deliciosas.', 18.90, 'Happy Hour', '/images/2_corn_dogs.webp', FALSE),
 ('2x1 Soju', 'Dose dupla de Soju.', 15.00, 'Happy Hour', '/images/2x1_soju.webp', FALSE),

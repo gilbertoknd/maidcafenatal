@@ -20,7 +20,7 @@ const mockProduct: Produto = {
   preco: "15.00",
   imagem_url: "/images/bolo.jpg",
   categoria: "Doces",
-  destaque: false,
+  promocao: false,
   curtidas: 10,
 };
 

@@ -14,7 +14,7 @@ const mockProducts: Produto[] = [
     preco: "10.00",
     imagem_url: "/img1.jpg",
     categoria: "Doces",
-    destaque: true,
+    promocao: true,
     curtidas: 5,
   },
   {
@@ -24,7 +24,7 @@ const mockProducts: Produto[] = [
     preco: "5.00",
     imagem_url: "/img2.jpg",
     categoria: "Bebidas",
-    destaque: false,
+    promocao: false,
     curtidas: 10,
   },
 ];

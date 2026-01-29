@@ -50,7 +50,7 @@ export class ProductController {
       //Converte os dados (FormData envia tudo como string)
       const { nome, descricao, categoria } = req.body;
       const preco = parseFloat(req.body.preco);
-      const destaque = req.body.destaque === "true";
+      const promocao = req.body.promocao === "true";
 
       if (!nome || isNaN(preco) || !categoria) {
         //Se o Multer já salvou a imagem, apagar
@@ -71,7 +71,7 @@ export class ProductController {
         preco,
         categoria,
         imagemUrl,
-        destaque,
+        promocao,
       });
 
       res.status(201).json(product);
@@ -97,7 +97,7 @@ export class ProductController {
 
       const { nome, descricao, categoria } = req.body;
       const preco = req.body.preco ? parseFloat(req.body.preco) : undefined;
-      const destaque = req.body.destaque === "true";
+      const promocao = req.body.promocao === "true";
 
       const product = await updateProduct(id, {
         nome,
@@ -105,7 +105,7 @@ export class ProductController {
         preco: preco as number,
         categoria,
         imagemUrl, //Se null, o COALESCE no SQL mantém o valor original
-        destaque,
+        promocao,
       });
 
       if (!product) {

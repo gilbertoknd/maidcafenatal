@@ -123,7 +123,7 @@ export function ProductCard({ data, onEdit, onDelete }: ProductCardProps) {
 
   //INICIALIZAÇÃO INTELIGENTE (Só roda se NÃO for admin para economizar processamento)
   const [hasLiked, setHasLiked] = useState(() => {
-    if (isAdmin) return false; // Admin não precisa disso
+    if (isAdmin) return false; //Admin não precisa disso
     const stored = localStorage.getItem(STORAGE_KEY);
     const likedArray: number[] = stored ? JSON.parse(stored) : [];
     return likedArray.includes(data.id);
@@ -181,8 +181,8 @@ export function ProductCard({ data, onEdit, onDelete }: ProductCardProps) {
       </div>
 
       <div className={styles.content}>
-        {/* Adicionei o destaque aqui também, pois é útil ver no Admin */}
-        {data.destaque && (
+        {/* Adicionei a promoção aqui também, pois é útil ver no Admin */}
+        {data.promocao && (
           <span
             style={{
               background: "#ffc107",
@@ -194,7 +194,7 @@ export function ProductCard({ data, onEdit, onDelete }: ProductCardProps) {
               marginBottom: "5px",
             }}
           >
-            DESTAQUE
+            PROMOÇÃO
           </span>
         )}
 

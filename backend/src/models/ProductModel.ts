@@ -31,7 +31,7 @@ export async function listNewProducts() {
 //Products posts
 export async function createProduct(data: ProductData) {
   const query = `
-    INSERT INTO produtos (nome, descricao, preco, categoria, imagem_url, destaque)
+    INSERT INTO produtos (nome, descricao, preco, categoria, imagem_url, promocao)
     VALUES ($1, $2, $3, $4, $5, $6)
     RETURNING *;
   `;
@@ -42,7 +42,7 @@ export async function createProduct(data: ProductData) {
     data.preco,
     data.categoria,
     data.imagemUrl, // Mapeia para a coluna 'imagem_url' do banco
-    data.destaque,
+    data.promocao,
   ];
 
   const result = await pool.query(query, values);
@@ -59,7 +59,7 @@ export async function updateProduct(id: string, data: ProductData) {
         preco = $3,
         categoria = $4,
         imagem_url = COALESCE($5, imagem_url),
-        destaque = $6
+        promocao = $6
     WHERE id = $7
     RETURNING *;
   `;
@@ -70,7 +70,7 @@ export async function updateProduct(id: string, data: ProductData) {
     data.preco,
     data.categoria,
     data.imagemUrl,
-    data.destaque,
+    data.promocao,
     id,
   ];
 

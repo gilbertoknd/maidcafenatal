@@ -1,19 +1,12 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
-import { Trash2, Edit, Plus, X, LogOut } from "lucide-react";
+import { Edit, Plus, X, LogOut } from "lucide-react";
 // ⚠️ CERTIFIQUE-SE QUE O CAMINHO DO LOGINMODAL ESTÁ CORRETO
 import LoginModal from "../LoginModal/index";
 
 // Interface para tipar os dados que vêm do Backend
-interface Produto {
-  id: number;
-  nome: string;
-  descricao: string;
-  preco: string | number;
-  categoria: string;
-  imagem_url?: string | null;
-  destaque: boolean;
-}
+import { ProductCard } from "../ProductCard";
+import type { Produto } from "../../types/produto";
 
 export default function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -26,7 +19,7 @@ export default function AdminDashboard() {
   const [descricao, setDescricao] = useState("");
   const [preco, setPreco] = useState("");
   const [categoria, setCategoria] = useState("");
-  const [destaque, setDestaque] = useState(false);
+  const [promocao, setPromocao] = useState(false);
   const [imagem, setImagem] = useState<File | null>(null);
 
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -138,7 +131,7 @@ export default function AdminDashboard() {
     formData.append("descricao", descricao);
     formData.append("preco", preco);
     formData.append("categoria", categoria);
-    formData.append("destaque", String(destaque));
+    formData.append("promocao", String(promocao));
 
     if (imagem) {
       formData.append("image", imagem);
@@ -184,7 +177,7 @@ export default function AdminDashboard() {
     setDescricao(produto.descricao || "");
     setPreco(String(produto.preco));
     setCategoria(produto.categoria);
-    setDestaque(produto.destaque);
+    setPromocao(produto.promocao);
     setImagem(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -220,7 +213,7 @@ export default function AdminDashboard() {
     setDescricao("");
     setPreco("");
     setCategoria("");
-    setDestaque(false);
+    setPromocao(false);
     setImagem(null);
     const fileInput = document.getElementById("fileInput") as HTMLInputElement;
     if (fileInput) fileInput.value = "";
@@ -333,12 +326,12 @@ export default function AdminDashboard() {
           >
             <input
               type="checkbox"
-              id="destaque"
-              checked={destaque}
-              onChange={(e) => setDestaque(e.target.checked)}
+              id="promocao"
+              checked={promocao}
+              onChange={(e) => setPromocao(e.target.checked)}
             />
-            <label htmlFor="destaque" style={{ cursor: "pointer", flex: 1 }}>
-              É destaque?
+            <label htmlFor="promocao" style={{ cursor: "pointer", flex: 1 }}>
+              É promoção?
             </label>
           </div>
 
@@ -422,117 +415,16 @@ export default function AdminDashboard() {
           display: "grid",
           gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
           gap: "20px",
+          justifyItems: "center",
         }}
       >
         {produtos.map((prod) => (
-          <div
+          <ProductCard
             key={prod.id}
-            style={{
-              border: "1px solid #eee",
-              borderRadius: "8px",
-              overflow: "hidden",
-              background: "white",
-              position: "relative",
-            }}
-          >
-            {/* Imagem */}
-            <div
-              style={{
-                height: "150px",
-                background: "#f8f9fa",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              {prod.imagem_url ? (
-                <img
-                  src={`${apiUrl}${prod.imagem_url}`}
-                  alt={prod.nome}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                  }}
-                  onError={(e) => {
-                    e.currentTarget.src =
-                      "https://placehold.co/400?text=Sem+Foto";
-                  }}
-                />
-              ) : (
-                <span style={{ color: "#ccc" }}>Sem Foto</span>
-              )}
-            </div>
-
-            {/* Info */}
-            <div style={{ padding: "15px" }}>
-              {prod.destaque && (
-                <span
-                  style={{
-                    background: "#ffc107",
-                    fontSize: "10px",
-                    padding: "2px 6px",
-                    borderRadius: "4px",
-                    fontWeight: "bold",
-                  }}
-                >
-                  DESTAQUE
-                </span>
-              )}
-              <h3 style={{ margin: "5px 0", fontSize: "18px" }}>{prod.nome}</h3>
-              <p style={{ color: "#666", fontSize: "14px", margin: "5px 0" }}>
-                {prod.categoria}
-              </p>
-              <p
-                style={{
-                  color: "#d63384",
-                  fontWeight: "bold",
-                  fontSize: "16px",
-                }}
-              >
-                R$ {Number(prod.preco).toFixed(2)}
-              </p>
-
-              <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
-                <button
-                  onClick={() => handleEdit(prod)}
-                  style={{
-                    flex: 1,
-                    padding: "8px",
-                    background: "#007bff",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "5px",
-                  }}
-                >
-                  <Edit size={16} /> Editar
-                </button>
-                <button
-                  onClick={() => handleDelete(prod.id)}
-                  style={{
-                    flex: 1,
-                    padding: "8px",
-                    background: "#dc3545",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "5px",
-                  }}
-                >
-                  <Trash2 size={16} /> Excluir
-                </button>
-              </div>
-            </div>
-          </div>
+            data={prod}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
         ))}
       </div>
     </div>
