@@ -2,7 +2,7 @@ import "../setupTests";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { ProductCard } from "../components/ProductCard";
-import type { Produto } from "../types";
+import type { Produto } from "../types/produto";
 
 // Mock the API and formatters
 vi.mock("../services/api", () => ({
@@ -30,7 +30,7 @@ describe("ProductCard Component", () => {
 
     expect(screen.getByText("Bolo de Morango")).toBeInTheDocument();
     expect(
-      screen.getByText("Delicioso bolo com morangos frescos")
+      screen.getByText("Delicioso bolo com morangos frescos"),
     ).toBeInTheDocument();
     expect(screen.getByText("R$ 15.00")).toBeInTheDocument();
     expect(screen.getByAltText("Bolo de Morango")).toBeInTheDocument();
