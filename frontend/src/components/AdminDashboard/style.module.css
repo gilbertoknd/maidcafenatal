@@ -1,0 +1,69 @@
+.container {
+  /*max-width: 1200px;*/
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: sans-serif;
+}
+
+.loading {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa;
+  color: #666;
+  font-size: 18px;
+}
+
+/* --- Cabeçalho --- */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: var(--font-size-4xl);
+  color: var(--color-primary);
+  margin: 0;
+  font-family: var(--font-main);
+}
+
+.logoutBtn {
+  background-color: var(--color-text);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-button);
+  cursor: pointer;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  font-family: var(--font-main);
+  transition: var(--transition-default);
+}
+
+.logoutBtn:hover {
+  background-color: #555;
+  opacity: 0.8;
+}
+
+/* --- Lista --- */
+.listTitle {
+  border-bottom: 2px solid var(--color-primary-border);
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+  color: var(--color-primary-dark);
+  font-size: var(--font-size-2xl);
+  font-family: var(--font-main);
+}
+
+.listGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  justify-items: center;
+  padding-bottom: 3rem;
+}

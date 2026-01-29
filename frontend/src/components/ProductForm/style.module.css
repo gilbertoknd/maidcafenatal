@@ -1,0 +1,152 @@
+/* Container do Form */
+.formContainer {
+  background-color: var(--color-tertiary-background);
+  padding: 2rem;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  margin-bottom: 2rem;
+  border: 1px solid var(--color-secondary-border);
+}
+
+.formTitle {
+  margin-top: 0;
+  color: var(--color-primary-dark);
+  margin-bottom: 1.5rem;
+  font-size: var(--font-size-2xl);
+  font-family: var(--font-main);
+  font-weight: var(--font-weight-bold);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+/* --- INPUTS (A CORREÇÃO ESTÁ AQUI) --- */
+.input {
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--color-secondary-border);
+  border-radius: 10px;
+  font-size: var(--font-size-md);
+  width: 100%;
+  box-sizing: border-box;
+  font-family: var(--font-main);
+  /* Background e color estão sendo definidos inline no componente para garantir compatibilidade */
+}
+
+.input::placeholder {
+  color: #9ca3af !important; /* Cinza médio (Tailwind gray-400 equivalent) */
+  -webkit-text-fill-color: #9ca3af !important;
+  opacity: 1;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-shadow);
+}
+
+.textarea {
+  grid-column: span 2;
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* --- Checkbox --- */
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  padding: 0 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--color-secondary-border);
+  height: 45px; /* Ajuste visual */
+}
+
+.checkboxLabel {
+  cursor: pointer;
+  flex: 1;
+  font-size: var(--font-size-md);
+  color: var(--color-text);
+}
+
+/* --- Arquivo --- */
+.fileInputContainer {
+  grid-column: span 2;
+}
+
+.fileLabel {
+  display: block;
+  width: fit-content;
+  margin-bottom: 0.5rem;
+  font-size: var(--font-size-md);
+  color: var(--color-text);
+}
+
+.fileInput {
+  font-family: var(--font-main);
+  color: var(--color-text);
+  width: fit-content;
+  display: inline-block;
+  background-color: white;
+}
+
+/* --- Botões --- */
+.actions {
+  grid-column: span 2;
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.btn {
+  padding: 1rem;
+  border: none;
+  border-radius: var(--radius-button);
+  cursor: pointer;
+  font-weight: var(--font-weight-bold);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-white);
+  font-family: var(--font-main);
+  font-size: var(--font-size-md);
+  transition: var(--transition-default);
+  box-shadow: var(--shadow-card);
+}
+
+.btn:hover {
+  transform: scale(1.02);
+}
+
+.btnSubmit {
+  flex: 1;
+}
+
+.create {
+  background-color: #28a745;
+}
+.edit {
+  background-color: #ffc107;
+  color: #333;
+}
+.btnCancel {
+  background-color: #6c757d;
+  width: auto;
+  padding: 0 2rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+  .textarea,
+  .fileInputContainer,
+  .actions {
+    grid-column: span 1;
+  }
+}
