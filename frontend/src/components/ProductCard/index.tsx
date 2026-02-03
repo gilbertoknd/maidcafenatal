@@ -20,7 +20,7 @@ export function ProductCard({ data, onEdit, onDelete }: ProductCardProps) {
   //Verifica se estamos no modo Admin (se as funções foram passadas)
   const isAdmin = !!onEdit && !!onDelete;
 
-  //INICIALIZAÇÃO INTELIGENTE (Só roda se NÃO for admin para economizar processamento)
+  //Só roda se NÃO for admin para economizar processamento
   const [hasLiked, setHasLiked] = useState(() => {
     if (isAdmin) return false; //Admin não precisa disso
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -30,14 +30,14 @@ export function ProductCard({ data, onEdit, onDelete }: ProductCardProps) {
 
   const [likesCount, setLikesCount] = useState(data.curtidas);
 
-  //Fallback seguro para a URL (caso o .env esteja vazio em algum ambiente)
+  //Fallback para a URL
   const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
   const fullImageUrl = `${backendUrl}${data.imagem_url}`;
 
   const precoFormatado = formatCurrency(data.preco);
 
   async function handleLike() {
-    if (isAdmin) return; // Segurança extra
+    if (isAdmin) return; //Segurança extra
 
     const action = hasLiked ? "unlike" : "like";
 
