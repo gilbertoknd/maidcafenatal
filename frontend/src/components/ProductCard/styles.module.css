@@ -118,7 +118,7 @@
   filter: drop-shadow(0 0 2px var(--color-star-shadow));
 }
 
-/* Ajustes finos para Mobile quando estiver em 3 colunas */
+/* Ajustes para Mobile quando estiver em 3 colunas */
 @media (max-width: 768px) {
   .content {
     padding: 0.35rem; /* Reduz padding interno */

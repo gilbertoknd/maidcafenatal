@@ -31,19 +31,19 @@
 }
 
 /* Tablets e Celulares grandes */
-@media (max-width: 880px) {
+@media (max-width: 768px) {
   .grid {
     /* FORÇA 3 COLUNAS com minmax para segurança */
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0.5rem;
   }
 }
 
-/* Celulares (abaixo de 640px) */
-@media (max-width: 640px) {
+/* Celulares (abaixo de 425px) */
+@media (max-width: 425px) {
   .grid {
     /* Cai para 2 colunas com minmax(0, 1fr) para evitar overflow */
     /* !important adicionado para garantir prioridade total */
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
 }
