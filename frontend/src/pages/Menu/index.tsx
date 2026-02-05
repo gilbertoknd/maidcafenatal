@@ -1,4 +1,5 @@
 import { useProducts } from "../../hooks/useProducts";
+import { useDebugScreen } from "../../hooks/useDebugScreen";
 import { ProductCard } from "../../components/ProductCard";
 import styles from "./styles.module.css";
 import { Footer } from "../../components/Footer";
@@ -8,6 +9,7 @@ import { Search } from "../../components/Search";
 import { CategoryFilter } from "../../components/CategoryFilter";
 
 export function MenuPage() {
+  useDebugScreen();
   const {
     loading,
     categories,

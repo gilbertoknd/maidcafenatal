@@ -63,6 +63,6 @@
 
 body {
   margin: 0;
-  min-width: 320px;
+  /* Removed min-width: 320px to test layout constraints */
   min-height: 100vh;
 }

@@ -6,6 +6,8 @@
   transition: transform 0.2s;
   width: 100%;
   max-width: 100%;
+  /* CRUCIAL: min-width: 0 permite que o card encolha abaixo do tamanho do conteúdo interno */
+  min-width: 0;
   display: flex;
   flex-direction: column;
 }
@@ -15,38 +17,53 @@
 }
 
 .imageContainer {
-  height: 140px;
+  height: 100px;
   overflow: hidden;
   background-color: var(--color-image-background);
+  /* CRUCIAL: Garante que o container da imagem não trave a largura */
+  width: 100%;
+  min-width: 0;
 }
 
 .image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* BRUTE FORCE: Garante que nada trave essa imagem */
+  min-width: 0 !important;
+  max-width: 100% !important;
 }
 
 .content {
-  padding: 0.75rem;
+  padding: 0.5rem;
   flex: 1;
   display: flex;
   flex-direction: column;
+  /* Garante que texto luuuuuongo não quebre o layout */
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .title {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-md);
   font-weight: var(--font-weight-bold);
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.25rem 0;
   color: var(--color-text);
   font-family: var(--font-main);
+  line-height: 1.2;
 }
 
 .description {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   color: var(--color-text);
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   flex: 1;
   opacity: 0.8;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .footer {
@@ -57,7 +74,7 @@
 }
 
 .price {
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   color: var(--color-primary);
   font-family: var(--font-main);
@@ -67,11 +84,12 @@
   background-color: var(--color-primary);
   color: var(--color-white);
   border: none;
-  padding: 8px 16px;
+  padding: 4px 8px;
   border-radius: var(--radius-card);
   cursor: pointer;
   font-weight: var(--font-weight-medium);
   font-family: var(--font-main);
+  font-size: var(--font-size-sm);
 }
 
 .button:hover {
@@ -98,4 +116,40 @@
 .liked {
   color: var(--color-star-active);
   filter: drop-shadow(0 0 2px var(--color-star-shadow));
+}
+
+/* Ajustes finos para Mobile quando estiver em 3 colunas */
+@media (max-width: 768px) {
+  .content {
+    padding: 0.35rem; /* Reduz padding interno */
+  }
+
+  .title {
+    font-size: 0.85rem; /* Fonte do título um pouco menor */
+    margin-bottom: 0.15rem;
+  }
+
+  .description {
+    font-size: 0.7rem; /* Descrição menor */
+    -webkit-line-clamp: 1; /* Mostra apenas 1 linha ou... */
+    line-clamp: 1;
+    display: none; /* ...Oculta a descrição no mobile para limpar o visual (OPCIONAL) */
+  }
+
+  .footer {
+    flex-direction: column; /* Empilha preço e botões se faltar espaço */
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .price {
+    font-size: 0.9rem;
+  }
+
+  /* Ajuste os botões para serem menores */
+  .button,
+  .likeButton {
+    padding: 2px 6px;
+    font-size: 0.75rem;
+  }
 }
