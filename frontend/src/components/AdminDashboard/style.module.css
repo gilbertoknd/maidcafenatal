@@ -1,6 +1,5 @@
 .container {
-  /*max-width: 1200px;*/
-  max-width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
   font-family: sans-serif;
@@ -16,19 +15,14 @@
   font-size: 18px;
 }
 
-/* --- Cabeçalho --- */
-.header {
+.loading {
+  height: 100vh;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  margin-bottom: 2rem;
-}
-
-.title {
-  font-size: var(--font-size-4xl);
-  color: var(--color-primary);
-  margin: 0;
-  font-family: var(--font-main);
+  background-color: #f8f9fa;
+  color: #666;
+  font-size: 18px;
 }
 
 .logoutBtn {
@@ -48,22 +42,4 @@
 .logoutBtn:hover {
   background-color: #555;
   opacity: 0.8;
-}
-
-/* --- Lista --- */
-.listTitle {
-  border-bottom: 2px solid var(--color-primary-border);
-  padding-bottom: 1rem;
-  margin-bottom: 2rem;
-  color: var(--color-primary-dark);
-  font-size: var(--font-size-2xl);
-  font-family: var(--font-main);
-}
-
-.listGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
-  justify-items: center;
-  padding-bottom: 3rem;
 }

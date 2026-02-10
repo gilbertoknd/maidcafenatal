@@ -39,7 +39,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  /* Garante que texto luuuuuongo não quebre o layout */
+  /* Pro texto longo não quebrar o layout */
   word-break: break-word;
   hyphens: auto;
 }
@@ -125,20 +125,19 @@
   }
 
   .title {
-    font-size: 0.85rem; /* Fonte do título um pouco menor */
+    font-size: 0.75rem;
     margin-bottom: 0.15rem;
   }
 
   .description {
-    font-size: 0.7rem; /* Descrição menor */
-    -webkit-line-clamp: 1; /* Mostra apenas 1 linha ou... */
-    line-clamp: 1;
-    display: none; /* ...Oculta a descrição no mobile para limpar o visual (OPCIONAL) */
+    display: none;
   }
 
   .footer {
-    flex-direction: column; /* Empilha preço e botões se faltar espaço */
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
     gap: 4px;
   }
 

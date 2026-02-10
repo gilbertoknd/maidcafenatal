@@ -99,7 +99,11 @@ export function ProductCard({ data, onEdit, onDelete }: ProductCardProps) {
         )}
 
         <h3 className={styles.title}>{data.nome}</h3>
-        <p className={styles.description}>{data.descricao}</p>
+        <p className={styles.description}>
+          {data.descricao != null && data.descricao.length > 50
+            ? `${data.descricao.substring(0, 50)}...`
+            : data.descricao}
+        </p>
 
         <div className={styles.footer}>
           <span className={styles.price}>{precoFormatado}</span>

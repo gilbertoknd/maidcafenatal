@@ -3,11 +3,12 @@ import { LogOut } from "lucide-react";
 import styles from "./style.module.css";
 //Componentes
 import LoginModal from "../LoginModal";
-import { ProductCard } from "../ProductCard";
 import { ProductForm } from "../ProductForm/index";
+import { MenuContent } from "../MenuContent";
 //Hooks e Types
 import { useAuth } from "../../hooks/useAuth";
 import { useAdminProducts } from "../../hooks/useAdminProducts";
+import { useProducts } from "../../hooks/useProducts";
 import type { Produto } from "../../types/produto";
 
 export default function AdminDashboard() {
@@ -20,20 +21,18 @@ export default function AdminDashboard() {
   } = useAuth();
 
   //2. Hook de Produtos (Manuseia o CRUD)
-  const {
-    produtos,
-    loading: productsLoading,
-    fetchProducts,
-    saveProduct,
-    deleteProduct,
-  } = useAdminProducts();
+  const { saveProduct, deleteProduct } = useAdminProducts();
+
+  //3. Hook de Produtos (Lista/Filtros) - Fonte da verdade visual
+  const productData = useProducts();
+  const { refresh } = productData;
 
   const [produtoEditando, setProdutoEditando] = useState<Produto | null>(null);
 
   //Busca produtos ao logar
   useEffect(() => {
-    if (isAuthenticated) fetchProducts();
-  }, [isAuthenticated, fetchProducts]);
+    if (isAuthenticated) refresh();
+  }, [isAuthenticated]);
 
   //Função wrapper para salvar
   async function handleSaveWrapper(formData: FormData) {
@@ -42,7 +41,17 @@ export default function AdminDashboard() {
       !!produtoEditando,
       produtoEditando?.id,
     );
-    if (success) setProdutoEditando(null); //Fecha o form se deu certo
+    if (success) {
+      setProdutoEditando(null); //Fecha o form se deu certo
+      refresh(); //Atualiza a lista
+    }
+  }
+
+  //Função wrapper para deletar
+  async function handleDeleteWrapper(id: number) {
+    if (!window.confirm("Tem certeza que deseja excluir este produto?")) return;
+    const success = await deleteProduct(id);
+    if (success) refresh();
   }
 
   //--- RENDERIZAÇÃO ---
@@ -54,36 +63,22 @@ export default function AdminDashboard() {
     return <LoginModal onSuccess={() => setIsAuthenticated(true)} />;
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Painel Administrativo 🍰</h1>
+    <MenuContent
+      {...productData}
+      title="Painel Administrativo 🍰"
+      onEdit={setProdutoEditando}
+      onDelete={handleDeleteWrapper}
+      headerActions={
         <button onClick={logout} className={styles.logoutBtn}>
           <LogOut size={18} /> Sair
         </button>
-      </div>
-
-      {/* Formulário Wrapper */}
+      }
+    >
       <ProductForm
         produtoEditando={produtoEditando}
         onSave={handleSaveWrapper}
         onCancel={() => setProdutoEditando(null)}
       />
-
-      <h2 className={styles.listTitle}>
-        Cardápio Atual ({produtos.length})
-        {productsLoading && <span style={{ fontSize: "0.8em" }}> 🔄</span>}
-      </h2>
-
-      <div className={styles.listGrid}>
-        {produtos.map((prod) => (
-          <ProductCard
-            key={prod.id}
-            data={prod}
-            onEdit={setProdutoEditando}
-            onDelete={deleteProduct}
-          />
-        ))}
-      </div>
-    </div>
+    </MenuContent>
   );
 }

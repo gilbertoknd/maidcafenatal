@@ -8,7 +8,8 @@ export function useProducts() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Todos");
 
-  useEffect(() => {
+  function refresh() {
+    setLoading(true);
     getProducts()
       .then((data) => {
         setProdutos(data);
@@ -18,6 +19,10 @@ export function useProducts() {
         console.error(err);
         setLoading(false);
       });
+  }
+
+  useEffect(() => {
+    refresh();
   }, []);
 
   const categories = useMemo(() => {
@@ -45,5 +50,6 @@ export function useProducts() {
     selectedCategory,
     setSelectedCategory,
     filteredProducts,
+    refresh,
   };
 }
