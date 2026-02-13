@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "./styles.module.css";
-import type { Produto } from "../../types";
+import type { Produto } from "../../types/produto";
 import { formatCurrency } from "../../utils/formatters";
 import { toggleProductLike } from "../../services/api";
 import { StarIcon } from "../../assets/icons/StarIcon";
@@ -24,6 +24,7 @@ export function ProductCard({
 }: ProductCardProps) {
   //INICIALIZAÇÃO INTELIGENTE
   const [hasLiked, setHasLiked] = useState(() => {
+    if (isAdmin) return false; //Admin não precisa disso
     const stored = localStorage.getItem(STORAGE_KEY);
     const likedArray: number[] = stored ? JSON.parse(stored) : [];
     return likedArray.includes(data.id);
@@ -31,26 +32,25 @@ export function ProductCard({
 
   const [likesCount, setLikesCount] = useState(data.curtidas);
 
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  //Fallback para a URL
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
   const fullImageUrl = `${backendUrl}${data.imagem_url}`;
 
   const precoFormatado = formatCurrency(data.preco);
 
   async function handleLike() {
+    if (isAdmin) return; //Segurança extra
+
     const action = hasLiked ? "unlike" : "like";
 
-    //Optimistic UI (Muda a tela antes)
+    //Optimistic UI
     setHasLiked(!hasLiked);
     setLikesCount((prev) => (hasLiked ? prev - 1 : prev + 1));
 
     try {
-      //Chama a API para o fetch
       const novasCurtidas = await toggleProductLike(data.id, action);
-
-      //Salva no LocalStorage o valor correto
       setLikesCount(novasCurtidas);
 
-      //Lógica do LocalStorage
       const stored = localStorage.getItem(STORAGE_KEY);
       let likedArray: number[] = stored ? JSON.parse(stored) : [];
 
@@ -62,7 +62,7 @@ export function ProductCard({
       localStorage.setItem(STORAGE_KEY, JSON.stringify(likedArray));
     } catch (error) {
       console.error("Erro:", error);
-      //Rollback (Desfaz a mudança visual)
+      //Rollback
       setHasLiked(!hasLiked);
       setLikesCount((prev) => (hasLiked ? prev + 1 : prev - 1));
     }

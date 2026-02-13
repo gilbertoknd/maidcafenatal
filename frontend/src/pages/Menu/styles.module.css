@@ -21,9 +21,29 @@
   color: var(--color-text);
 }
 
+/* Responsividade */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2rem;
-  justify-items: center;
+  /* Desktop: Ajustado para 200px para evitar que os cards fiquem minúsculos */
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  /* Removemos justify-items: center para deixar o grid esticar (stretch) os cards */
+}
+
+/* Tablets e Celulares grandes */
+@media (max-width: 768px) {
+  .grid {
+    /* FORÇA 3 COLUNAS com minmax para segurança */
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+}
+
+/* Celulares (abaixo de 425px) */
+@media (max-width: 425px) {
+  .grid {
+    /* Cai para 2 colunas com minmax(0, 1fr) para evitar overflow */
+    /* !important adicionado para garantir prioridade total */
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
 }

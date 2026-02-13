@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import { ProductCard } from "../ProductCard";
-import { getNewProducts } from "../../services/api";
-import type { Produto } from "../../types";
+import { getPopularProducts } from "../../services/api";
+import type { Produto } from "../../types/produto";
 import styles from "./styles.module.css";
 
-export function NewArrivalsSection() {
+export function PopularSection() {
   const [products, setProducts] = useState<Produto[]>([]);
 
   useEffect(() => {
-    getNewProducts().then(setProducts).catch(console.error);
+    getPopularProducts().then(setProducts).catch(console.error);
   }, []);
 
   return (
     <section className={styles.section}>
-      <h2 className={styles.sectionTitle}>Novidades no Cardápio</h2>
+      <h2 className={styles.sectionTitle}>Pedidos Mais Populares</h2>
       <div className={styles.grid}>
         {products.map((product) => (
           <ProductCard key={product.id} data={product} />

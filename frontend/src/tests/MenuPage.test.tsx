@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { MenuPage } from "../pages/Menu";
 import { BrowserRouter } from "react-router-dom";
-import type { Produto } from "../types";
+import type { Produto } from "../types/produto";
 
 // Mock API
 const mockProducts: Produto[] = [
@@ -14,7 +14,7 @@ const mockProducts: Produto[] = [
     preco: "10.00",
     imagem_url: "/img1.jpg",
     categoria: "Doces",
-    destaque: true,
+    promocao: true,
     curtidas: 5,
   },
   {
@@ -24,7 +24,7 @@ const mockProducts: Produto[] = [
     preco: "5.00",
     imagem_url: "/img2.jpg",
     categoria: "Bebidas",
-    destaque: false,
+    promocao: false,
     curtidas: 10,
   },
 ];
@@ -44,7 +44,7 @@ describe("MenuPage", () => {
     render(
       <BrowserRouter>
         <MenuPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
     expect(screen.getByText("Carregando refeições...")).toBeInTheDocument();
   });
@@ -53,7 +53,7 @@ describe("MenuPage", () => {
     render(
       <BrowserRouter>
         <MenuPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
 
     await waitFor(() => {
@@ -66,7 +66,7 @@ describe("MenuPage", () => {
     render(
       <BrowserRouter>
         <MenuPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
 
     await waitFor(() => {
@@ -84,7 +84,7 @@ describe("MenuPage", () => {
     render(
       <BrowserRouter>
         <MenuPage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
 
     await waitFor(() => {

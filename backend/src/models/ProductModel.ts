@@ -3,14 +3,7 @@ import { pool } from "../config/db.js";
 //TODO: Product model responsável por interagir com a tabela produtos no banco de dados
 
 //Tipagem
-interface ProductData {
-  nome: string;
-  descricao: string;
-  preco: number;
-  categoria: string;
-  imagemUrl: string | null; // Aqui recebemos apenas o nome do arquivo
-  destaque: boolean;
-}
+import { ProductData } from "../types/ProductTypes.js";
 
 //Products gets
 export async function listAllProducts() {
@@ -21,7 +14,7 @@ export async function listAllProducts() {
 
 export async function listPopularProducts() {
   const result = await pool.query(
-    "SELECT * FROM produtos ORDER BY curtidas DESC LIMIT 6"
+    "SELECT * FROM produtos ORDER BY curtidas DESC LIMIT 6",
   );
 
   return result.rows;
@@ -29,7 +22,7 @@ export async function listPopularProducts() {
 
 export async function listNewProducts() {
   const result = await pool.query(
-    "SELECT * FROM produtos ORDER BY criado_em DESC LIMIT 3"
+    "SELECT * FROM produtos ORDER BY criado_em DESC LIMIT 3",
   );
 
   return result.rows;
@@ -38,7 +31,7 @@ export async function listNewProducts() {
 //Products posts
 export async function createProduct(data: ProductData) {
   const query = `
-    INSERT INTO produtos (nome, descricao, preco, categoria, imagem_url, destaque)
+    INSERT INTO produtos (nome, descricao, preco, categoria, imagem_url, promocao)
     VALUES ($1, $2, $3, $4, $5, $6)
     RETURNING *;
   `;
@@ -49,7 +42,7 @@ export async function createProduct(data: ProductData) {
     data.preco,
     data.categoria,
     data.imagemUrl, // Mapeia para a coluna 'imagem_url' do banco
-    data.destaque,
+    data.promocao,
   ];
 
   const result = await pool.query(query, values);
@@ -66,7 +59,7 @@ export async function updateProduct(id: string, data: ProductData) {
         preco = $3,
         categoria = $4,
         imagem_url = COALESCE($5, imagem_url),
-        destaque = $6
+        promocao = $6
     WHERE id = $7
     RETURNING *;
   `;
@@ -77,7 +70,7 @@ export async function updateProduct(id: string, data: ProductData) {
     data.preco,
     data.categoria,
     data.imagemUrl,
-    data.destaque,
+    data.promocao,
     id,
   ];
 
@@ -90,7 +83,7 @@ export async function updateProduct(id: string, data: ProductData) {
 export async function deleteProduct(id: string) {
   const result = await pool.query(
     "DELETE FROM produtos WHERE id = $1 RETURNING *",
-    [id]
+    [id],
   );
 
   if (result.rows.length === 0) {
@@ -103,7 +96,7 @@ export async function deleteProduct(id: string) {
 export async function likeProduct(id: string) {
   const result = await pool.query(
     "UPDATE produtos SET curtidas = curtidas + 1 WHERE id = $1 RETURNING curtidas",
-    [id]
+    [id],
   );
 
   if (result.rows.length === 0) {
@@ -115,7 +108,7 @@ export async function likeProduct(id: string) {
 export async function unlikeProduct(id: string) {
   const result = await pool.query(
     "UPDATE produtos SET curtidas = GREATEST(curtidas - 1, 0) WHERE id = $1 RETURNING curtidas",
-    [id]
+    [id],
   );
 
   if (result.rows.length === 0) {

@@ -1,4 +1,4 @@
-import type { Produto } from "../types";
+import type { Produto } from "../types/produto";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -28,7 +28,7 @@ export async function getNewProducts(): Promise<Produto[]> {
 
 export async function toggleProductLike(
   id: number,
-  action: "like" | "unlike"
+  action: "like" | "unlike",
 ): Promise<number> {
   const response = await fetch(`${BASE_URL}/api/produtos/${id}/${action}`, {
     method: "PATCH",

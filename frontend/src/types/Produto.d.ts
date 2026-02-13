@@ -5,6 +5,6 @@ export interface Produto {
   preco: string; //Postgres pode retornar decimal como string
   imagem_url: string;
   categoria: string;
-  destaque: boolean;
+  promocao: boolean;
   curtidas: number;
 }

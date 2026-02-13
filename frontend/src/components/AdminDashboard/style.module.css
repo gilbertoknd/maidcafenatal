@@ -1,0 +1,45 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: sans-serif;
+}
+
+.loading {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa;
+  color: #666;
+  font-size: 18px;
+}
+
+.loading {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa;
+  color: #666;
+  font-size: 18px;
+}
+
+.logoutBtn {
+  background-color: var(--color-text);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-button);
+  cursor: pointer;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  font-family: var(--font-main);
+  transition: var(--transition-default);
+}
+
+.logoutBtn:hover {
+  background-color: #555;
+  opacity: 0.8;
+}

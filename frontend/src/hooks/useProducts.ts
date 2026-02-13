@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { getProducts } from "../services/api";
-import type { Produto } from "../types";
+import type { Produto } from "../types/produto";
 
 export function useProducts() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
@@ -8,7 +8,8 @@ export function useProducts() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Todos");
 
-  useEffect(() => {
+  function refresh() {
+    setLoading(true);
     getProducts()
       .then((data) => {
         setProdutos(data);
@@ -18,6 +19,10 @@ export function useProducts() {
         console.error(err);
         setLoading(false);
       });
+  }
+
+  useEffect(() => {
+    refresh();
   }, []);
 
   const categories = useMemo(() => {
@@ -45,5 +50,6 @@ export function useProducts() {
     selectedCategory,
     setSelectedCategory,
     filteredProducts,
+    refresh,
   };
 }
