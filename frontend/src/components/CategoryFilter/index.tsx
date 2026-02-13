@@ -12,11 +12,17 @@ export function CategoryFilter({
   selectedCategory,
   onSelectCategory,
 }: CategoryFilterProps) {
+  // 1. Separamos as categorias (removemos "Todos" da lista que rola)
+  const scrollableCategories = categories.filter((c) => c !== "Todos");
+
+  // A Ref agora apontará para a área de scroll, não para o container todo
   const scrollRef = useRef<HTMLDivElement>(null);
+
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
 
+  // --- Lógica de Arrastar (Mantida igual, apenas aplicada no lugar certo) ---
   const handleMouseDown = (e: MouseEvent) => {
     if (!scrollRef.current) return;
     setIsDragging(true);
@@ -36,30 +42,52 @@ export function CategoryFilter({
     if (!isDragging || !scrollRef.current) return;
     e.preventDefault();
     const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 1; // Scroll speed multiplier
+    const walk = (x - startX) * 1; // Multiplicador de velocidade
     scrollRef.current.scrollLeft = scrollLeft - walk;
   };
 
   return (
-    <div
-      className={styles.container}
-      ref={scrollRef}
-      onMouseDown={handleMouseDown}
-      onMouseLeave={handleMouseLeave}
-      onMouseUp={handleMouseUp}
-      onMouseMove={handleMouseMove}
-    >
-      {categories.map((category) => (
+    // Wrapper geral que segura os dois lados
+    <div className={styles.wrapper}>
+      {/* LADO ESQUERDO: Lista de Categorias (Com Scroll e Drag) */}
+      <div
+        className={styles.scrollArea}
+        ref={scrollRef}
+        onMouseDown={handleMouseDown}
+        onMouseLeave={handleMouseLeave}
+        onMouseUp={handleMouseUp}
+        onMouseMove={handleMouseMove}
+      >
+        {scrollableCategories.map((category) => (
+          <button
+            key={category}
+            // Adicionei uma verificação para evitar clique acidental enquanto arrasta
+            onClick={() => {
+              if (!isDragging) onSelectCategory(category);
+            }}
+            className={`${styles.button} ${
+              selectedCategory === category ? styles.active : ""
+            }`}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+
+      {/* DIVISÓRIA VISUAL */}
+      <div className={styles.divider}></div>
+
+      {/* LADO DIREITO: Botão Todos (Fixo) */}
+      <div className={styles.fixedArea}>
         <button
-          key={category}
-          className={`${styles.button} ${
-            selectedCategory === category ? styles.active : ""
+          onClick={() => onSelectCategory("Todos")}
+          className={`${styles.button} ${styles.todosBtn} ${
+            selectedCategory === "Todos" ? styles.active : ""
           }`}
-          onClick={() => onSelectCategory(category)}
         >
-          {category}
+          Todos
         </button>
-      ))}
+      </div>
     </div>
   );
 }

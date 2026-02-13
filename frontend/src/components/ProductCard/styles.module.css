@@ -18,6 +18,10 @@
   height: 180px;
   overflow: hidden;
   background-color: var(--color-image-background);
+  /* CRUCIAL: Garante que o container da imagem não trave a largura */
+  width: 100%;
+  min-width: 0;
+  position: relative; /* Adicionado para posicionar o botão de like */
 }
 
 .image {
@@ -78,20 +82,33 @@
   background-color: var(--color-primary-dark);
 }
 
+/* Novo estilo para o botão sobre a imagem */
 .likeButton {
-  background: none;
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 10;
+
+  background: rgba(255, 255, 255, 0.9); /* Fundo branco semi-transparente */
   border: none;
   cursor: pointer;
-  padding: 8px;
+  padding: 4px 8px;
+  border-radius: 20px; /* Arredondado estilo "pill" */
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.1s ease;
+  gap: 4px;
+
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
   color: var(--color-icon-inactive);
 }
 
 .likeButton:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
+  background: #fff;
 }
 
 /* Quando a estrela estiver ativa (amarela) */

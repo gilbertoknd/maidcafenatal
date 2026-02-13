@@ -1,24 +1,53 @@
-.container {
+.wrapper {
   display: flex;
-  justify-content: flex-start;
+  align-items: center;
   gap: 1rem;
   margin-bottom: 2rem;
-  overflow-x: auto;
-  padding: 0.5rem 1rem;
   width: 100%;
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
-  cursor: grab;
+  position: relative;
+  overflow: hidden; /* Garante que nada vaze */
 }
 
-.container:active {
+.scrollArea {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 0.5rem 0.5rem; /* Padding para a sombra não cortar */
+  flex: 1; /* Ocupa todo o espaço disponível à esquerda */
+
+  /* Esconder barra de rolagem */
+  -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+
+  cursor: grab;
+  /* Garante que os itens não encolham */
+  flex-wrap: nowrap;
+}
+
+.scrollArea:active {
   cursor: grabbing;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
-.container::-webkit-scrollbar {
+.scrollArea::-webkit-scrollbar {
   display: none;
+}
+
+.fixedArea {
+  flex-shrink: 0;
+  z-index: 2;
+  padding-left: 0.5rem;
+  /* Fundo sutil gradiente pode ser legal, mas vamos manter simples por enquanto */
+}
+
+/* Divisória opcional se quiser separar visualmente */
+.divider {
+  width: 1px;
+  background-color: #e0e0e0;
+  height: 24px;
+  flex-shrink: 0;
+  display: none; /* Ocultei por padrão, descomente se quiser uma linha vertical */
 }
 
 .button {
@@ -50,4 +79,9 @@
 .active:hover {
   background-color: var(--color-primary-dark);
   border-color: var(--color-primary-dark);
+}
+
+.todosBtn {
+  /* Estilo específico para o botão "Todos" se quiser diferenciar ou destacar que é fixo */
+  font-weight: 700;
 }

@@ -4,15 +4,24 @@ import type { Produto } from "../../types";
 import { formatCurrency } from "../../utils/formatters";
 import { toggleProductLike } from "../../services/api";
 import { StarIcon } from "../../assets/icons/StarIcon";
+import { Edit, Trash2 } from "lucide-react";
 
 interface ProductCardProps {
   data: Produto;
+  isAdmin?: boolean;
+  onEdit?: (produto: Produto) => void;
+  onDelete?: (id: number) => void;
 }
 
 //Chave para salvar no navegador
 const STORAGE_KEY = "mewmew_liked_products";
 
-export function ProductCard({ data }: ProductCardProps) {
+export function ProductCard({
+  data,
+  isAdmin = false,
+  onEdit,
+  onDelete,
+}: ProductCardProps) {
   //INICIALIZAÇÃO INTELIGENTE
   const [hasLiked, setHasLiked] = useState(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -70,6 +79,26 @@ export function ProductCard({ data }: ProductCardProps) {
             e.currentTarget.src = "https://placehold.co/400?text=Sem+Foto";
           }}
         />
+        {!isAdmin && (
+          <button
+            onClick={handleLike}
+            className={`${styles.likeButton} ${hasLiked ? styles.liked : ""}`}
+            title={hasLiked ? "Descurtir" : "Curtir"}
+          >
+            <span style={{ fontSize: "0.8rem", fontWeight: "bold" }}>
+              {likesCount}
+            </span>
+            <StarIcon
+              width="20"
+              height="20"
+              fill={hasLiked ? "currentColor" : "none"}
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </button>
+        )}
       </div>
 
       <div className={styles.content}>
@@ -79,26 +108,65 @@ export function ProductCard({ data }: ProductCardProps) {
         <div className={styles.footer}>
           <span className={styles.price}>{precoFormatado}</span>
 
-          <button
-            onClick={handleLike}
-            className={`${styles.likeButton} ${hasLiked ? styles.liked : ""}`}
-            title={hasLiked ? "Descurtir" : "Curtir"}
-            style={{ display: "flex", alignItems: "center", gap: "5px" }}
-          >
-            <span style={{ fontSize: "0.9rem", fontWeight: "bold" }}>
-              {likesCount}
-            </span>
-
-            <StarIcon
-              width="24"
-              height="24"
-              fill={hasLiked ? "currentColor" : "none"}
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </button>
+          {/* CONDICIONAL MÁGICA AQUI 👇 */}
+          {isAdmin ? (
+            //--- MODO ADMIN ---
+            <div style={{ display: "flex", gap: "8px" }}>
+              <button
+                onClick={() => onEdit && onEdit(data)}
+                style={{
+                  background: "#007bff",
+                  color: "white",
+                  border: "none",
+                  padding: "6px",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+                title="Editar"
+              >
+                <Edit size={18} />
+              </button>
+              <button
+                onClick={() => onDelete && onDelete(data.id)}
+                style={{
+                  background: "#dc3545",
+                  color: "white",
+                  border: "none",
+                  padding: "6px",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+                title="Excluir"
+              >
+                <Trash2 size={18} />
+              </button>
+            </div>
+          ) : (
+            //--- MODO PÚBLICO (LIKE) ---
+            <button
+              onClick={handleLike}
+              className={`${styles.likeButton} ${hasLiked ? styles.liked : ""}`}
+              title={hasLiked ? "Descurtir" : "Curtir"}
+              style={{ display: "flex", alignItems: "center", gap: "5px" }}
+            >
+              <span style={{ fontSize: "0.9rem", fontWeight: "bold" }}>
+                {likesCount}
+              </span>
+              <StarIcon
+                width="24"
+                height="24"
+                fill={hasLiked ? "currentColor" : "none"}
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </button>
+          )}
         </div>
       </div>
     </article>
