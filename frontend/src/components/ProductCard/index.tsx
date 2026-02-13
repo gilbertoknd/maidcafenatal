@@ -4,11 +4,11 @@ import type { Produto } from "../../types/produto";
 import { formatCurrency } from "../../utils/formatters";
 import { toggleProductLike } from "../../services/api";
 import { StarIcon } from "../../assets/icons/StarIcon";
-import { Edit, Trash2 } from "lucide-react"; //Importe os ícones que você usa no Admin
+import { Edit, Trash2 } from "lucide-react";
 
 interface ProductCardProps {
   data: Produto;
-  //Propriedades Opcionais (?) para o modo Admin
+  isAdmin?: boolean;
   onEdit?: (produto: Produto) => void;
   onDelete?: (id: number) => void;
 }
@@ -16,11 +16,13 @@ interface ProductCardProps {
 //Chave para salvar no navegador
 const STORAGE_KEY = "mewmew_liked_products";
 
-export function ProductCard({ data, onEdit, onDelete }: ProductCardProps) {
-  //Verifica se estamos no modo Admin (se as funções foram passadas)
-  const isAdmin = !!onEdit && !!onDelete;
-
-  //Só roda se NÃO for admin para economizar processamento
+export function ProductCard({
+  data,
+  isAdmin = false,
+  onEdit,
+  onDelete,
+}: ProductCardProps) {
+  //INICIALIZAÇÃO INTELIGENTE
   const [hasLiked, setHasLiked] = useState(() => {
     if (isAdmin) return false; //Admin não precisa disso
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -77,33 +79,31 @@ export function ProductCard({ data, onEdit, onDelete }: ProductCardProps) {
             e.currentTarget.src = "https://placehold.co/400?text=Sem+Foto";
           }}
         />
+        {!isAdmin && (
+          <button
+            onClick={handleLike}
+            className={`${styles.likeButton} ${hasLiked ? styles.liked : ""}`}
+            title={hasLiked ? "Descurtir" : "Curtir"}
+          >
+            <span style={{ fontSize: "0.8rem", fontWeight: "bold" }}>
+              {likesCount}
+            </span>
+            <StarIcon
+              width="20"
+              height="20"
+              fill={hasLiked ? "currentColor" : "none"}
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </button>
+        )}
       </div>
 
       <div className={styles.content}>
-        {/* Adicionei a promoção aqui também, pois é útil ver no Admin */}
-        {data.promocao && (
-          <span
-            style={{
-              background: "#ffc107",
-              fontSize: "10px",
-              padding: "2px 6px",
-              borderRadius: "4px",
-              fontWeight: "bold",
-              display: "inline-block",
-              marginBottom: "5px",
-              alignSelf: "flex-start",
-            }}
-          >
-            PROMOÇÃO
-          </span>
-        )}
-
         <h3 className={styles.title}>{data.nome}</h3>
-        <p className={styles.description}>
-          {data.descricao != null && data.descricao.length > 50
-            ? `${data.descricao.substring(0, 50)}...`
-            : data.descricao}
-        </p>
+        <p className={styles.description}>{data.descricao}</p>
 
         <div className={styles.footer}>
           <span className={styles.price}>{precoFormatado}</span>
