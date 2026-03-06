@@ -1,7 +1,7 @@
 // src/hooks/useAdminProducts.ts
 import { useState, useCallback } from "react";
 import { useAuth } from "./useAuth"; // Reaproveitando seu hook de auth
-import type { Produto } from "../types/produto";
+import type { Produto } from "../types/Produto";
 
 export function useAdminProducts() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
@@ -59,8 +59,8 @@ export function useAdminProducts() {
         const err = await res.json();
         throw new Error(err.error || "Erro na operação");
       }
-    } catch (error: any) {
-      alert(error.message || "Erro de conexão");
+    } catch (error) {
+      alert((error as Error).message || "Erro de conexão");
       return false;
     }
   };

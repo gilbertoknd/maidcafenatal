@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import type { FormEvent } from "react";
 import { Edit, Plus, X } from "lucide-react";
 import styles from "./style.module.css";
-import type { Produto } from "../../types/produto";
+import type { Produto } from "../../types/Produto";
 
 interface ProductFormProps {
   produtoEditando: Produto | null;
@@ -23,19 +23,6 @@ export function ProductForm({
   const [promocao, setPromocao] = useState(false);
   const [imagem, setImagem] = useState<File | null>(null);
 
-  //Popula o form quando entra em modo edição
-  useEffect(() => {
-    if (produtoEditando) {
-      setNome(produtoEditando.nome);
-      setDescricao(produtoEditando.descricao || "");
-      setPreco(String(produtoEditando.preco));
-      setCategoria(produtoEditando.categoria);
-      setPromocao(produtoEditando.promocao);
-    } else {
-      resetForm();
-    }
-  }, [produtoEditando]);
-
   function resetForm() {
     setNome("");
     setDescricao("");
@@ -46,6 +33,20 @@ export function ProductForm({
     const fileInput = document.getElementById("fileInput") as HTMLInputElement;
     if (fileInput) fileInput.value = "";
   }
+
+  //Popula o form quando entra em modo edição
+  useEffect(() => {
+    if (produtoEditando) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setNome(produtoEditando.nome);
+      setDescricao(produtoEditando.descricao || "");
+      setPreco(String(produtoEditando.preco));
+      setCategoria(produtoEditando.categoria);
+      setPromocao(produtoEditando.promocao);
+    } else {
+      resetForm();
+    }
+  }, [produtoEditando]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();

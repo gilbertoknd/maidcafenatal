@@ -1,4 +1,4 @@
-import type { Produto } from "../types/produto";
+import type { Produto } from "../types/Produto";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 

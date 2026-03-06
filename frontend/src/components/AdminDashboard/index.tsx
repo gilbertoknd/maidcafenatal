@@ -9,7 +9,7 @@ import { MenuContent } from "../MenuContent";
 import { useAuth } from "../../hooks/useAuth";
 import { useAdminProducts } from "../../hooks/useAdminProducts";
 import { useProducts } from "../../hooks/useProducts";
-import type { Produto } from "../../types/produto";
+import type { Produto } from "../../types/Produto";
 
 export default function AdminDashboard() {
   //1. Hook de Auth
@@ -32,7 +32,7 @@ export default function AdminDashboard() {
   //Busca produtos ao logar
   useEffect(() => {
     if (isAuthenticated) refresh();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, refresh]);
 
   //Função wrapper para salvar
   async function handleSaveWrapper(formData: FormData) {

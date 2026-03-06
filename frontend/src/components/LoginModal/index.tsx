@@ -30,7 +30,7 @@ export default function LoginModal({ onSuccess }: LoginModalProps) {
       } else {
         setErro("Credenciais incorretas");
       }
-    } catch (err) {
+    } catch {
       setErro("Erro de conexão");
     }
   }

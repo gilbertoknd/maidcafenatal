@@ -2,7 +2,7 @@ import "../setupTests";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { ProductCard } from "../components/ProductCard";
-import type { Produto } from "../types/produto";
+import type { Produto } from "../types/Produto";
 
 // Mock the API and formatters
 vi.mock("../services/api", () => ({

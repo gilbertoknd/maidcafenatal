@@ -5,32 +5,6 @@ export function useAuth() {
   const [isLoading, setIsLoading] = useState(true);
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
-  async function checkAuth() {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      setIsAuthenticated(false);
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      const res = await fetch(`${apiUrl}/api/auth/verify`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (res.ok) {
-        setIsAuthenticated(true);
-      } else {
-        logout();
-      }
-    } catch (error) {
-      setIsAuthenticated(false);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
   function logout() {
     localStorage.removeItem("token");
     setIsAuthenticated(false);
@@ -47,8 +21,34 @@ export function useAuth() {
   }
 
   useEffect(() => {
+    async function checkAuth() {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        setIsAuthenticated(false);
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const res = await fetch(`${apiUrl}/api/auth/verify`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (res.ok) {
+          setIsAuthenticated(true);
+        } else {
+          logout();
+        }
+      } catch {
+        setIsAuthenticated(false);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
     checkAuth();
-  }, []);
+  }, [apiUrl]);
 
   return {
     isAuthenticated,

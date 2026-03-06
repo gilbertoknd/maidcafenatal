@@ -2,7 +2,7 @@ import { ProductCard } from "../ProductCard";
 import { Search } from "../Search";
 import { CategoryFilter } from "../CategoryFilter";
 import styles from "./styles.module.css";
-import type { Produto } from "../../types/produto";
+import type { Produto } from "../../types/Produto";
 
 interface MenuContentProps {
   loading: boolean;

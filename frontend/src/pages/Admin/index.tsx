@@ -3,13 +3,12 @@ import LoginModal from "../../components/LoginModal";
 import AdminDashboard from "../../components/AdminDashboard";
 
 export function Admin() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return !!localStorage.getItem("token");
+  });
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setIsAuthenticated(true);
-    }
+    // Optionally listen to changes if needed, but initial read is done in useState
   }, []);
 
   //Se não estiver logado: Mostra o Login

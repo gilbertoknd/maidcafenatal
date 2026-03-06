@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { MenuPage } from "../pages/Menu";
 import { BrowserRouter } from "react-router-dom";
-import type { Produto } from "../types/produto";
+import type { Produto } from "../types/Produto";
 
 // Mock API
 const mockProducts: Produto[] = [

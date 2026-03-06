@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ProductCard } from "../ProductCard";
 import { getNewProducts } from "../../services/api";
-import type { Produto } from "../../types/produto";
+import type { Produto } from "../../types/Produto";
 import styles from "./styles.module.css";
 
 export function NewArrivalsSection() {

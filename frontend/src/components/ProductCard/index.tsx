@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "./styles.module.css";
-import type { Produto } from "../../types/produto";
+import type { Produto } from "../../types/Produto";
 import { formatCurrency } from "../../utils/formatters";
 import { toggleProductLike } from "../../services/api";
 import { StarIcon } from "../../assets/icons/StarIcon";
