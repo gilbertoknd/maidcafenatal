@@ -153,26 +153,11 @@ export function ProductCard({
               <button
                 onClick={() => {
                   addToCart(data);
-                  alert(`${data.nome} adicionado ao carrinho!`);
                 }}
-                style={{
-                  background: "#ffb6c1", // Pinkish maid cafe color
-                  color: "#fff",
-                  border: "none",
-                  padding: "8px 12px",
-                  borderRadius: "20px",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  fontWeight: "bold",
-                  flex: 1,
-                  justifyContent: "center",
-                  boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-                }}
+                className={styles.addToCartBtn}
                 title="Adicionar ao Carrinho"
               >
-                <ShoppingCart size={18} /> <span className={styles.addToCartText}>Adicionar</span>
+                <ShoppingCart className={styles.cartIcon} /> <span className={styles.addToCartText}>Adicionar</span>
               </button>
             </div>
           )}

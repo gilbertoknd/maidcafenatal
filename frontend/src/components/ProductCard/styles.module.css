@@ -97,6 +97,35 @@
   background-color: var(--color-primary-dark);
 }
 
+.addToCartBtn {
+  background: var(--color-primary); /* Pinkish maid cafe color */
+  color: var(--color-white);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+  flex: 1;
+  justify-content: center;
+  box-shadow: 0 2px 5px var(--color-shadow);
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.addToCartBtn:hover {
+  background: var(--color-primary-dark);
+  transform: scale(1.02);
+}
+
+.cartIcon {
+  width: 18px;
+  height: 18px;
+}
+
 /* Novo estilo para o botão sobre a imagem */
 .likeButton {
   position: absolute;
@@ -153,17 +182,25 @@
     justify-content: space-between;
     width: 100%;
     gap: 4px;
+    flex-wrap: nowrap;
   }
 
   .price {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
   }
 
   /* Ajuste os botões para serem menores */
   .button,
-  .likeButton {
+  .likeButton,
+  .addToCartBtn {
     padding: 2px 6px;
     font-size: 0.75rem;
+  }
+
+  .cartIcon {
+    width: 14px;
+    height: 14px;
   }
 
   .addToCartText {
