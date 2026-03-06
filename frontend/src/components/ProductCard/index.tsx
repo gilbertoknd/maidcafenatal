@@ -6,6 +6,7 @@ import { toggleProductLike } from "../../services/api";
 import { StarIcon } from "../../assets/icons/StarIcon";
 import { Edit, Trash2, ShoppingCart } from "lucide-react";
 import { useCart } from "../../hooks/useCart";
+import { ProductDetailsModal } from "../ProductDetailsModal";
 
 interface ProductCardProps {
   data: Produto;
@@ -33,6 +34,7 @@ export function ProductCard({
   });
 
   const [likesCount, setLikesCount] = useState(data.curtidas);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   //Fallback para a URL
   const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
@@ -72,7 +74,11 @@ export function ProductCard({
 
   return (
     <article className={styles.card}>
-      <div className={styles.imageContainer}>
+      <div 
+        className={styles.imageContainer} 
+        onClick={() => setIsModalOpen(true)}
+        style={{ cursor: "pointer" }}
+      >
         <img
           src={fullImageUrl}
           alt={data.nome}
@@ -83,7 +89,10 @@ export function ProductCard({
         />
         {!isAdmin && (
           <button
-            onClick={handleLike}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleLike();
+            }}
             className={`${styles.likeButton} ${hasLiked ? styles.liked : ""}`}
             title={hasLiked ? "Descurtir" : "Curtir"}
           >
@@ -104,7 +113,13 @@ export function ProductCard({
       </div>
 
       <div className={styles.content}>
-        <h3 className={styles.title}>{data.nome}</h3>
+        <h3 
+          className={styles.title} 
+          onClick={() => setIsModalOpen(true)}
+          style={{ cursor: "pointer" }}
+        >
+          {data.nome}
+        </h3>
         <p className={styles.description}>{data.descricao}</p>
 
         <div className={styles.footer}>
@@ -115,7 +130,10 @@ export function ProductCard({
             //--- MODO ADMIN ---
             <div style={{ display: "flex", gap: "8px" }}>
               <button
-                onClick={() => onEdit && onEdit(data)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit && onEdit(data);
+                }}
                 style={{
                   background: "#007bff",
                   color: "white",
@@ -131,7 +149,10 @@ export function ProductCard({
                 <Edit size={18} />
               </button>
               <button
-                onClick={() => onDelete && onDelete(data.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete && onDelete(data.id);
+                }}
                 style={{
                   background: "#dc3545",
                   color: "white",
@@ -151,7 +172,8 @@ export function ProductCard({
             //--- MODO PÚBLICO (ADD TO CART + LIKE) ---
             <div style={{ display: "flex", gap: "8px" }}>
               <button
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   addToCart(data);
                 }}
                 className={styles.addToCartBtn}
@@ -163,6 +185,12 @@ export function ProductCard({
           )}
         </div>
       </div>
+
+      <ProductDetailsModal 
+        produto={data} 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
     </article>
   );
 }

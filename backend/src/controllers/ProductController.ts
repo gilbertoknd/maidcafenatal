@@ -48,7 +48,7 @@ export class ProductController {
       const imagemUrl = req.file ? `/images/${req.file.filename}` : null;
 
       //Converte os dados (FormData envia tudo como string)
-      const { nome, descricao, categoria } = req.body;
+      const { nome, descricao, categoria, tags } = req.body;
       const preco = parseFloat(req.body.preco);
       const promocao = req.body.promocao === "true";
 
@@ -72,6 +72,7 @@ export class ProductController {
         categoria,
         imagemUrl,
         promocao,
+        tags: tags || null,
       });
 
       res.status(201).json(product);
@@ -95,7 +96,7 @@ export class ProductController {
       //Se não tiver, envia null (para o model ignorar e manter a foto antiga)
       const imagemUrl = req.file ? `/images/${req.file.filename}` : null;
 
-      const { nome, descricao, categoria } = req.body;
+      const { nome, descricao, categoria, tags } = req.body;
       const preco = req.body.preco ? parseFloat(req.body.preco) : undefined;
       const promocao = req.body.promocao === "true";
 
@@ -106,6 +107,7 @@ export class ProductController {
         categoria,
         imagemUrl, //Se null, o COALESCE no SQL mantém o valor original
         promocao,
+        tags: tags || null,
       });
 
       if (!product) {

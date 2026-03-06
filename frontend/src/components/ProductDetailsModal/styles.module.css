@@ -1,0 +1,179 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--color-modal-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modalContent {
+  background: var(--color-white);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease-out;
+}
+
+.closeButton {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  color: var(--color-text);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: background 0.2s, transform 0.2s;
+}
+
+.closeButton:hover {
+  background: var(--color-white);
+  transform: scale(1.1);
+}
+
+.imageContainer {
+  width: 100%;
+  height: 250px;
+  background-color: var(--color-image-background);
+  flex-shrink: 0;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.infoContainer {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-family: var(--font-main);
+  color: var(--color-text);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.price {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--color-primary);
+  font-family: var(--font-main);
+}
+
+.tagsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.tagBadge {
+  background-color: #f1f5f9;
+  color: #475569;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid #e2e8f0;
+}
+
+/* Algumas cores pré-definidas baseadas em palavras chaves podem ser adicionadas */
+.tagBadge[data-tag*="vegano" i], .tagBadge[data-tag*="vegan" i] {
+  background-color: #dcfce7;
+  color: #166534;
+  border-color: #bbf7d0;
+}
+
+.tagBadge[data-tag*="lactose" i] {
+  background-color: #e0f2fe;
+  color: #075985;
+  border-color: #bae6fd;
+}
+
+.tagBadge[data-tag*="glúten" i], .tagBadge[data-tag*="gluten" i] {
+  background-color: #fef08a;
+  color: #854d0e;
+  border-color: #fde047;
+}
+
+.description {
+  font-size: 0.95rem;
+  color: var(--color-text);
+  line-height: 1.5;
+  opacity: 0.9;
+  margin: 8px 0;
+  white-space: pre-wrap;
+}
+
+.addToCartBtn {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  padding: 12px 20px;
+  border-radius: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  margin-top: 12px;
+  box-shadow: 0 4px 10px var(--color-shadow);
+  transition: transform 0.2s ease, background 0.2s ease;
+  width: 100%;
+}
+
+.addToCartBtn:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-2px);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .modalContent {
+    width: 95%;
+    max-height: 95vh;
+  }
+  
+  .imageContainer {
+    height: 200px;
+  }
+}

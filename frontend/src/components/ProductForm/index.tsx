@@ -20,6 +20,7 @@ export function ProductForm({
   const [descricao, setDescricao] = useState("");
   const [preco, setPreco] = useState("");
   const [categoria, setCategoria] = useState("");
+  const [tags, setTags] = useState("");
   const [promocao, setPromocao] = useState(false);
   const [imagem, setImagem] = useState<File | null>(null);
 
@@ -28,6 +29,7 @@ export function ProductForm({
     setDescricao("");
     setPreco("");
     setCategoria("");
+    setTags("");
     setPromocao(false);
     setImagem(null);
     const fileInput = document.getElementById("fileInput") as HTMLInputElement;
@@ -42,6 +44,7 @@ export function ProductForm({
       setDescricao(produtoEditando.descricao || "");
       setPreco(String(produtoEditando.preco));
       setCategoria(produtoEditando.categoria);
+      setTags(produtoEditando.tags || "");
       setPromocao(produtoEditando.promocao);
     } else {
       resetForm();
@@ -55,6 +58,7 @@ export function ProductForm({
     formData.append("descricao", descricao);
     formData.append("preco", preco);
     formData.append("categoria", categoria);
+    formData.append("tags", tags);
     formData.append("promocao", String(promocao));
     if (imagem) formData.append("image", imagem);
 
@@ -95,6 +99,17 @@ export function ProductForm({
           value={categoria}
           onChange={(e) => setCategoria(e.target.value)}
           required
+          className={`${styles.input} local-input`}
+          style={{
+            color: "#000000",
+            backgroundColor: "#ffffff",
+            WebkitTextFillColor: "#000000",
+          }}
+        />
+        <input
+          placeholder="Tags (separadas por vírgula, ex: Vegano, Sem Glúten)"
+          value={tags}
+          onChange={(e) => setTags(e.target.value)}
           className={`${styles.input} local-input`}
           style={{
             color: "#000000",

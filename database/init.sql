@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS produtos (
     categoria VARCHAR(50) NOT NULL,  
     promocao BOOLEAN DEFAULT FALSE,  
     curtidas INTEGER DEFAULT 0,
+    tags VARCHAR(255),
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -7,4 +7,5 @@ export interface Produto {
   categoria: string;
   promocao: boolean;
   curtidas: number;
+  tags?: string;
 }
