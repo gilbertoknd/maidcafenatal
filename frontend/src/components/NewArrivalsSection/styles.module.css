@@ -25,20 +25,24 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  justify-items: center;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
 }
 
-@media (max-width: 1024px) {
+/* Tablets e Celulares grandes */
+@media (max-width: 768px) {
   .grid {
-    grid-template-columns: repeat(2, 1fr);
+    /* 3 COLUNAS com minmax para segurança */
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.5rem;
   }
 }
 
-@media (max-width: 640px) {
+/* Celulares (abaixo de 425px) */
+@media (max-width: 425px) {
   .grid {
-    grid-template-columns: 1fr;
+    /* Cai para 3 colunas com minmax(0, 1fr) para evitar overflow */
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
 }
 

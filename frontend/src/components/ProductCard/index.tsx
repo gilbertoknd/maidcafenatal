@@ -4,7 +4,8 @@ import type { Produto } from "../../types/Produto";
 import { formatCurrency } from "../../utils/formatters";
 import { toggleProductLike } from "../../services/api";
 import { StarIcon } from "../../assets/icons/StarIcon";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, Trash2, ShoppingCart } from "lucide-react";
+import { useCart } from "../../hooks/useCart";
 
 interface ProductCardProps {
   data: Produto;
@@ -22,6 +23,7 @@ export function ProductCard({
   onEdit,
   onDelete,
 }: ProductCardProps) {
+  const { addToCart } = useCart();
   //INICIALIZAÇÃO INTELIGENTE
   const [hasLiked, setHasLiked] = useState(() => {
     if (isAdmin) return false; //Admin não precisa disso
@@ -146,26 +148,33 @@ export function ProductCard({
               </button>
             </div>
           ) : (
-            //--- MODO PÚBLICO (LIKE) ---
-            <button
-              onClick={handleLike}
-              className={`${styles.likeButton} ${hasLiked ? styles.liked : ""}`}
-              title={hasLiked ? "Descurtir" : "Curtir"}
-              style={{ display: "flex", alignItems: "center", gap: "5px" }}
-            >
-              <span style={{ fontSize: "0.9rem", fontWeight: "bold" }}>
-                {likesCount}
-              </span>
-              <StarIcon
-                width="24"
-                height="24"
-                fill={hasLiked ? "currentColor" : "none"}
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </button>
+            //--- MODO PÚBLICO (ADD TO CART + LIKE) ---
+            <div style={{ display: "flex", gap: "8px" }}>
+              <button
+                onClick={() => {
+                  addToCart(data);
+                  alert(`${data.nome} adicionado ao carrinho!`);
+                }}
+                style={{
+                  background: "#ffb6c1", // Pinkish maid cafe color
+                  color: "#fff",
+                  border: "none",
+                  padding: "8px 12px",
+                  borderRadius: "20px",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  fontWeight: "bold",
+                  flex: 1,
+                  justifyContent: "center",
+                  boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+                }}
+                title="Adicionar ao Carrinho"
+              >
+                <ShoppingCart size={18} /> <span className={styles.addToCartText}>Adicionar</span>
+              </button>
+            </div>
           )}
         </div>
       </div>

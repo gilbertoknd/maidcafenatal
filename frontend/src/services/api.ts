@@ -41,3 +41,48 @@ export async function toggleProductLike(
   const data = await response.json();
   return data.novas_curtidas;
 }
+
+export async function sendOrderToBackend(orderData: {
+  cliente_nome: string;
+  cliente_endereco: string;
+  itens: { produto_id: number; quantidade: number }[];
+}): Promise<{ message: string; orderId: number; total: number }> {
+  const response = await fetch(`${BASE_URL}/api/orders`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(orderData)
+  });
+
+  if (!response.ok) {
+    throw new Error("Erro ao enviar pedido");
+  }
+
+  return response.json();
+}
+
+export const getOrders = async () => {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${BASE_URL}/api/orders`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  if (!response.ok) throw new Error("Erro ao buscar pedidos");
+  return response.json();
+};
+
+export const updateOrderStatus = async (id: number, status: string) => {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${BASE_URL}/api/orders/${id}/status`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ status })
+  });
+  if (!response.ok) throw new Error("Erro ao atualizar status");
+  return response.json();
+};

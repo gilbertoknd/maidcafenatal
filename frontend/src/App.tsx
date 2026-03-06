@@ -5,11 +5,15 @@ import { Admin } from "./pages/Admin";
 import "./App.css";
 
 import { ScrollToTop } from "./components/ScrollToTop";
+import { CartButton } from "./components/CartButton";
+import { CartModal } from "./components/CartModal";
 
 function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <CartButton />
+      <CartModal />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Navigate to="/" replace />} />

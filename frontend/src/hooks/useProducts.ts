@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { getProducts } from "../services/api";
 import type { Produto } from "../types/Produto";
 
@@ -8,7 +8,7 @@ export function useProducts() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Todos");
 
-  function refresh() {
+  const refresh = useCallback(() => {
     setLoading(true);
     getProducts()
       .then((data) => {
@@ -19,11 +19,11 @@ export function useProducts() {
         console.error(err);
         setLoading(false);
       });
-  }
+  }, []);
 
   useEffect(() => {
     refresh();
-  }, []);
+  }, [refresh]);
 
   const categories = useMemo(() => {
     const allCategories = produtos.map((p) => p.categoria);

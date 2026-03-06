@@ -15,16 +15,6 @@
   font-size: 18px;
 }
 
-.loading {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f8f9fa;
-  color: #666;
-  font-size: 18px;
-}
-
 .logoutBtn {
   background-color: var(--color-text);
   color: white;
@@ -42,4 +32,54 @@
 .logoutBtn:hover {
   background-color: #555;
   opacity: 0.8;
+}
+
+.adminLayout {
+  min-height: 100vh;
+  background-color: var(--color-tertiary-background);
+}
+
+.adminHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: var(--color-secondary-background);
+  box-shadow: 0 4px 6px var(--color-shadow);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.tabsContainer {
+  display: flex;
+  gap: 1rem;
+}
+
+.tabBtn {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-main);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-dark);
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: var(--radius-button);
+  transition: var(--transition-default);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.tabBtn:hover {
+  background-color: var(--color-white);
+}
+
+.activeTab {
+  background-color: var(--color-white);
+}
+
+.adminMain {
+  padding: 2rem 0;
 }

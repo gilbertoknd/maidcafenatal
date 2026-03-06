@@ -13,6 +13,7 @@ interface MenuContentProps {
   setSelectedCategory: (category: string) => void;
   filteredProducts: Produto[];
   // Admin Props
+  isAdmin?: boolean;
   onEdit?: (produto: Produto) => void;
   onDelete?: (id: number) => void;
   title?: string;
@@ -28,6 +29,7 @@ export function MenuContent({
   selectedCategory,
   setSelectedCategory,
   filteredProducts,
+  isAdmin = false,
   onEdit,
   onDelete,
   title = "🌸 Cardápio Mew Mew 🌸",
@@ -73,6 +75,7 @@ export function MenuContent({
               <ProductCard
                 key={produto.id}
                 data={produto}
+                isAdmin={isAdmin || !!onEdit}
                 onEdit={onEdit}
                 onDelete={onDelete}
               />

@@ -19,9 +19,30 @@ CREATE TABLE IF NOT EXISTS users (
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Criando tabela pedidos
+CREATE TABLE IF NOT EXISTS pedidos (
+    id SERIAL PRIMARY KEY,
+    cliente_nome VARCHAR(100) NOT NULL,
+    cliente_endereco TEXT NOT NULL,
+    total DECIMAL(10, 2) NOT NULL,
+    status VARCHAR(50) DEFAULT 'Pendente',
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Criando tabela itens_pedido
+CREATE TABLE IF NOT EXISTS itens_pedido (
+    id SERIAL PRIMARY KEY,
+    pedido_id INTEGER REFERENCES pedidos(id) ON DELETE CASCADE,
+    produto_id INTEGER REFERENCES produtos(id) ON DELETE RESTRICT,
+    quantidade INTEGER NOT NULL,
+    preco_unitario DECIMAL(10, 2) NOT NULL
+);
+
 -- Limpa dados antigos, apaga tudo ao reiniciar o container
-TRUNCATE TABLE produtos RESTART IDENTITY;
-TRUNCATE TABLE users RESTART IDENTITY;
+TRUNCATE TABLE itens_pedido RESTART IDENTITY CASCADE;
+TRUNCATE TABLE pedidos RESTART IDENTITY CASCADE;
+TRUNCATE TABLE produtos RESTART IDENTITY CASCADE;
+TRUNCATE TABLE users RESTART IDENTITY CASCADE;
 
 -- Inserindo o Admin
 INSERT INTO users (nickname, senha) VALUES

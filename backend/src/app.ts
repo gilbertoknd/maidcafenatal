@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import productRoutes from "./routes/ProductRoutes.js";
+import orderRoutes from "./routes/OrderRoutes.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import path from "path";
 import authRoutes from "./routes/AuthRoutes.js";
@@ -18,5 +19,6 @@ app.use(errorHandler);
 //Rotas
 app.use("/api/auth", authRoutes);
 app.use("/api/produtos", productRoutes);
+app.use("/api/orders", orderRoutes);
 
 export default app;
