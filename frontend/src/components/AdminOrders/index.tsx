@@ -16,27 +16,33 @@ export function AdminOrders() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchOrders = async () => {
+  const fetchOrders = async (showLoading = true) => {
     try {
-      setIsLoading(true);
+      if (showLoading) setIsLoading(true);
       const data = await getOrders();
       setOrders(data);
     } catch (error) {
-      console.error(error);
-      alert("Erro ao buscar pedidos");
+      console.error("Erro ao buscar pedidos em background:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchOrders();
+    fetchOrders(true); // Primeira carga com loading
+
+    // Polling a cada 10 segundos
+    const interval = setInterval(() => {
+      fetchOrders(false); // Atualiza em background sem dar loading na tela
+    }, 10000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const handleStatusChange = async (id: number, newStatus: string) => {
     try {
       await updateOrderStatus(id, newStatus);
-      fetchOrders(); // Recarrega a lista
+      fetchOrders(false); // Recarrega a lista em background
     } catch (error) {
       console.error(error);
       alert("Erro ao atualizar status do pedido.");

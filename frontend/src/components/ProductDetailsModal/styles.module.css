@@ -94,7 +94,7 @@
 
 .tagBadge {
   background-color: #f1f5f9;
-  color: #475569;
+  color: #475569 !important;
   padding: 4px 10px;
   border-radius: 12px;
   font-size: 0.75rem;
@@ -107,19 +107,19 @@
 /* Algumas cores pré-definidas baseadas em palavras chaves podem ser adicionadas */
 .tagBadge[data-tag*="vegano" i], .tagBadge[data-tag*="vegan" i] {
   background-color: #dcfce7;
-  color: #166534;
+  color: #166534 !important;
   border-color: #bbf7d0;
 }
 
 .tagBadge[data-tag*="lactose" i] {
   background-color: #e0f2fe;
-  color: #075985;
+  color: #075985 !important;
   border-color: #bae6fd;
 }
 
 .tagBadge[data-tag*="glúten" i], .tagBadge[data-tag*="gluten" i] {
   background-color: #fef08a;
-  color: #854d0e;
+  color: #854d0e !important;
   border-color: #fde047;
 }
 

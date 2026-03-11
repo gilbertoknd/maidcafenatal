@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useCart } from "../../hooks/useCart";
 import { formatCurrency } from "../../utils/formatters";
-import { X, Plus, Minus, Trash2 } from "lucide-react";
+import { X, Plus, Minus, Trash2, MapPin } from "lucide-react";
 import styles from "./styles.module.css";
-import { sendOrderToBackend } from "../../services/api"; //we'll create this!
+import { sendOrderToBackend } from "../../services/api"; 
+import { AddressMapModal } from "../AddressMapModal";
+import type { AddressData } from "../AddressMapModal";
 
 export function CartModal() {
   const {
@@ -16,10 +18,14 @@ export function CartModal() {
     clearCart,
   } = useCart();
   const [nome, setNome] = useState("");
-  const [endereco, setEndereco] = useState("");
   const [formaPagamento, setFormaPagamento] = useState("Pix");
   const [observacao, setObservacao] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Map States
+  const [isMapOpen, setIsMapOpen] = useState(false);
+  const [addressData, setAddressData] = useState<AddressData | null>(null);
+  const [numeroComplemento, setNumeroComplemento] = useState("");
 
   if (!isCartOpen) return null;
 
@@ -30,8 +36,8 @@ export function CartModal() {
 
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!nome.trim() || !endereco.trim()) {
-      alert("Por favor, preencha nome e endereço.");
+    if (!nome.trim() || !addressData) {
+      alert("Por favor, preencha nome e selecione o endereço no mapa.");
       return;
     }
 
@@ -47,7 +53,7 @@ export function CartModal() {
       //Sends order to backend
       const response = await sendOrderToBackend({
         cliente_nome: nome,
-        cliente_endereco: endereco,
+        cliente_endereco: addressData.address + (numeroComplemento ? `, ${numeroComplemento}` : ""),
         itens,
       });
 
@@ -58,11 +64,16 @@ export function CartModal() {
       });
       message += `\n*Total:* ${formatCurrency(response.total)}\n`;
       message += `\n*Nome:* ${nome}`;
-      message += `\n*Endereço:* ${endereco}`;
+      message += `\n*Endereço:* ${addressData.address}`;
+      if (numeroComplemento.trim()) {
+        message += `\n*Número/Complemento:* ${numeroComplemento.trim()}`;
+      }
       message += `\n*Pagamento:* ${formaPagamento}`;
       if (observacao.trim()) {
         message += `\n*Observação:* ${observacao.trim()}`;
       }
+      
+      message += `\n\n📍 *Localização GPS:* https://www.google.com/maps?q=${addressData.lat},${addressData.lng}`;
 
       const whatsappNumber = "5584998350914"; //Replace with real number or env variable
       const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
@@ -82,8 +93,9 @@ export function CartModal() {
   const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
 
   return (
-    <div className={styles.overlay} onClick={handleOverlayClick}>
-      <div className={styles.modal}>
+    <>
+      <div className={styles.overlay} onClick={handleOverlayClick}>
+        <div className={styles.modal}>
         <div className={styles.header}>
           <h2>Seu Carrinho</h2>
           <button
@@ -160,14 +172,52 @@ export function CartModal() {
                   required
                   className={styles.input}
                 />
-                <input
-                  type="text"
-                  placeholder="Seu Endereço de Entrega"
-                  value={endereco}
-                  onChange={(e) => setEndereco(e.target.value)}
-                  required
-                  className={styles.input}
-                />
+                
+                {/* Custom Map Input Section */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                   {!addressData ? (
+                      <button 
+                        type="button" 
+                        onClick={() => setIsMapOpen(true)}
+                        className={styles.finishBtn}
+                        style={{ backgroundColor: '#0284c7', display: 'flex', gap: '8px' }}
+                      >
+                         <MapPin size={20} /> Selecionar Endereço no Mapa
+                      </button>
+                   ) : (
+                      <>
+                         <div style={{ 
+                            padding: '12px', 
+                            backgroundColor: '#f1f5f9', 
+                            borderRadius: '8px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '8px'
+                         }}>
+                            <div>
+                               <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Endereço selecionado:</span>
+                               <p style={{ margin: 0, fontWeight: 600, fontSize: '0.9rem' }}>{addressData.address}</p>
+                            </div>
+                            <button 
+                               type="button"
+                               onClick={() => setIsMapOpen(true)}
+                               style={{ backgroundColor: 'transparent', color: '#0284c7', border: 'none', textAlign: 'left', padding: 0, cursor: 'pointer', fontWeight: 600, fontSize: '0.8rem' }}
+                            >
+                               Alterar endereço no mapa
+                            </button>
+                         </div>
+                         <input
+                            type="text"
+                            placeholder="Número da Casa e Complemento (Apto, Bloco...)"
+                            value={numeroComplemento}
+                            onChange={(e) => setNumeroComplemento(e.target.value)}
+                            required
+                            className={styles.input}
+                         />
+                      </>
+                   )}
+                </div>
+
                 <select
                   value={formaPagamento}
                   onChange={(e) => setFormaPagamento(e.target.value)}
@@ -198,5 +248,15 @@ export function CartModal() {
         )}
       </div>
     </div>
+    
+      <AddressMapModal 
+        isOpen={isMapOpen} 
+        onClose={() => setIsMapOpen(false)} 
+        onConfirm={(data) => {
+            setAddressData(data);
+            setIsMapOpen(false);
+        }}
+      />
+    </>
   );
 }

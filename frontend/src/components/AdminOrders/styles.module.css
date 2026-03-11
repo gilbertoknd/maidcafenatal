@@ -96,6 +96,7 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   background: white;
+  color: var(--color-text);
   font-size: 1rem;
   cursor: pointer;
   outline: none;
