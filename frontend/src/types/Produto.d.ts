@@ -8,4 +8,5 @@ export interface Produto {
   promocao: boolean;
   curtidas: number;
   tags?: string;
+  is_loja: boolean;
 }

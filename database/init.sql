@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS produtos (
     promocao BOOLEAN DEFAULT FALSE,  
     curtidas INTEGER DEFAULT 0,
     tags VARCHAR(255),
+    is_loja BOOLEAN DEFAULT FALSE,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -188,3 +189,6 @@ INSERT INTO produtos (nome, descricao, preco, categoria, imagem_url, promocao) V
 ('Estrela Radiante + Batatinha + Ringo Chan!', 'Escolha com carinho...o seu combo!', 36.90, 'Black Friday', '/images/Estrela_radiante_batatinha_ringo_chan.webp', TRUE),
 ('2 Cupcakes', 'Ninho com Mousse de Matcha, Chocolate dobrado, Geleia de morango...', 22.90, 'Black Friday', '/images/2_cupcakes.webp', TRUE),
 ('3 Docinhos ブリガデイロ', '3 vezes dos docinhos classicos da Mew Mew no preço exclusivo!', 9.90, 'Black Friday', '/images/3_docinhos.webp', TRUE);
+
+-- Definir is_loja para os produtos da loja
+UPDATE produtos SET is_loja = TRUE WHERE categoria = 'Nossa Lojinha';

@@ -25,16 +25,19 @@ export default function AdminDashboard() {
   const { saveProduct, deleteProduct } = useAdminProducts();
 
   //3. Hook de Produtos (Lista/Filtros) - Fonte da verdade visual
-  const productData = useProducts();
-  const { refresh } = productData;
+  const menuProductData = useProducts("menu");
+  const storeProductData = useProducts("store");
 
   const [produtoEditando, setProdutoEditando] = useState<Produto | null>(null);
-  const [activeTab, setActiveTab] = useState<"produtos" | "pedidos" | "banners">("pedidos");
+  const [activeTab, setActiveTab] = useState<"produtos" | "loja" | "pedidos" | "banners">("pedidos");
 
   //Busca produtos ao logar
   useEffect(() => {
-    if (isAuthenticated) refresh();
-  }, [isAuthenticated, refresh]);
+    if (isAuthenticated) {
+      menuProductData.refresh();
+      storeProductData.refresh();
+    }
+  }, [isAuthenticated, menuProductData.refresh, storeProductData.refresh]);
 
   //Função wrapper para salvar
   async function handleSaveWrapper(formData: FormData) {
@@ -45,7 +48,8 @@ export default function AdminDashboard() {
     );
     if (success) {
       setProdutoEditando(null); //Fecha o form se deu certo
-      refresh(); //Atualiza a lista
+      menuProductData.refresh(); //Atualiza a lista menu
+      storeProductData.refresh(); //Atualiza a lista loja
     }
   }
 
@@ -53,7 +57,10 @@ export default function AdminDashboard() {
   async function handleDeleteWrapper(id: number) {
     if (!window.confirm("Tem certeza que deseja excluir este produto?")) return;
     const success = await deleteProduct(id);
-    if (success) refresh();
+    if (success) {
+      menuProductData.refresh();
+      storeProductData.refresh();
+    }
   }
 
   //--- RENDERIZAÇÃO ---
@@ -86,7 +93,13 @@ export default function AdminDashboard() {
             className={`${styles.tabBtn} ${activeTab === "produtos" ? styles.activeTab : ""}`}
             onClick={() => setActiveTab("produtos")}
           >
-            Produtos
+            Cardápio
+          </button>
+          <button 
+            className={`${styles.tabBtn} ${activeTab === "loja" ? styles.activeTab : ""}`}
+            onClick={() => setActiveTab("loja")}
+          >
+            Loja
           </button>
         </nav>
         
@@ -105,8 +118,22 @@ export default function AdminDashboard() {
         )}
         {activeTab === "produtos" && (
           <MenuContent
-            {...productData}
-            title="Painel Administrativo 🍰"
+            {...menuProductData}
+            title="Painel Administrativo - Cardápio 🍰"
+            onEdit={setProdutoEditando}
+            onDelete={handleDeleteWrapper}
+          >
+            <ProductForm
+              produtoEditando={produtoEditando}
+              onSave={handleSaveWrapper}
+              onCancel={() => setProdutoEditando(null)}
+            />
+          </MenuContent>
+        )}
+        {activeTab === "loja" && (
+          <MenuContent
+            {...storeProductData}
+            title="Painel Administrativo - Loja Online 🛍️"
             onEdit={setProdutoEditando}
             onDelete={handleDeleteWrapper}
           >

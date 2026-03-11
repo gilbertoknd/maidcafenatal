@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { getProducts } from "../services/api";
 import type { Produto } from "../types/Produto";
 
-export function useProducts() {
+export function useProducts(type: "menu" | "store" | "admin" = "menu") {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -11,8 +11,13 @@ export function useProducts() {
   const refresh = useCallback(() => {
     setLoading(true);
     getProducts()
-      .then((data) => {
-        setProdutos(data);
+      .then((data: Produto[]) => {
+        const filteredData = data.filter((item) => {
+          if (type === "menu") return !item.is_loja;
+          if (type === "store") return item.is_loja;
+          return true; // admin shows all
+        });
+        setProdutos(filteredData);
         setLoading(false);
       })
       .catch((err) => {

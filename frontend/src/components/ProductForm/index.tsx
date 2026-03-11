@@ -22,6 +22,7 @@ export function ProductForm({
   const [categoria, setCategoria] = useState("");
   const [tags, setTags] = useState("");
   const [promocao, setPromocao] = useState(false);
+  const [isLoja, setIsLoja] = useState(false);
   const [imagem, setImagem] = useState<File | null>(null);
 
   function resetForm() {
@@ -31,6 +32,7 @@ export function ProductForm({
     setCategoria("");
     setTags("");
     setPromocao(false);
+    setIsLoja(false);
     setImagem(null);
     const fileInput = document.getElementById("fileInput") as HTMLInputElement;
     if (fileInput) fileInput.value = "";
@@ -46,6 +48,7 @@ export function ProductForm({
       setCategoria(produtoEditando.categoria);
       setTags(produtoEditando.tags || "");
       setPromocao(produtoEditando.promocao);
+      setIsLoja(produtoEditando.is_loja);
     } else {
       resetForm();
     }
@@ -60,6 +63,7 @@ export function ProductForm({
     formData.append("categoria", categoria);
     formData.append("tags", tags);
     formData.append("promocao", String(promocao));
+    formData.append("isLoja", String(isLoja));
     if (imagem) formData.append("image", imagem);
 
     await onSave(formData);
@@ -132,16 +136,29 @@ export function ProductForm({
           }}
         />
 
-        <div className={styles.checkboxContainer}>
-          <input
-            type="checkbox"
-            id="promocao"
-            checked={promocao}
-            onChange={(e) => setPromocao(e.target.checked)}
-          />
-          <label htmlFor="promocao" className={styles.checkboxLabel}>
-            Promoção
-          </label>
+        <div className={styles.checkboxContainer} style={{ display: 'flex', gap: '1rem' }}>
+          <div>
+            <input
+              type="checkbox"
+              id="promocao"
+              checked={promocao}
+              onChange={(e) => setPromocao(e.target.checked)}
+            />
+            <label htmlFor="promocao" className={styles.checkboxLabel} style={{ marginLeft: '4px' }}>
+              Promoção
+            </label>
+          </div>
+          <div>
+            <input
+              type="checkbox"
+              id="isLoja"
+              checked={isLoja}
+              onChange={(e) => setIsLoja(e.target.checked)}
+            />
+            <label htmlFor="isLoja" className={styles.checkboxLabel} style={{ marginLeft: '4px' }}>
+              Item de Lojinha
+            </label>
+          </div>
         </div>
 
         <textarea
