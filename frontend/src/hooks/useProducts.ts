@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { getProducts } from "../services/api";
+import { getProducts, getAdminProducts } from "../services/api";
 import type { Produto } from "../types/Produto";
 
-export function useProducts(type: "menu" | "store" | "admin" = "menu") {
+export function useProducts(type: "menu" | "store" | "admin" = "menu", isAdminScope: boolean = false) {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -10,7 +10,9 @@ export function useProducts(type: "menu" | "store" | "admin" = "menu") {
 
   const refresh = useCallback(() => {
     setLoading(true);
-    getProducts()
+    const fetchFn = isAdminScope ? getAdminProducts : getProducts;
+    
+    fetchFn()
       .then((data: Produto[]) => {
         const filteredData = data.filter((item) => {
           if (type === "menu") return !item.is_loja;

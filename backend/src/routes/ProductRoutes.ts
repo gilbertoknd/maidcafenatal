@@ -13,6 +13,7 @@ router.patch("/:id/like", ProductController.addLike);
 router.patch("/:id/unlike", ProductController.removeLike);
 
 //Rotas privadas
+router.get("/admin", authMiddleware, ProductController.getAllAdmin);
 router.post(
   "/",
   authMiddleware,

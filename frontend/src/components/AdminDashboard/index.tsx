@@ -25,8 +25,8 @@ export default function AdminDashboard() {
   const { saveProduct, deleteProduct } = useAdminProducts();
 
   //3. Hook de Produtos (Lista/Filtros) - Fonte da verdade visual
-  const menuProductData = useProducts("menu");
-  const storeProductData = useProducts("store");
+  const menuProductData = useProducts("menu", true);
+  const storeProductData = useProducts("store", true);
 
   const [produtoEditando, setProdutoEditando] = useState<Produto | null>(null);
   const [activeTab, setActiveTab] = useState<"produtos" | "loja" | "pedidos" | "banners">("pedidos");
@@ -127,6 +127,7 @@ export default function AdminDashboard() {
               produtoEditando={produtoEditando}
               onSave={handleSaveWrapper}
               onCancel={() => setProdutoEditando(null)}
+              isStoreTab={false}
             />
           </MenuContent>
         )}
@@ -141,6 +142,7 @@ export default function AdminDashboard() {
               produtoEditando={produtoEditando}
               onSave={handleSaveWrapper}
               onCancel={() => setProdutoEditando(null)}
+              isStoreTab={true}
             />
           </MenuContent>
         )}

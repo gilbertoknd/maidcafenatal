@@ -5,6 +5,7 @@ import fs from "fs";
 import {
   createProduct,
   listAllProducts,
+  listAllProductsAdmin,
   listNewProducts,
   listPopularProducts,
   updateProduct,
@@ -18,6 +19,15 @@ export class ProductController {
   static async getAll(req: Request, res: Response, next: NextFunction) {
     try {
       const products = await listAllProducts();
+      res.json(products);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getAllAdmin(req: Request, res: Response, next: NextFunction) {
+    try {
+      const products = await listAllProductsAdmin();
       res.json(products);
     } catch (error) {
       next(error);
@@ -52,6 +62,7 @@ export class ProductController {
       const preco = parseFloat(req.body.preco);
       const promocao = req.body.promocao === "true";
       const isLoja = req.body.isLoja === "true";
+      const visivel = req.body.visivel === "false" ? false : true;
 
       if (!nome || isNaN(preco) || !categoria) {
         //Se o Multer já salvou a imagem, apagar
@@ -75,6 +86,7 @@ export class ProductController {
         promocao,
         tags: tags || null,
         isLoja,
+        visivel,
       });
 
       res.status(201).json(product);
@@ -102,6 +114,7 @@ export class ProductController {
       const preco = req.body.preco ? parseFloat(req.body.preco) : undefined;
       const promocao = req.body.promocao === "true";
       const isLoja = req.body.isLoja === "true";
+      const visivel = req.body.visivel !== undefined ? req.body.visivel === "true" : undefined;
 
       const product = await updateProduct(id, {
         nome,
@@ -112,6 +125,7 @@ export class ProductController {
         promocao,
         tags: tags || null,
         isLoja,
+        visivel,
       });
 
       if (!product) {

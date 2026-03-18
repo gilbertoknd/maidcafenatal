@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
 import type { Produto } from "../../types/Produto";
 import { formatCurrency } from "../../utils/formatters";
@@ -25,6 +26,7 @@ export function ProductCard({
   onDelete,
 }: ProductCardProps) {
   const { addToCart } = useCart();
+  const navigate = useNavigate();
   //INICIALIZAÇÃO INTELIGENTE
   const [hasLiked, setHasLiked] = useState(() => {
     if (isAdmin) return false; //Admin não precisa disso
@@ -76,7 +78,13 @@ export function ProductCard({
     <article className={styles.card}>
       <div 
         className={styles.imageContainer} 
-        onClick={() => setIsModalOpen(true)}
+        onClick={() => {
+          if (!isAdmin && data.is_loja) {
+            navigate(`/loja/produto/${data.id}`);
+          } else {
+            setIsModalOpen(true);
+          }
+        }}
         style={{ cursor: "pointer" }}
       >
         <img
@@ -87,6 +95,11 @@ export function ProductCard({
             e.currentTarget.src = "https://placehold.co/400?text=Sem+Foto";
           }}
         />
+        {!data.visivel && isAdmin && (
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.6)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 10, borderRadius: "12px" }}>
+            <span style={{ backgroundColor: "#ef4444", color: "#fff", padding: "6px 12px", borderRadius: "4px", fontWeight: "bold", fontSize: "1.1rem" }}>OCULTO</span>
+          </div>
+        )}
         {!isAdmin && (
           <button
             onClick={(e) => {
@@ -115,7 +128,13 @@ export function ProductCard({
       <div className={styles.content}>
         <h3 
           className={styles.title} 
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            if (!isAdmin && data.is_loja) {
+              navigate(`/loja/produto/${data.id}`);
+            } else {
+              setIsModalOpen(true);
+            }
+          }}
           style={{ cursor: "pointer" }}
         >
           {data.nome}
@@ -123,7 +142,14 @@ export function ProductCard({
         <p className={styles.description}>{data.descricao}</p>
 
         <div className={styles.footer}>
-          <span className={styles.price}>{precoFormatado}</span>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            {data.preco_original && (
+              <span style={{ textDecoration: 'line-through', color: '#9ca3af', fontSize: '0.85rem' }}>
+                {formatCurrency(data.preco_original)}
+              </span>
+            )}
+            <span className={styles.price}>{precoFormatado}</span>
+          </div>
 
           {/* CONDICIONAL MÁGICA AQUI 👇 */}
           {isAdmin ? (

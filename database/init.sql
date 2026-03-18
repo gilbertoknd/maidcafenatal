@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS produtos (
     curtidas INTEGER DEFAULT 0,
     tags VARCHAR(255),
     is_loja BOOLEAN DEFAULT FALSE,
+    preco_original DECIMAL(10, 2),
+    visivel BOOLEAN DEFAULT TRUE,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -192,3 +194,6 @@ INSERT INTO produtos (nome, descricao, preco, categoria, imagem_url, promocao) V
 
 -- Definir is_loja para os produtos da loja
 UPDATE produtos SET is_loja = TRUE WHERE categoria = 'Nossa Lojinha';
+
+-- Promoção do Pocky
+UPDATE produtos SET preco = 16.99, preco_original = 20.90, promocao = TRUE WHERE nome = 'Pocky';

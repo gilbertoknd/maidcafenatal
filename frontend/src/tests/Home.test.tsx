@@ -3,18 +3,19 @@ import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { Home } from "../pages/Home";
 import { BrowserRouter } from "react-router-dom";
+import { CartProvider } from "../hooks/useCart";
 
 // Mock child components to avoid complex rendering and API calls
 vi.mock("../components/Banner", () => ({
   VideoBanner: () => <div data-testid="video-banner">Video Banner</div>,
 }));
-vi.mock("../components/PopularSection/PopularSection", () => ({
+vi.mock("../components/PopularSection", () => ({
   PopularSection: () => <div>Popular Section</div>,
 }));
-vi.mock("../components/NewArrivalsSection/NewArrivalsSection", () => ({
+vi.mock("../components/NewArrivalsSection", () => ({
   NewArrivalsSection: () => <div>New Arrivals Section</div>,
 }));
-vi.mock("../components/AboutSection/AboutSection", () => ({
+vi.mock("../components/AboutSection", () => ({
   AboutSection: () => <div>About Section</div>,
 }));
 
@@ -22,7 +23,9 @@ describe("Home Page", () => {
   it("should render all sections", () => {
     render(
       <BrowserRouter>
-        <Home />
+        <CartProvider>
+          <Home />
+        </CartProvider>
       </BrowserRouter>
     );
 

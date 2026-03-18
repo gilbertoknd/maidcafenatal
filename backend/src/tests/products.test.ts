@@ -29,7 +29,7 @@ describe("Product Routes", () => {
     expect(response.status).toBe(200);
     expect(response.body).toEqual(mockProducts);
     expect(pool.query).toHaveBeenCalledWith(
-      "SELECT * FROM produtos ORDER BY id ASC"
+      "SELECT * FROM produtos WHERE visivel = true ORDER BY id ASC"
     );
   });
 
@@ -43,7 +43,7 @@ describe("Product Routes", () => {
     expect(response.status).toBe(200);
     expect(response.body).toEqual(mockProducts);
     expect(pool.query).toHaveBeenCalledWith(
-      "SELECT * FROM produtos ORDER BY curtidas DESC LIMIT 6"
+      "SELECT * FROM produtos WHERE visivel = true ORDER BY curtidas DESC LIMIT 6"
     );
   });
   it("should return new products", async () => {
@@ -58,7 +58,7 @@ describe("Product Routes", () => {
     expect(response.status).toBe(200);
     expect(response.body).toEqual(mockProducts);
     expect(pool.query).toHaveBeenCalledWith(
-      "SELECT * FROM produtos ORDER BY criado_em DESC LIMIT 3"
+      "SELECT * FROM produtos WHERE visivel = true ORDER BY criado_em DESC LIMIT 3"
     );
   });
 

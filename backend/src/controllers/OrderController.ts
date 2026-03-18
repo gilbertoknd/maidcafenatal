@@ -1,18 +1,14 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { OrderModel } from "../models/OrderModel.js";
+import { AppError } from "../errors/AppError.js";
 
 export const OrderController = {
-  createOrder: async (req: Request, res: Response): Promise<void> => {
+  createOrder: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { cliente_nome, cliente_endereco, itens } = req.body;
 
       if (!cliente_nome || !cliente_endereco || !itens || !itens.length) {
-        res
-          .status(400)
-          .json({
-            error: "Dados inválidos: Nome, endereço e itens são obrigatórios.",
-          });
-        return;
+        throw new AppError("Dados inválidos: Nome, endereço e itens são obrigatórios.", 400);
       }
 
       //Criar pedido usando os preços do banco de dados
@@ -27,56 +23,48 @@ export const OrderController = {
         orderId: order.id,
         total: order.total,
       });
-    } catch (error: any) {
-      console.error("Erro ao criar pedido:", error);
-      res.status(500).json({
-        error: error.message || "Erro interno ao processar o pedido",
-      });
+    } catch (error) {
+      next(error);
     }
   },
 
-  getAllOrders: async (req: Request, res: Response): Promise<void> => {
+  getAllOrders: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const orders = await OrderModel.getAllOrders();
       res.status(200).json(orders);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Erro ao buscar pedidos" });
+      next(error);
     }
   },
 
-  getOrderDetails: async (req: Request, res: Response): Promise<void> => {
+  getOrderDetails: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params;
       const items = await OrderModel.getOrderItems(Number(id));
       res.status(200).json(items);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Erro ao buscar detalhes do pedido" });
+      next(error);
     }
   },
 
-  updateOrderStatus: async (req: Request, res: Response): Promise<void> => {
+  updateOrderStatus: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params;
       const { status } = req.body;
 
       if (!status) {
-        res.status(400).json({ error: "Status é obrigatório" });
-        return;
+        throw new AppError("Status é obrigatório", 400);
       }
 
       const updatedOrder = await OrderModel.updateStatus(Number(id), status);
 
       if (!updatedOrder) {
-        res.status(404).json({ error: "Pedido não encontrado" });
-        return;
+        throw new AppError("Pedido não encontrado", 404);
       }
 
       res.status(200).json(updatedOrder);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Erro ao atualizar status" });
+      next(error);
     }
   },
 };

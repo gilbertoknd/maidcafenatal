@@ -10,6 +10,19 @@ export async function getProducts(): Promise<Produto[]> {
   return response.json();
 }
 
+export async function getAdminProducts(): Promise<Produto[]> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${BASE_URL}/api/produtos/admin`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  if (!response.ok) {
+    throw new Error("Erro ao buscar catálogo completo");
+  }
+  return response.json();
+}
+
 export async function getPopularProducts(): Promise<Produto[]> {
   const response = await fetch(`${BASE_URL}/api/produtos/populares`);
   if (!response.ok) {

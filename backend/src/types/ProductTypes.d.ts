@@ -7,4 +7,5 @@ export interface ProductData {
   promocao: boolean;
   tags?: string; //Opcional para suportar itens sem tags
   isLoja?: boolean;
+  precoOriginal?: number;
 }

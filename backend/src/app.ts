@@ -14,11 +14,13 @@ const publicPath = path.join(process.cwd(), "public", "images");
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/images", express.static(publicPath));
-app.use(errorHandler);
 
 //Rotas
 app.use("/api/auth", authRoutes);
 app.use("/api/produtos", productRoutes);
 app.use("/api/orders", orderRoutes);
+
+// Error Handler deve SEMPRE vir DEPOIS das rotas
+app.use(errorHandler);
 
 export default app;

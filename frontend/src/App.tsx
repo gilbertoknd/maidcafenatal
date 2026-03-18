@@ -3,6 +3,7 @@ import { MenuPage } from "./pages/Menu";
 import { Home } from "./pages/Home";
 import { Admin } from "./pages/Admin";
 import { OnlineStore } from "./pages/OnlineStore";
+import { StoreProductDetails } from "./pages/StoreProductDetails";
 import "./App.css";
 
 import { ScrollToTop } from "./components/ScrollToTop";
@@ -20,6 +21,7 @@ function App() {
         <Route path="/home" element={<Navigate to="/" replace />} />
         <Route path="/cardapio" element={<MenuPage />} />
         <Route path="/loja" element={<OnlineStore />} />
+        <Route path="/loja/produto/:id" element={<StoreProductDetails />} />
         <Route path="/admin" element={<Admin />} />
       </Routes>
     </BrowserRouter>

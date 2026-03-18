@@ -7,6 +7,12 @@ import { ProductData } from "../types/ProductTypes.js";
 
 //Products gets
 export async function listAllProducts() {
+  const result = await pool.query("SELECT * FROM produtos WHERE visivel = true ORDER BY id ASC");
+
+  return result.rows;
+}
+
+export async function listAllProductsAdmin() {
   const result = await pool.query("SELECT * FROM produtos ORDER BY id ASC");
 
   return result.rows;
@@ -14,7 +20,7 @@ export async function listAllProducts() {
 
 export async function listPopularProducts() {
   const result = await pool.query(
-    "SELECT * FROM produtos ORDER BY curtidas DESC LIMIT 6",
+    "SELECT * FROM produtos WHERE visivel = true ORDER BY curtidas DESC LIMIT 6",
   );
 
   return result.rows;
@@ -22,49 +28,17 @@ export async function listPopularProducts() {
 
 export async function listNewProducts() {
   const result = await pool.query(
-    "SELECT * FROM produtos ORDER BY criado_em DESC LIMIT 3",
+    "SELECT * FROM produtos WHERE visivel = true ORDER BY criado_em DESC LIMIT 3",
   );
 
   return result.rows;
 }
 
 //Products posts
-export async function createProduct(data: ProductData) {
+export async function createProduct(data: ProductData & { visivel?: boolean }) {
   const query = `
-    INSERT INTO produtos (nome, descricao, preco, categoria, imagem_url, promocao, tags, is_loja)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-    RETURNING *;
-  `;
-
-  const values = [
-    data.nome,
-    data.descricao,
-    data.preco,
-    data.categoria,
-    data.imagemUrl, // Mapeia para a coluna 'imagem_url' do banco
-    data.promocao,
-    data.tags || null,
-    data.isLoja || false,
-  ];
-
-  const result = await pool.query(query, values);
-
-  return result.rows[0];
-}
-
-//Product update
-export async function updateProduct(id: string, data: ProductData) {
-  const query = `
-    UPDATE produtos
-    SET nome = $1,
-        descricao = $2,
-        preco = $3,
-        categoria = $4,
-        imagem_url = COALESCE($5, imagem_url),
-        promocao = $6,
-        tags = $7,
-        is_loja = $8
-    WHERE id = $9
+    INSERT INTO produtos (nome, descricao, preco, categoria, imagem_url, promocao, tags, is_loja, preco_original, visivel)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
     RETURNING *;
   `;
 
@@ -77,6 +51,44 @@ export async function updateProduct(id: string, data: ProductData) {
     data.promocao,
     data.tags || null,
     data.isLoja || false,
+    data.precoOriginal || null,
+    data.visivel ?? true,
+  ];
+
+  const result = await pool.query(query, values);
+
+  return result.rows[0];
+}
+
+//Product update
+export async function updateProduct(id: string, data: ProductData & { visivel?: boolean }) {
+  const query = `
+    UPDATE produtos
+    SET nome = $1,
+        descricao = $2,
+        preco = $3,
+        categoria = $4,
+        imagem_url = COALESCE($5, imagem_url),
+        promocao = $6,
+        tags = $7,
+        is_loja = $8,
+        preco_original = $9,
+        visivel = COALESCE($10, visivel)
+    WHERE id = $11
+    RETURNING *;
+  `;
+
+  const values = [
+    data.nome,
+    data.descricao,
+    data.preco,
+    data.categoria,
+    data.imagemUrl,
+    data.promocao,
+    data.tags || null,
+    data.isLoja || false,
+    data.precoOriginal || null,
+    data.visivel,
     id,
   ];
 

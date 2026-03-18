@@ -4,6 +4,7 @@ import { describe, it, expect, vi } from "vitest";
 import { MenuPage } from "../pages/Menu";
 import { BrowserRouter } from "react-router-dom";
 import type { Produto } from "../types/Produto";
+import { CartProvider } from "../hooks/useCart";
 
 // Mock API
 const mockProducts: Produto[] = [
@@ -16,6 +17,7 @@ const mockProducts: Produto[] = [
     categoria: "Doces",
     promocao: true,
     curtidas: 5,
+    is_loja: false,
   },
   {
     id: 2,
@@ -26,6 +28,7 @@ const mockProducts: Produto[] = [
     categoria: "Bebidas",
     promocao: false,
     curtidas: 10,
+    is_loja: false,
   },
 ];
 
@@ -43,7 +46,9 @@ describe("MenuPage", () => {
   it("should render loading state initially", () => {
     render(
       <BrowserRouter>
-        <MenuPage />
+        <CartProvider>
+          <MenuPage />
+        </CartProvider>
       </BrowserRouter>,
     );
     expect(screen.getByText("Carregando refeições...")).toBeInTheDocument();
@@ -52,7 +57,9 @@ describe("MenuPage", () => {
   it("should render products after loading", async () => {
     render(
       <BrowserRouter>
-        <MenuPage />
+        <CartProvider>
+          <MenuPage />
+        </CartProvider>
       </BrowserRouter>,
     );
 
@@ -65,7 +72,9 @@ describe("MenuPage", () => {
   it("should filter products by search", async () => {
     render(
       <BrowserRouter>
-        <MenuPage />
+        <CartProvider>
+          <MenuPage />
+        </CartProvider>
       </BrowserRouter>,
     );
 
@@ -83,7 +92,9 @@ describe("MenuPage", () => {
   it("should filter products by category", async () => {
     render(
       <BrowserRouter>
-        <MenuPage />
+        <CartProvider>
+          <MenuPage />
+        </CartProvider>
       </BrowserRouter>,
     );
 

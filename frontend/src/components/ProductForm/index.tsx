@@ -8,31 +8,35 @@ interface ProductFormProps {
   produtoEditando: Produto | null;
   onCancel: () => void;
   onSave: (formData: FormData) => Promise<void>;
+  isStoreTab: boolean;
 }
 
 export function ProductForm({
   produtoEditando,
   onCancel,
   onSave,
+  isStoreTab,
 }: ProductFormProps) {
   //Estados locais (agora só existem aqui dentro!)
   const [nome, setNome] = useState("");
   const [descricao, setDescricao] = useState("");
   const [preco, setPreco] = useState("");
+  const [precoOriginal, setPrecoOriginal] = useState("");
   const [categoria, setCategoria] = useState("");
   const [tags, setTags] = useState("");
   const [promocao, setPromocao] = useState(false);
-  const [isLoja, setIsLoja] = useState(false);
+  const [visivel, setVisivel] = useState(true);
   const [imagem, setImagem] = useState<File | null>(null);
 
   function resetForm() {
     setNome("");
     setDescricao("");
     setPreco("");
+    setPrecoOriginal("");
     setCategoria("");
     setTags("");
     setPromocao(false);
-    setIsLoja(false);
+    setVisivel(true);
     setImagem(null);
     const fileInput = document.getElementById("fileInput") as HTMLInputElement;
     if (fileInput) fileInput.value = "";
@@ -45,10 +49,11 @@ export function ProductForm({
       setNome(produtoEditando.nome);
       setDescricao(produtoEditando.descricao || "");
       setPreco(String(produtoEditando.preco));
+      setPrecoOriginal(produtoEditando.preco_original ? String(produtoEditando.preco_original) : "");
       setCategoria(produtoEditando.categoria);
       setTags(produtoEditando.tags || "");
       setPromocao(produtoEditando.promocao);
-      setIsLoja(produtoEditando.is_loja);
+      setVisivel(produtoEditando.visivel ?? true);
     } else {
       resetForm();
     }
@@ -60,10 +65,12 @@ export function ProductForm({
     formData.append("nome", nome);
     formData.append("descricao", descricao);
     formData.append("preco", preco);
+    if (precoOriginal) formData.append("precoOriginal", precoOriginal);
     formData.append("categoria", categoria);
     formData.append("tags", tags);
     formData.append("promocao", String(promocao));
-    formData.append("isLoja", String(isLoja));
+    formData.append("visivel", String(visivel));
+    formData.append("isLoja", String(isStoreTab));
     if (imagem) formData.append("image", imagem);
 
     await onSave(formData);
@@ -135,6 +142,19 @@ export function ProductForm({
             WebkitTextFillColor: "#000000",
           }}
         />
+        <input
+          placeholder="Preço Original (Opcional, ex: 25.90)"
+          type="number"
+          step="0.01"
+          value={precoOriginal}
+          onChange={(e) => setPrecoOriginal(e.target.value)}
+          className={`${styles.input} local-input`}
+          style={{
+            color: "#000000",
+            backgroundColor: "#ffffff",
+            WebkitTextFillColor: "#000000",
+          }}
+        />
 
         <div className={styles.checkboxContainer} style={{ display: 'flex', gap: '1rem' }}>
           <div>
@@ -151,12 +171,12 @@ export function ProductForm({
           <div>
             <input
               type="checkbox"
-              id="isLoja"
-              checked={isLoja}
-              onChange={(e) => setIsLoja(e.target.checked)}
+              id="visivel"
+              checked={visivel}
+              onChange={(e) => setVisivel(e.target.checked)}
             />
-            <label htmlFor="isLoja" className={styles.checkboxLabel} style={{ marginLeft: '4px' }}>
-              Item de Lojinha
+            <label htmlFor="visivel" className={styles.checkboxLabel} style={{ marginLeft: '4px' }}>
+              Exibir ao Público
             </label>
           </div>
         </div>

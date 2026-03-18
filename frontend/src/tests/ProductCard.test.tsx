@@ -3,6 +3,8 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { ProductCard } from "../components/ProductCard";
 import type { Produto } from "../types/Produto";
+import { CartProvider } from "../hooks/useCart";
+import { BrowserRouter } from "react-router-dom";
 
 // Mock the API and formatters
 vi.mock("../services/api", () => ({
@@ -22,11 +24,18 @@ const mockProduct: Produto = {
   categoria: "Doces",
   promocao: false,
   curtidas: 10,
+  is_loja: false,
 };
 
 describe("ProductCard Component", () => {
   it("should render product details", () => {
-    render(<ProductCard data={mockProduct} />);
+    render(
+      <BrowserRouter>
+        <CartProvider>
+          <ProductCard data={mockProduct} />
+        </CartProvider>
+      </BrowserRouter>
+    );
 
     expect(screen.getByText("Bolo de Morango")).toBeInTheDocument();
     expect(
@@ -37,14 +46,26 @@ describe("ProductCard Component", () => {
   });
 
   it("should display like count", () => {
-    render(<ProductCard data={mockProduct} />);
+    render(
+      <BrowserRouter>
+        <CartProvider>
+          <ProductCard data={mockProduct} />
+        </CartProvider>
+      </BrowserRouter>
+    );
     expect(screen.getByText("10")).toBeInTheDocument();
   });
 
   it("should toggle like on click", () => {
-    render(<ProductCard data={mockProduct} />);
+    render(
+      <BrowserRouter>
+        <CartProvider>
+          <ProductCard data={mockProduct} />
+        </CartProvider>
+      </BrowserRouter>
+    );
 
-    const likeButton = screen.getByRole("button");
+    const likeButton = screen.getByTitle("Curtir");
     fireEvent.click(likeButton);
 
     // Optimistic update should happen immediately
