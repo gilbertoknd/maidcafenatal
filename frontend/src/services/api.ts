@@ -1,4 +1,5 @@
 import type { Produto } from "../types/Produto";
+import type { Event, EventFormData } from "../types/Event";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -99,3 +100,62 @@ export const updateOrderStatus = async (id: number, status: string) => {
   if (!response.ok) throw new Error("Erro ao atualizar status");
   return response.json();
 };
+
+// --- EVENTOS ---
+export async function getEvents(): Promise<Event[]> {
+  const response = await fetch(`${BASE_URL}/api/eventos`);
+  if (!response.ok) throw new Error("Erro ao buscar eventos");
+  return response.json();
+}
+
+export async function getAdminEvents(): Promise<Event[]> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${BASE_URL}/api/eventos/admin`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  if (!response.ok) throw new Error("Erro ao buscar eventos no modo admin");
+  return response.json();
+}
+
+export async function createEvent(data: FormData): Promise<Event> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${BASE_URL}/api/eventos`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: data
+  });
+  if (!response.ok) throw new Error("Erro ao criar evento");
+  return response.json();
+}
+
+export async function updateEvent(id: number, data: FormData): Promise<Event> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${BASE_URL}/api/eventos/${id}`, {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${token}` },
+    body: data
+  });
+  if (!response.ok) throw new Error("Erro ao atualizar evento");
+  return response.json();
+}
+
+export async function deleteEvent(id: number): Promise<{ message: string; evento: Event }> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${BASE_URL}/api/eventos/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  if (!response.ok) throw new Error("Erro ao deletar evento");
+  return response.json();
+}
+
+export async function toggleEventVisibility(id: number): Promise<Event> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${BASE_URL}/api/eventos/${id}/visibility`, {
+    method: "PATCH",
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  if (!response.ok) throw new Error("Erro ao alterar visibilidade do evento");
+  return response.json();
+}
+

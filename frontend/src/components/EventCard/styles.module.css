@@ -1,0 +1,155 @@
+.card {
+  background: var(--color-white);
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  transition: transform 0.2s;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 200px;
+  border-left: 5px solid var(--color-primary);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.imageContainer {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  border-bottom: 2px solid var(--color-primary-light);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.card:hover .image {
+  transform: scale(1.05);
+}
+
+.hidden {
+  opacity: 0.7;
+  border-left: 5px solid #ef4444;
+}
+
+.content {
+  padding: 1.5rem 1rem 1rem 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.dateBadge {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  border-radius: 8px;
+  padding: 4px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.day {
+  font-size: 1.2rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.month {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.title {
+  font-size: 1.2rem;
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
+  padding-right: 50px; /* space for badge */
+}
+
+.description {
+  color: #666;
+  font-size: 0.9rem;
+  flex: 1;
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: auto;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
+
+.infoRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #555;
+  font-size: 0.85rem;
+}
+
+.adminFooter {
+  background-color: #f7f9fc;
+  border-top: 1px solid #e2e8f0;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.statusBadge {
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.adminActions {
+  display: flex;
+  gap: 6px;
+}
+
+.adminBtn {
+  border: none;
+  padding: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
+  background-color: #cbd5e1;
+  color: #334155;
+  transition: background 0.2s;
+}
+
+.editBtn {
+  background-color: #3b82f6;
+  color: white;
+}
+.editBtn:hover { background-color: #2563eb; }
+
+.deleteBtn {
+  background-color: #ef4444;
+  color: white;
+}
+.deleteBtn:hover { background-color: #dc2626; }

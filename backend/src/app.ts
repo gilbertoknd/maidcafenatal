@@ -5,6 +5,7 @@ import orderRoutes from "./routes/OrderRoutes.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import path from "path";
 import authRoutes from "./routes/AuthRoutes.js";
+import eventRoutes from "./routes/EventRoutes.js";
 import corsOptions from "./config/corsOptions.js";
 
 const app = express();
@@ -19,6 +20,7 @@ app.use("/images", express.static(publicPath));
 app.use("/api/auth", authRoutes);
 app.use("/api/produtos", productRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/eventos", eventRoutes);
 
 // Error Handler deve SEMPRE vir DEPOIS das rotas
 app.use(errorHandler);

@@ -40,6 +40,14 @@ export function Header() {
           >
             Loja Online
           </Link>
+          <Link
+            to="/eventos"
+            className={`${styles.navLink} ${
+              location.pathname === "/eventos" ? styles.active : ""
+            }`}
+          >
+            Eventos
+          </Link>
         </nav>
       </div>
     </header>

@@ -15,6 +15,18 @@ CREATE TABLE IF NOT EXISTS produtos (
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Criando tabela eventos
+CREATE TABLE IF NOT EXISTS eventos (
+    id SERIAL PRIMARY KEY,
+    titulo VARCHAR(100) NOT NULL,
+    descricao TEXT,
+    data TIMESTAMP NOT NULL,
+    local VARCHAR(255) NOT NULL,
+    imagem_url VARCHAR(255),
+    visivel BOOLEAN DEFAULT TRUE,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Criando tabela users
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
@@ -46,6 +58,7 @@ CREATE TABLE IF NOT EXISTS itens_pedido (
 TRUNCATE TABLE itens_pedido RESTART IDENTITY CASCADE;
 TRUNCATE TABLE pedidos RESTART IDENTITY CASCADE;
 TRUNCATE TABLE produtos RESTART IDENTITY CASCADE;
+TRUNCATE TABLE eventos RESTART IDENTITY CASCADE;
 TRUNCATE TABLE users RESTART IDENTITY CASCADE;
 
 -- Inserindo o Admin
@@ -197,3 +210,10 @@ UPDATE produtos SET is_loja = TRUE WHERE categoria = 'Nossa Lojinha';
 
 -- Promoção do Pocky
 UPDATE produtos SET preco = 16.99, preco_original = 20.90, promocao = TRUE WHERE nome = 'Pocky';
+
+-- Eventos Iniciais
+INSERT INTO eventos (titulo, descricao, data, local, imagem_url) VALUES
+('Festival de Cosplay', 'Traga seu melhor cosplay e venha curtir!', '2026-03-24 14:00:00', 'Mew Mew Café', '/images/J-kit.webp'),
+('Desfile de Pets', 'Um dia especial para trazer seu companheiro!', '2026-03-27 15:00:00', 'Mew Mew Café', '/images/2_corn_dogs.webp'),
+('Escape Room', 'Desafios imersivos num Escape Room temático.', '2026-04-04 18:00:00', 'Mew Mew Café', '/images/Colecao_doce_natal_mew_mew.webp'),
+('Ateliê dos Artistas', 'Oficina de artes e encontros criativos.', '2026-04-19 14:00:00', 'Mew Mew Café', '/images/Trio_de_baozi.webp');

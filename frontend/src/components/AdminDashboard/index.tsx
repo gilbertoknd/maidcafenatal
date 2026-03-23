@@ -6,6 +6,7 @@ import LoginModal from "../LoginModal";
 import { ProductForm } from "../ProductForm/index";
 import { MenuContent } from "../MenuContent";
 import { AdminOrders } from "../AdminOrders";
+import { AdminEvents } from "../AdminEvents";
 //Hooks e Types
 import { useAuth } from "../../hooks/useAuth";
 import { useAdminProducts } from "../../hooks/useAdminProducts";
@@ -29,7 +30,7 @@ export default function AdminDashboard() {
   const storeProductData = useProducts("store", true);
 
   const [produtoEditando, setProdutoEditando] = useState<Produto | null>(null);
-  const [activeTab, setActiveTab] = useState<"produtos" | "loja" | "pedidos" | "banners">("pedidos");
+  const [activeTab, setActiveTab] = useState<"produtos" | "loja" | "pedidos" | "eventos" | "banners">("pedidos");
 
   //Busca produtos ao logar
   useEffect(() => {
@@ -101,6 +102,12 @@ export default function AdminDashboard() {
           >
             Loja
           </button>
+          <button 
+            className={`${styles.tabBtn} ${activeTab === "eventos" ? styles.activeTab : ""}`}
+            onClick={() => setActiveTab("eventos")}
+          >
+            Eventos
+          </button>
         </nav>
         
         <button onClick={logout} className={styles.logoutBtn}>
@@ -146,6 +153,7 @@ export default function AdminDashboard() {
             />
           </MenuContent>
         )}
+        {activeTab === "eventos" && <AdminEvents />}
       </main>
     </div>
   );
