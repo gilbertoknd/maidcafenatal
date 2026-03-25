@@ -38,9 +38,9 @@
 }
 
 .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .empty {
@@ -48,22 +48,27 @@
   font-style: italic;
 }
 
-/* Responsive side by side on desktop */
 @media (min-width: 900px) {
   .contentSection {
     flex-direction: row;
     align-items: flex-start;
   }
-  
+
   .calendarWrapper {
-    flex: 1;
-    min-width: 350px;
+    width: 280px;
+    flex-shrink: 0;
     position: sticky;
     top: 100px;
   }
 
   .eventsList {
-    flex: 2;
+    flex: 1;
+  }
+  
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 15px;
   }
 }
 
@@ -76,8 +81,10 @@
   color: white;
   border: none;
   border-radius: 20px;
-  transition: background-color 0.2s, transform 0.2s;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition:
+    background-color 0.2s,
+    transform 0.2s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   vertical-align: middle;
 }
 

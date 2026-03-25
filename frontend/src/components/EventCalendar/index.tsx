@@ -1,15 +1,22 @@
 import styles from "./styles.module.css";
 import type { Event } from "../../types/Event";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface EventCalendarProps {
   events: Event[];
   selectedDate?: Date | null;
   onDateSelect?: (date: Date) => void;
+  onMonthChange?: (date: Date) => void;
 }
 
-export function EventCalendar({ events, selectedDate, onDateSelect }: EventCalendarProps) {
+export function EventCalendar({ events, selectedDate, onDateSelect, onMonthChange }: EventCalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
+
+  useEffect(() => {
+    if (selectedDate) {
+      setCurrentDate(selectedDate);
+    }
+  }, [selectedDate]);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -19,12 +26,28 @@ export function EventCalendar({ events, selectedDate, onDateSelect }: EventCalen
 
   const monthName = currentDate.toLocaleString("pt-BR", { month: "long" });
 
+  const autoSelectDayForMonth = (date: Date) => {
+    if (!onDateSelect) return;
+    const now = new Date();
+    if (date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) {
+      onDateSelect(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
+    } else {
+      onDateSelect(new Date(date.getFullYear(), date.getMonth(), 1));
+    }
+  };
+
   const prevMonth = () => {
-    setCurrentDate(new Date(year, month - 1, 1));
+    const newDate = new Date(year, month - 1, 1);
+    setCurrentDate(newDate);
+    if (onMonthChange) onMonthChange(newDate);
+    autoSelectDayForMonth(newDate);
   };
 
   const nextMonth = () => {
-    setCurrentDate(new Date(year, month + 1, 1));
+    const newDate = new Date(year, month + 1, 1);
+    setCurrentDate(newDate);
+    if (onMonthChange) onMonthChange(newDate);
+    autoSelectDayForMonth(newDate);
   };
 
   // Create grid
@@ -50,11 +73,11 @@ export function EventCalendar({ events, selectedDate, onDateSelect }: EventCalen
         key={day} 
         className={`${styles.day} ${isToday ? styles.today : ""} ${isSelected ? styles.selectedDay : ""} ${dayEvents.length > 0 ? styles.hasEvent : ""}`}
         onClick={() => {
-          if (onDateSelect && dayEvents.length > 0) {
+          if (onDateSelect) {
             onDateSelect(new Date(year, month, day));
           }
         }}
-        title={dayEvents.length > 0 ? "Clique para filtrar" : ""}
+        title="Clique para ver eventos a partir desta data"
       >
         <span className={styles.dayNumber}>{day}</span>
         {dayEvents.length > 0 && (
