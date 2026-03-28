@@ -1,6 +1,6 @@
 import styles from "./styles.module.css";
 import type { Evento } from "../../types/Evento";
-import { Edit, Trash2, MapPin, CalendarDays, ExternalLink } from "lucide-react";
+import { Edit, Trash2, MapPin, CalendarDays } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface EventoCardProps {
@@ -34,7 +34,10 @@ export function EventoCard({
     : evento.descricao;
 
   return (
-    <article className={`${styles.card} ${!evento.visivel ? styles.hidden : ""}`}>
+    <article 
+      className={`${styles.card} ${!evento.visivel ? styles.hidden : ""} ${styles.clickable}`}
+      onClick={() => navigate(`/eventos/${evento.id}`)}
+    >
       <div className={styles.imageWrapper}>
         {evento.imagem_url ? (
           <img 
@@ -68,37 +71,45 @@ export function EventoCard({
           </div>
         </div>
 
-        <div className={styles.bottomSection}>
-          {isAdmin && (
+        {isAdmin && (
+          <div className={styles.bottomSection}>
             <div className={styles.adminActions}>
               <span className={styles.statusBadge} style={{ backgroundColor: evento.visivel ? "#10b981" : "#ef4444" }}>
                  {evento.visivel ? "Visível" : "Oculto"}
               </span>
               <button 
-                onClick={() => onToggleVisibility && onToggleVisibility(evento.id)} 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleVisibility && onToggleVisibility(evento.id);
+                }} 
                 className={styles.adminBtn} 
                 title={evento.visivel ? "Ocultar" : "Mostrar"}
               >
                 {evento.visivel ? "Ocultar" : "Mostrar"}
               </button>
-              <button onClick={() => onEdit && onEdit(evento)} className={`${styles.adminBtn} ${styles.editBtn}`} title="Editar">
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit && onEdit(evento);
+                }} 
+                className={`${styles.adminBtn} ${styles.editBtn}`} 
+                title="Editar"
+              >
                 <Edit size={15} />
               </button>
-              <button onClick={() => onDelete && onDelete(evento.id)} className={`${styles.adminBtn} ${styles.deleteBtn}`} title="Excluir">
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete && onDelete(evento.id);
+                }} 
+                className={`${styles.adminBtn} ${styles.deleteBtn}`} 
+                title="Excluir"
+              >
                 <Trash2 size={15} />
               </button>
             </div>
-          )}
-          
-          {!isAdmin && (
-            <button 
-              className={styles.detailsBtn}
-              onClick={() => navigate(`/eventos/${evento.id}`)}
-            >
-              Ver Detalhes <ExternalLink size={16} />
-            </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </article>
   );

@@ -17,6 +17,14 @@
   transform: translateX(4px);
 }
 
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  background-color: var(--color-gray-50);
+}
+
 .hidden {
   opacity: var(--opacity-60);
   border-left: 5px solid var(--color-error);

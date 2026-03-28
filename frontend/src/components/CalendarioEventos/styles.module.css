@@ -73,7 +73,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  transition: background 0.2s;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.day:hover {
+  background-color: var(--color-gray-50);
+  border-color: var(--color-primary-light);
+  transform: translateY(-2px);
 }
 
 .dayNumber {
@@ -97,15 +104,6 @@
 }
 .selectedDay .dot {
   background-color: var(--color-white);
-}
-
-.hasEvent {
-  cursor: pointer;
-}
-
-.hasEvent:hover {
-  background-color: var(--color-gray-50);
-  border-color: var(--color-gray-300);
 }
 
 .eventDots {

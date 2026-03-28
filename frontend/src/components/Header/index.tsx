@@ -15,8 +15,8 @@ export function Header() {
     <header className={styles.header}>
       <div className={styles.container}>
         {/* Lado Esquerdo: Logo Box e Nome */}
-        <div 
-          className={styles.brandContainer} 
+        <div
+          className={styles.brandContainer}
           onClick={() => {
             navigate("/");
             closeMenu();
@@ -40,7 +40,7 @@ export function Header() {
               location.pathname === "/" ? styles.active : ""
             }`}
           >
-            Home
+            Início
           </Link>
           <Link
             to="/cardapio"

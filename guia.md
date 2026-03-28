@@ -578,6 +578,12 @@ pnpm lint        # eslint
 **Causa:** Uso de `multi_replace_file_content` ou `replace_file_content` onde o bloco `TargetContent` inadvertidamente exclui linhas no topo do arquivo ao tentar "limpar" ou "organizar" imports.
 **Solução:** Sempre verificar se todos os imports necessários (especialmente `styles.module.css`) permanecem no arquivo após a edição. Se o componente falhar ao renderizar com erro de "styles is not defined", verifique o topo do arquivo.
 
+**Hurdle:** Ambiguidade na busca de textos de categorias em testes (`TestingLibraryElementError: Found multiple elements with the text: X`).
+
+**Causa:** O componente `CategoryFilter` cria botões com o nome da categoria, e o agrupamento no cardápio cria subtítulos (`h2`) com o mesmo nome. O `getByText` falha por encontrar ambos no DOM.
+
+**Solução:** Sempre utilizar seletores mais específicos como `getByRole('heading', { name: 'Categoria', level: 2 })` para capturar especificamente o subtítulo do agrupamento, ou `getByRole('button', { name: 'Categoria' })` para interagir com os filtros.
+
 ---
 
 ## 14. Testes

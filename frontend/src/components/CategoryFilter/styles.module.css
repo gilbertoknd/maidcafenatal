@@ -85,3 +85,25 @@
   /* Estilo específico para o botão "Todos" se quiser diferenciar ou destacar que é fixo */
   font-weight: 700;
 }
+
+/* Ajustes para Mobile */
+@media (max-width: 600px) {
+  .wrapper {
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .scrollArea {
+    gap: 0.5rem;
+    padding: 0.3rem 0;
+  }
+
+  .button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem; /* Um pouco menor para caber mais */
+  }
+
+  .fixedArea {
+    padding-left: 0.3rem;
+  }
+}

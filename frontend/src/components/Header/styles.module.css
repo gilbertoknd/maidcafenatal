@@ -49,7 +49,7 @@
 /*Navegacao*/
 .nav {
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
   align-items: center;
 }
 
@@ -57,19 +57,53 @@
   text-decoration: none;
   color: var(--color-text);
   font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-lg);
-  transition: color 0.2s;
+  font-size: var(--font-size-md);
+  transition: all 0.3s ease;
   font-family: var(--font-main);
+  position: relative;
+  padding: 0.5rem 0.2rem;
+  display: flex;
+  align-items: center;
+}
+
+/* Divisor entre itens (Desktop) */
+.navLink:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: -0.75rem;
+  height: 15px;
+  width: 1px;
+  background-color: var(--color-primary-border);
+}
+
+.navLink::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--color-primary);
+  transition: width 0.3s ease;
+  border-radius: 2px;
 }
 
 .navLink:hover {
   color: var(--color-primary);
 }
 
-/*Link Ativo*/
+.navLink:hover::before {
+  width: 100%;
+}
+
+/* Link Ativo */
 .active {
   color: var(--color-primary);
-  font-weight: var(--font-weight-extrabold);
+  font-weight: var(--font-weight-bold);
+}
+
+.active::before {
+  width: 100%;
 }
 
 .mobileMenuBtn {
@@ -90,16 +124,44 @@
     position: fixed;
     top: 0;
     right: -100%;
-    width: 80%;
+    width: 75%;
     height: 100vh;
-    background-color: var(--color-tertiary-background);
+    background-color: var(--color-background);
     flex-direction: column;
     justify-content: flex-start;
-    padding-top: 5rem;
-    gap: 2rem;
+    padding: 6rem 1.5rem 2rem;
+    gap: 0.8rem;
     transition: var(--transition-default);
     box-shadow: -5px 0 15px var(--color-shadow);
     z-index: 1000;
+  }
+
+  .navLink::after,
+  .navLink::before {
+    display: none;
+  }
+
+  .navLink {
+    font-size: var(--font-size-lg);
+    width: 100%;
+    justify-content: center;
+    padding: 1rem;
+    color: var(--color-text);
+    border-radius: var(--radius-button);
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+  }
+
+  .navLink:first-of-type {
+    border-top: none;
+  }
+
+  .active {
+    background-color: var(--color-white);
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary-border);
+    box-shadow: var(--shadow-sm);
+    font-weight: var(--font-weight-bold);
   }
 
   .navOpen {

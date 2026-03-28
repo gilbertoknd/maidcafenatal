@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { ProdutoCard } from "../ProdutoCard";
 import { Search } from "../Search";
 import { CategoryFilter } from "../CategoryFilter";
@@ -38,6 +39,17 @@ export function MenuContent({
   headerActions,
   children,
 }: MenuContentProps) {
+  const groupedProducts = useMemo(() => {
+    return filteredProducts.reduce((acc, produto) => {
+      const cat = produto.categoria || "Outros";
+      if (!acc[cat]) acc[cat] = [];
+      acc[cat].push(produto);
+      return acc;
+    }, {} as Record<string, Produto[]>);
+  }, [filteredProducts]);
+
+  const categoriesToShow = useMemo(() => Object.keys(groupedProducts), [groupedProducts]);
+
   return (
     <div className={styles.container}>
       <header className={styles.header} id="cardapio">
@@ -71,22 +83,29 @@ export function MenuContent({
       {loading ? (
         <p className={styles.loading}>Carregando refeições...</p>
       ) : (
-        <main className={styles.grid}>
-          {filteredProducts.length > 0 ? (
-            filteredProducts.map((produto) => (
-              <ProdutoCard
-                key={produto.id}
-                produto={produto}
-                isAdmin={isAdmin || !!onEdit}
-                onEdit={onEdit}
-                onDelete={onDelete}
-                onToggleVisibility={onToggleVisibility}
-              />
+        <div className={styles.menuGroups}>
+          {categoriesToShow.length > 0 ? (
+            categoriesToShow.map((cat) => (
+              <section key={cat} className={styles.categorySection}>
+                <h2 className={styles.categorySubtitle}>{cat}</h2>
+                <main className={styles.grid}>
+                  {groupedProducts[cat].map((produto) => (
+                    <ProdutoCard
+                      key={produto.id}
+                      produto={produto}
+                      isAdmin={isAdmin || !!onEdit}
+                      onEdit={onEdit}
+                      onDelete={onDelete}
+                      onToggleVisibility={onToggleVisibility}
+                    />
+                  ))}
+                </main>
+              </section>
             ))
           ) : (
             <p className={styles.loading}>Nenhuma delícia encontrada :(</p>
           )}
-        </main>
+        </div>
       )}
     </div>
   );
