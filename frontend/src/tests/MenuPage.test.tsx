@@ -33,8 +33,8 @@ const mockProducts: Produto[] = [
 ];
 
 vi.mock("../services/api", () => ({
-  getProducts: vi.fn(() => Promise.resolve(mockProducts)),
-  toggleProductLike: vi.fn(),
+  getProdutos: vi.fn(() => Promise.resolve(mockProducts)),
+  alternarCurtidaProduto: vi.fn(),
 }));
 
 // Mock child components that are not focus of this test to simplify

@@ -1,4 +1,4 @@
-import { ProductCard } from "../ProductCard";
+import { ProdutoCard } from "../ProdutoCard";
 import { Search } from "../Search";
 import { CategoryFilter } from "../CategoryFilter";
 import styles from "./styles.module.css";
@@ -72,9 +72,9 @@ export function MenuContent({
         <main className={styles.grid}>
           {filteredProducts.length > 0 ? (
             filteredProducts.map((produto) => (
-              <ProductCard
+              <ProdutoCard
                 key={produto.id}
-                data={produto}
+                produto={produto}
                 isAdmin={isAdmin || !!onEdit}
                 onEdit={onEdit}
                 onDelete={onDelete}

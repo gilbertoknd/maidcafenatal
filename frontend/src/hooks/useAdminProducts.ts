@@ -7,12 +7,12 @@ export function useAdminProducts() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [loading, setLoading] = useState(false);
 
-  //Pegamos a função de verificar token do seu hook useAuth
+  // Pegamos a função de verificar token do seu hook useAuth
   const { verifyTokenExpiration } = useAuth();
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
-  //READ (Buscar)
-  const fetchProducts = useCallback(async () => {
+  // READ (Buscar)
+  const buscarProdutos = useCallback(async () => {
     setLoading(true);
     try {
       const res = await fetch(`${apiUrl}/api/produtos`);
@@ -28,7 +28,7 @@ export function useAdminProducts() {
   }, [apiUrl]);
 
   // CREATE / UPDATE
-  const saveProduct = async (
+  const salvarProduto = async (
     formData: FormData,
     isUpdate: boolean,
     id?: number,
@@ -49,11 +49,11 @@ export function useAdminProducts() {
         body: formData,
       });
 
-      //Verifica segurança
+      // Verifica segurança
       if (!verifyTokenExpiration(res)) return false;
 
       if (res.ok) {
-        await fetchProducts(); // Recarrega a lista
+        await buscarProdutos(); // Recarrega a lista
         return true; // Sucesso
       } else {
         const err = await res.json();
@@ -65,8 +65,8 @@ export function useAdminProducts() {
     }
   };
 
-  //DELETE
-  const deleteProduct = async (id: number) => {
+  // DELETE
+  const deletarProduto = async (id: number) => {
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(`${apiUrl}/api/produtos/${id}`, {
@@ -77,7 +77,7 @@ export function useAdminProducts() {
       if (!verifyTokenExpiration(res)) return false;
 
       if (res.ok) {
-        //Otimização: Remove da lista localmente sem precisar buscar no banco de novo
+        // Otimização: Remove da lista localmente sem precisar buscar no banco de novo
         setProdutos((prev) => prev.filter((p) => p.id !== id));
         return true;
       } else {
@@ -93,8 +93,8 @@ export function useAdminProducts() {
   return {
     produtos,
     loading,
-    fetchProducts,
-    saveProduct,
-    deleteProduct,
+    buscarProdutos,
+    salvarProduto,
+    deletarProduto,
   };
 }

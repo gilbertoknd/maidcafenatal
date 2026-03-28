@@ -1,9 +1,9 @@
 import type { Produto } from "../types/Produto";
-import type { Event, EventFormData } from "../types/Event";
+import type { Evento } from "../types/Evento";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
-export async function getProducts(): Promise<Produto[]> {
+export async function getProdutos(): Promise<Produto[]> {
   const response = await fetch(`${BASE_URL}/api/produtos`);
   if (!response.ok) {
     throw new Error("Erro ao buscar produtos");
@@ -11,7 +11,7 @@ export async function getProducts(): Promise<Produto[]> {
   return response.json();
 }
 
-export async function getAdminProducts(): Promise<Produto[]> {
+export async function getProdutosAdmin(): Promise<Produto[]> {
   const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/produtos/admin`, {
     headers: {
@@ -24,7 +24,7 @@ export async function getAdminProducts(): Promise<Produto[]> {
   return response.json();
 }
 
-export async function getPopularProducts(): Promise<Produto[]> {
+export async function getProdutosPopulares(): Promise<Produto[]> {
   const response = await fetch(`${BASE_URL}/api/produtos/populares`);
   if (!response.ok) {
     throw new Error("Erro ao buscar produtos populares");
@@ -32,7 +32,7 @@ export async function getPopularProducts(): Promise<Produto[]> {
   return response.json();
 }
 
-export async function getNewProducts(): Promise<Produto[]> {
+export async function getProdutosNovidades(): Promise<Produto[]> {
   const response = await fetch(`${BASE_URL}/api/produtos/novidades`);
   if (!response.ok) {
     throw new Error("Erro ao buscar novidades");
@@ -40,7 +40,7 @@ export async function getNewProducts(): Promise<Produto[]> {
   return response.json();
 }
 
-export async function toggleProductLike(
+export async function alternarCurtidaProduto(
   id: number,
   action: "like" | "unlike",
 ): Promise<number> {
@@ -56,12 +56,12 @@ export async function toggleProductLike(
   return data.novas_curtidas;
 }
 
-export async function sendOrderToBackend(orderData: {
+export async function enviarPedido(orderData: {
   cliente_nome: string;
   cliente_endereco: string;
   itens: { produto_id: number; quantidade: number }[];
-}): Promise<{ message: string; orderId: number; total: number }> {
-  const response = await fetch(`${BASE_URL}/api/orders`, {
+}): Promise<{ message: string; pedido_id: number; total: number }> {
+  const response = await fetch(`${BASE_URL}/api/pedidos`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -76,9 +76,9 @@ export async function sendOrderToBackend(orderData: {
   return response.json();
 }
 
-export const getOrders = async () => {
+export const getPedidos = async () => {
   const token = localStorage.getItem("token");
-  const response = await fetch(`${BASE_URL}/api/orders`, {
+  const response = await fetch(`${BASE_URL}/api/pedidos`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -87,9 +87,9 @@ export const getOrders = async () => {
   return response.json();
 };
 
-export const updateOrderStatus = async (id: number, status: string) => {
+export const atualizarStatusPedido = async (id: number, status: string) => {
   const token = localStorage.getItem("token");
-  const response = await fetch(`${BASE_URL}/api/orders/${id}/status`, {
+  const response = await fetch(`${BASE_URL}/api/pedidos/${id}/status`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -102,13 +102,13 @@ export const updateOrderStatus = async (id: number, status: string) => {
 };
 
 // --- EVENTOS ---
-export async function getEvents(): Promise<Event[]> {
+export async function getEventos(): Promise<Evento[]> {
   const response = await fetch(`${BASE_URL}/api/eventos`);
   if (!response.ok) throw new Error("Erro ao buscar eventos");
   return response.json();
 }
 
-export async function getAdminEvents(): Promise<Event[]> {
+export async function getEventosAdmin(): Promise<Evento[]> {
   const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/eventos/admin`, {
     headers: { Authorization: `Bearer ${token}` }
@@ -117,7 +117,7 @@ export async function getAdminEvents(): Promise<Event[]> {
   return response.json();
 }
 
-export async function createEvent(data: FormData): Promise<Event> {
+export async function criarEvento(data: FormData): Promise<Evento> {
   const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/eventos`, {
     method: "POST",
@@ -128,7 +128,7 @@ export async function createEvent(data: FormData): Promise<Event> {
   return response.json();
 }
 
-export async function updateEvent(id: number, data: FormData): Promise<Event> {
+export async function atualizarEvento(id: number, data: FormData): Promise<Evento> {
   const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/eventos/${id}`, {
     method: "PUT",
@@ -139,7 +139,7 @@ export async function updateEvent(id: number, data: FormData): Promise<Event> {
   return response.json();
 }
 
-export async function deleteEvent(id: number): Promise<{ message: string; evento: Event }> {
+export async function deletarEvento(id: number): Promise<{ message: string; evento: Evento }> {
   const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/eventos/${id}`, {
     method: "DELETE",
@@ -149,7 +149,7 @@ export async function deleteEvent(id: number): Promise<{ message: string; evento
   return response.json();
 }
 
-export async function toggleEventVisibility(id: number): Promise<Event> {
+export async function alterarVisibilidadeEvento(id: number): Promise<Evento> {
   const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/eventos/${id}/visibility`, {
     method: "PATCH",

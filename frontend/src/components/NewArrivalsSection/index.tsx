@@ -1,22 +1,22 @@
 import { useEffect, useState } from "react";
-import { ProductCard } from "../ProductCard";
-import { getNewProducts } from "../../services/api";
+import { ProdutoCard } from "../ProdutoCard";
+import { getProdutosNovidades } from "../../services/api";
 import type { Produto } from "../../types/Produto";
 import styles from "./styles.module.css";
 
 export function NewArrivalsSection() {
-  const [products, setProducts] = useState<Produto[]>([]);
+  const [produtos, setProdutos] = useState<Produto[]>([]);
 
   useEffect(() => {
-    getNewProducts().then(setProducts).catch(console.error);
+    getProdutosNovidades().then(setProdutos).catch(console.error);
   }, []);
 
   return (
     <section className={styles.section}>
       <h2 className={styles.sectionTitle}>Novidades no Cardápio</h2>
       <div className={styles.grid}>
-        {products.map((product) => (
-          <ProductCard key={product.id} data={product} />
+        {produtos.map((produto) => (
+          <ProdutoCard key={produto.id} produto={produto} />
         ))}
       </div>
     </section>

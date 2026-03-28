@@ -3,18 +3,18 @@ import { LogOut } from "lucide-react";
 import styles from "./style.module.css";
 //Componentes
 import LoginModal from "../LoginModal";
-import { ProductForm } from "../ProductForm/index";
+import { ProdutoForm } from "../ProdutoForm/index";
 import { MenuContent } from "../MenuContent";
-import { AdminOrders } from "../AdminOrders";
-import { AdminEvents } from "../AdminEvents";
-//Hooks e Types
+import { AdminPedidos } from "../AdminPedidos";
+import { AdminEventos } from "../AdminEventos";
+// Hooks e Types
 import { useAuth } from "../../hooks/useAuth";
 import { useAdminProducts } from "../../hooks/useAdminProducts";
 import { useProducts } from "../../hooks/useProducts";
 import type { Produto } from "../../types/Produto";
 
 export default function AdminDashboard() {
-  //1. Hook de Auth
+  // 1. Hook de Auth
   const {
     isAuthenticated,
     setIsAuthenticated,
@@ -22,17 +22,17 @@ export default function AdminDashboard() {
     logout,
   } = useAuth();
 
-  //2. Hook de Produtos (Manuseia o CRUD)
-  const { saveProduct, deleteProduct } = useAdminProducts();
+  // 2. Hook de Produtos (Manuseia o CRUD)
+  const { salvarProduto, deletarProduto } = useAdminProducts();
 
-  //3. Hook de Produtos (Lista/Filtros) - Fonte da verdade visual
+  // 3. Hook de Produtos (Lista/Filtros) - Fonte da verdade visual
   const menuProductData = useProducts("menu", true);
   const storeProductData = useProducts("store", true);
 
   const [produtoEditando, setProdutoEditando] = useState<Produto | null>(null);
   const [activeTab, setActiveTab] = useState<"produtos" | "loja" | "pedidos" | "eventos" | "banners">("pedidos");
 
-  //Busca produtos ao logar
+  // Busca produtos ao logar
   useEffect(() => {
     if (isAuthenticated) {
       menuProductData.refresh();
@@ -40,31 +40,31 @@ export default function AdminDashboard() {
     }
   }, [isAuthenticated, menuProductData.refresh, storeProductData.refresh]);
 
-  //Função wrapper para salvar
+  // Função wrapper para salvar
   async function handleSaveWrapper(formData: FormData) {
-    const success = await saveProduct(
+    const success = await salvarProduto(
       formData,
       !!produtoEditando,
       produtoEditando?.id,
     );
     if (success) {
-      setProdutoEditando(null); //Fecha o form se deu certo
-      menuProductData.refresh(); //Atualiza a lista menu
-      storeProductData.refresh(); //Atualiza a lista loja
+      setProdutoEditando(null); // Fecha o form se deu certo
+      menuProductData.refresh(); // Atualiza a lista menu
+      storeProductData.refresh(); // Atualiza a lista loja
     }
   }
 
-  //Função wrapper para deletar
+  // Função wrapper para deletar
   async function handleDeleteWrapper(id: number) {
     if (!window.confirm("Tem certeza que deseja excluir este produto?")) return;
-    const success = await deleteProduct(id);
+    const success = await deletarProduto(id);
     if (success) {
       menuProductData.refresh();
       storeProductData.refresh();
     }
   }
 
-  //--- RENDERIZAÇÃO ---
+  // --- RENDERIZAÇÃO ---
 
   if (authLoading) return <div className={styles.loading}>Verificando... 🔐</div>;
 
@@ -116,7 +116,7 @@ export default function AdminDashboard() {
       </header>
 
       <main className={styles.adminMain}>
-        {activeTab === "pedidos" && <AdminOrders />}
+        {activeTab === "pedidos" && <AdminPedidos />}
         {activeTab === "banners" && (
           <div style={{ textAlign: "center", padding: "3rem", color: "var(--color-text)" }}>
             <h2>Em Breve</h2>
@@ -130,7 +130,7 @@ export default function AdminDashboard() {
             onEdit={setProdutoEditando}
             onDelete={handleDeleteWrapper}
           >
-            <ProductForm
+            <ProdutoForm
               produtoEditando={produtoEditando}
               onSave={handleSaveWrapper}
               onCancel={() => setProdutoEditando(null)}
@@ -145,7 +145,7 @@ export default function AdminDashboard() {
             onEdit={setProdutoEditando}
             onDelete={handleDeleteWrapper}
           >
-            <ProductForm
+            <ProdutoForm
               produtoEditando={produtoEditando}
               onSave={handleSaveWrapper}
               onCancel={() => setProdutoEditando(null)}
@@ -153,7 +153,7 @@ export default function AdminDashboard() {
             />
           </MenuContent>
         )}
-        {activeTab === "eventos" && <AdminEvents />}
+        {activeTab === "eventos" && <AdminEventos />}
       </main>
     </div>
   );

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { getProducts, getAdminProducts } from "../services/api";
+import { getProdutos, getProdutosAdmin } from "../services/api";
 import type { Produto } from "../types/Produto";
 
 export function useProducts(type: "menu" | "store" | "admin" = "menu", isAdminScope: boolean = false) {
@@ -10,7 +10,7 @@ export function useProducts(type: "menu" | "store" | "admin" = "menu", isAdminSc
 
   const refresh = useCallback(() => {
     setLoading(true);
-    const fetchFn = isAdminScope ? getAdminProducts : getProducts;
+    const fetchFn = isAdminScope ? getProdutosAdmin : getProdutos;
     
     fetchFn()
       .then((data: Produto[]) => {

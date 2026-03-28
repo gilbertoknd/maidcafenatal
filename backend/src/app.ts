@@ -1,11 +1,11 @@
 import express from "express";
 import cors from "cors";
-import productRoutes from "./routes/ProductRoutes.js";
-import orderRoutes from "./routes/OrderRoutes.js";
+import produtoRoutes from "./routes/ProdutoRoutes.js";
+import pedidoRoutes from "./routes/PedidoRoutes.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import path from "path";
 import authRoutes from "./routes/AuthRoutes.js";
-import eventRoutes from "./routes/EventRoutes.js";
+import eventoRoutes from "./routes/EventoRoutes.js";
 import corsOptions from "./config/corsOptions.js";
 
 const app = express();
@@ -18,9 +18,9 @@ app.use("/images", express.static(publicPath));
 
 //Rotas
 app.use("/api/auth", authRoutes);
-app.use("/api/produtos", productRoutes);
-app.use("/api/orders", orderRoutes);
-app.use("/api/eventos", eventRoutes);
+app.use("/api/produtos", produtoRoutes);
+app.use("/api/pedidos", pedidoRoutes);
+app.use("/api/eventos", eventoRoutes);
 
 // Error Handler deve SEMPRE vir DEPOIS das rotas
 app.use(errorHandler);
