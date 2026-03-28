@@ -1,31 +1,28 @@
-// src/hooks/useAdminProducts.ts
+// src/hooks/useAdminProdutos.ts
 import { useState, useCallback } from "react";
-import { useAuth } from "./useAuth"; // Reaproveitando seu hook de auth
+import { useAutenticacao } from "./useAutenticacao";
 import type { Produto } from "../types/Produto";
+import { buscarProdutosAdmin, alterarVisibilidadeProduto } from "../services/api";
 
-export function useAdminProducts() {
+export function useAdminProdutos() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Pegamos a função de verificar token do seu hook useAuth
-  const { verifyTokenExpiration } = useAuth();
+  const { verifyTokenExpiration } = useAutenticacao();
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
-  // READ (Buscar)
+  // READ (Buscar Admin - inclui ocultos)
   const buscarProdutos = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${apiUrl}/api/produtos`);
-      if (res.ok) {
-        const data = await res.json();
-        setProdutos(data);
-      }
+      const data = await buscarProdutosAdmin();
+      setProdutos(data);
     } catch (error) {
-      console.error("Erro ao buscar produtos", error);
+      console.error("Erro ao buscar produtos admin", error);
     } finally {
       setLoading(false);
     }
-  }, [apiUrl]);
+  }, []);
 
   // CREATE / UPDATE
   const salvarProduto = async (
@@ -49,12 +46,11 @@ export function useAdminProducts() {
         body: formData,
       });
 
-      // Verifica segurança
       if (!verifyTokenExpiration(res)) return false;
 
       if (res.ok) {
-        await buscarProdutos(); // Recarrega a lista
-        return true; // Sucesso
+        await buscarProdutos();
+        return true;
       } else {
         const err = await res.json();
         throw new Error(err.error || "Erro na operação");
@@ -77,7 +73,6 @@ export function useAdminProducts() {
       if (!verifyTokenExpiration(res)) return false;
 
       if (res.ok) {
-        // Otimização: Remove da lista localmente sem precisar buscar no banco de novo
         setProdutos((prev) => prev.filter((p) => p.id !== id));
         return true;
       } else {
@@ -90,11 +85,27 @@ export function useAdminProducts() {
     }
   };
 
+  const alternarVisibilidade = async (id: number) => {
+    try {
+      const data = await alterarVisibilidadeProduto(id);
+      if (data) {
+        await buscarProdutos();
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao alterar visibilidade");
+      return false;
+    }
+  };
+
   return {
     produtos,
     loading,
     buscarProdutos,
     salvarProduto,
     deletarProduto,
+    alternarVisibilidade,
   };
 }

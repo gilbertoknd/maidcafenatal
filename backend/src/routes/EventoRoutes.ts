@@ -1,22 +1,23 @@
 import { Router } from "express";
 import { EventoController } from "../controllers/EventoController.js";
-import { authMiddleware } from "../middlewares/authMiddleware.js";
+import { autenticacaoMiddleware } from "../middlewares/autenticacaoMiddleware.js";
 import { uploadConfig } from "../config/upload.js";
 
 const router = Router();
 
-// Rotas públicas
-router.get("/", EventoController.getAll);
+// Públicas
+router.get("/", EventoController.listarTodos);
 
-// Rotas privadas
-router.get("/admin", authMiddleware, EventoController.getAllAdmin);
-router.post("/", authMiddleware, uploadConfig.single("imagem"), EventoController.create);
-router.put("/:id", authMiddleware, uploadConfig.single("imagem"), EventoController.update);
+// Admin
+router.get("/admin", autenticacaoMiddleware, EventoController.listarTodosAdmin);
+router.post("/", autenticacaoMiddleware, uploadConfig.single("imagem"), EventoController.criar);
+router.put("/:id", autenticacaoMiddleware, uploadConfig.single("imagem"), EventoController.atualizar);
+
 router.patch(
-  "/:id/visibility",
-  authMiddleware,
-  EventoController.toggleVisibility,
+  "/:id/visibilidade",
+  autenticacaoMiddleware,
+  EventoController.alternarVisibilidade,
 );
-router.delete("/:id", authMiddleware, EventoController.delete);
+router.delete("/:id", autenticacaoMiddleware, EventoController.deletar);
 
 export default router;

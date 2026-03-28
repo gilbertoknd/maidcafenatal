@@ -14,4 +14,4 @@ export interface Produto {
   criado_em: string;
 }
 
-export type ProdutoFormData = Omit<Produto, "id" | "curtidas" | "criado_em">;
+export type DadosFormProduto = Omit<Produto, "id" | "curtidas" | "criado_em">;

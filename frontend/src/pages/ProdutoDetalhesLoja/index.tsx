@@ -1,18 +1,18 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useProducts } from "../../hooks/useProducts";
-import { useCart } from "../../hooks/useCart";
+import { useProdutos } from "../../hooks/useProdutos";
+import { useCarrinho } from "../../hooks/useCarrinho";
 import type { Produto } from "../../types/Produto";
 import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
-import { formatCurrency } from "../../utils/formatters";
+import { formatCurrency } from "../../utils/formatadores";
 import { ShoppingCart, ArrowLeft } from "lucide-react";
 
 export function ProdutoDetalhesLoja() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { produtos, loading } = useProducts("store");
-  const { addToCart } = useCart();
+  const { produtos, loading } = useProdutos("store");
+  const { adicionarProduto } = useCarrinho();
   
   const [produto, setProduto] = useState<Produto | null>(null);
 
@@ -121,7 +121,7 @@ export function ProdutoDetalhesLoja() {
               </div>
 
               <button
-                onClick={() => addToCart(produto)}
+                onClick={() => adicionarProduto(produto)}
                 style={{ 
                   marginTop: 'auto',
                   display: 'flex', 

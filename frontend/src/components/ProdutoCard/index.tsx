@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
 import type { Produto } from "../../types/Produto";
-import { formatCurrency } from "../../utils/formatters";
+import { formatCurrency } from "../../utils/formatadores";
 import { alternarCurtidaProduto } from "../../services/api";
 import { StarIcon } from "../../assets/icons/StarIcon";
-import { Edit, Trash2, ShoppingCart } from "lucide-react";
-import { useCart } from "../../hooks/useCart";
+import { Edit, Trash2, ShoppingCart, Eye, EyeOff } from "lucide-react";
+import { useCarrinho } from "../../hooks/useCarrinho";
 import { ProdutoDetalhesModal } from "../ProdutoDetalhesModal";
 
 interface ProdutoCardProps {
@@ -14,6 +14,7 @@ interface ProdutoCardProps {
   isAdmin?: boolean;
   onEdit?: (produto: Produto) => void;
   onDelete?: (id: number) => void;
+  onToggleVisibility?: (id: number) => void;
 }
 
 // Chave para salvar no navegador
@@ -24,8 +25,9 @@ export function ProdutoCard({
   isAdmin = false,
   onEdit,
   onDelete,
+  onToggleVisibility,
 }: ProdutoCardProps) {
-  const { addToCart } = useCart();
+  const { adicionarProduto } = useCarrinho();
   const navigate = useNavigate();
   // INICIALIZAÇÃO INTELIGENTE
   const [hasLiked, setHasLiked] = useState(() => {
@@ -192,6 +194,25 @@ export function ProdutoCard({
               >
                 <Trash2 size={18} />
               </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleVisibility && onToggleVisibility(produto.id);
+                }}
+                style={{
+                  background: produto.visivel ? "#6366f1" : "#4b5563",
+                  color: "white",
+                  border: "none",
+                  padding: "6px",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+                title={produto.visivel ? "Ocultar" : "Mostrar"}
+              >
+                {produto.visivel ? <Eye size={18} /> : <EyeOff size={18} />}
+              </button>
             </div>
           ) : (
             // --- MODO PÚBLICO (ADD TO CART + LIKE) ---
@@ -199,7 +220,7 @@ export function ProdutoCard({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  addToCart(produto);
+                  adicionarProduto(produto);
                 }}
                 className={styles.addToCartBtn}
                 title="Adicionar ao Carrinho"

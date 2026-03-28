@@ -2,9 +2,9 @@ import express from "express";
 import cors from "cors";
 import produtoRoutes from "./routes/ProdutoRoutes.js";
 import pedidoRoutes from "./routes/PedidoRoutes.js";
-import { errorHandler } from "./middlewares/errorHandler.js";
+import { gerenciadorErros } from "./middlewares/gerenciadorErros.js";
 import path from "path";
-import authRoutes from "./routes/AuthRoutes.js";
+import autenticacaoRoutes from "./routes/AutenticacaoRoutes.js";
 import eventoRoutes from "./routes/EventoRoutes.js";
 import corsOptions from "./config/corsOptions.js";
 
@@ -17,12 +17,12 @@ app.use(express.json());
 app.use("/images", express.static(publicPath));
 
 //Rotas
-app.use("/api/auth", authRoutes);
+app.use("/api/autenticacao", autenticacaoRoutes);
 app.use("/api/produtos", produtoRoutes);
 app.use("/api/pedidos", pedidoRoutes);
 app.use("/api/eventos", eventoRoutes);
 
 // Error Handler deve SEMPRE vir DEPOIS das rotas
-app.use(errorHandler);
+app.use(gerenciadorErros);
 
 export default app;

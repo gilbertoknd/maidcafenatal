@@ -3,8 +3,8 @@ import request from "supertest";
 import app from "../app.js";
 
 // Mock middleware de auth para passar direto em rotas protegidas
-vi.mock("../middlewares/authMiddleware", () => ({
-  authMiddleware: (req: any, res: any, next: any) => next(),
+vi.mock("../middlewares/autenticacaoMiddleware.js", () => ({
+  autenticacaoMiddleware: (req: any, res: any, next: any) => next(),
 }));
 
 // Mock do banco de dados

@@ -1,30 +1,30 @@
 import { Request, Response, NextFunction } from "express";
-import * as EventoModel from "../models/EventoModel.js";
+import { EventoModel } from "../models/EventoModel.js";
 import { Evento } from "../types/EventoTypes.js";
 import { AppError } from "../errors/AppError.js";
 import fs from "fs";
 import path from "path";
 
-export class EventoController {
-  static async getAll(req: Request, res: Response, next: NextFunction) {
+export const EventoController = {
+  listarTodos: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const eventos = await EventoModel.listarTodosEventos();
+      const eventos = await EventoModel.listarTodos();
       res.status(200).json(eventos);
     } catch (error) {
       next(error);
     }
-  }
+  },
 
-  static async getAllAdmin(req: Request, res: Response, next: NextFunction) {
+  listarTodosAdmin: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const eventos = await EventoModel.listarTodosEventosAdmin();
+      const eventos = await EventoModel.listarTodosAdmin();
       res.status(200).json(eventos);
     } catch (error) {
       next(error);
     }
-  }
+  },
 
-  static async create(req: Request, res: Response, next: NextFunction) {
+  criar: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const imagem_url = req.file ? `/images/${req.file.filename}` : null;
       
@@ -40,7 +40,7 @@ export class EventoController {
         imagem_url
       };
 
-      const novoEvento = await EventoModel.criarEvento(eventData);
+      const novoEvento = await EventoModel.criar(eventData);
       res.status(201).json(novoEvento);
     } catch (error) {
       if (req.file) {
@@ -50,9 +50,9 @@ export class EventoController {
       }
       next(error);
     }
-  }
+  },
 
-  static async update(req: Request, res: Response, next: NextFunction) {
+  atualizar: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
       const imagem_url = req.file ? `/images/${req.file.filename}` : undefined;
@@ -69,7 +69,7 @@ export class EventoController {
         imagem_url
       };
 
-      const eventoAtualizado = await EventoModel.atualizarEvento(id, eventData);
+      const eventoAtualizado = await EventoModel.atualizar(id, eventData);
 
       if (!eventoAtualizado) {
         if (req.file) {
@@ -87,12 +87,12 @@ export class EventoController {
       }
       next(error);
     }
-  }
+  },
 
-  static async delete(req: Request, res: Response, next: NextFunction) {
+  deletar: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const eventoDeletado = await EventoModel.deletarEvento(id);
+      const eventoDeletado = await EventoModel.deletar(id);
 
       if (!eventoDeletado) {
         throw new AppError("Evento não encontrado", 404);
@@ -119,16 +119,16 @@ export class EventoController {
     } catch (error) {
       next(error);
     }
-  }
+  },
 
-  static async toggleVisibility(
+  alternarVisibilidade: async (
     req: Request,
     res: Response,
     next: NextFunction,
-  ) {
+  ) => {
     try {
       const { id } = req.params;
-      const eventoAtualizado = await EventoModel.alternarVisibilidadeEvento(id);
+      const eventoAtualizado = await EventoModel.alternarVisibilidade(id);
 
       if (!eventoAtualizado) {
         throw new AppError("Evento não encontrado", 404);
@@ -138,5 +138,5 @@ export class EventoController {
     } catch (error) {
       next(error);
     }
-  }
-}
+  },
+};

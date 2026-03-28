@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
 import styles from "./styles.module.css";
-import { getEventos } from "../../services/api";
+import { buscarEventos } from "../../services/api";
 import type { Evento } from "../../types/Evento";
 import { EventoCard } from "../../components/EventoCard";
 import { CalendarioEventos } from "../../components/CalendarioEventos";
@@ -16,7 +16,7 @@ export function EventosPage() {
   useEffect(() => {
     async function loadEvents() {
       try {
-        const data = await getEventos();
+        const data = await buscarEventos();
         setEventos(data);
       } catch (error) {
         console.error("Erro ao carregar eventos:", error);

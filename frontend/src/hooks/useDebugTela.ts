@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export function useDebugScreen() {
+export function useDebugTela() {
   useEffect(() => {
     function handleResize() {
       const width = window.innerWidth;

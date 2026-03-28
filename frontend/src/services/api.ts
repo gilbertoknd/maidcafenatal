@@ -3,7 +3,7 @@ import type { Evento } from "../types/Evento";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
-export async function getProdutos(): Promise<Produto[]> {
+export async function buscarProdutos(): Promise<Produto[]> {
   const response = await fetch(`${BASE_URL}/api/produtos`);
   if (!response.ok) {
     throw new Error("Erro ao buscar produtos");
@@ -11,7 +11,7 @@ export async function getProdutos(): Promise<Produto[]> {
   return response.json();
 }
 
-export async function getProdutosAdmin(): Promise<Produto[]> {
+export async function buscarProdutosAdmin(): Promise<Produto[]> {
   const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/produtos/admin`, {
     headers: {
@@ -24,7 +24,7 @@ export async function getProdutosAdmin(): Promise<Produto[]> {
   return response.json();
 }
 
-export async function getProdutosPopulares(): Promise<Produto[]> {
+export async function buscarProdutosPopulares(): Promise<Produto[]> {
   const response = await fetch(`${BASE_URL}/api/produtos/populares`);
   if (!response.ok) {
     throw new Error("Erro ao buscar produtos populares");
@@ -32,7 +32,7 @@ export async function getProdutosPopulares(): Promise<Produto[]> {
   return response.json();
 }
 
-export async function getProdutosNovidades(): Promise<Produto[]> {
+export async function buscarProdutosNovidades(): Promise<Produto[]> {
   const response = await fetch(`${BASE_URL}/api/produtos/novidades`);
   if (!response.ok) {
     throw new Error("Erro ao buscar novidades");
@@ -76,7 +76,7 @@ export async function enviarPedido(orderData: {
   return response.json();
 }
 
-export const getPedidos = async () => {
+export const buscarPedidos = async () => {
   const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/pedidos`, {
     headers: {
@@ -101,14 +101,21 @@ export const atualizarStatusPedido = async (id: number, status: string) => {
   return response.json();
 };
 
+export async function verificarToken(token: string): Promise<boolean> {
+  const response = await fetch(`${BASE_URL}/api/autenticacao/verify`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.ok;
+}
+
 // --- EVENTOS ---
-export async function getEventos(): Promise<Evento[]> {
+export async function buscarEventos(): Promise<Evento[]> {
   const response = await fetch(`${BASE_URL}/api/eventos`);
   if (!response.ok) throw new Error("Erro ao buscar eventos");
   return response.json();
 }
 
-export async function getEventosAdmin(): Promise<Evento[]> {
+export async function buscarEventosAdmin(): Promise<Evento[]> {
   const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/eventos/admin`, {
     headers: { Authorization: `Bearer ${token}` }
@@ -151,11 +158,21 @@ export async function deletarEvento(id: number): Promise<{ message: string; even
 
 export async function alterarVisibilidadeEvento(id: number): Promise<Evento> {
   const token = localStorage.getItem("token");
-  const response = await fetch(`${BASE_URL}/api/eventos/${id}/visibility`, {
+  const response = await fetch(`${BASE_URL}/api/eventos/${id}/visibilidade`, {
     method: "PATCH",
     headers: { Authorization: `Bearer ${token}` }
   });
   if (!response.ok) throw new Error("Erro ao alterar visibilidade do evento");
+  return response.json();
+}
+
+export async function alterarVisibilidadeProduto(id: number): Promise<Produto> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${BASE_URL}/api/produtos/${id}/visibilidade`, {
+    method: "PATCH",
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  if (!response.ok) throw new Error("Erro ao alterar visibilidade do produto");
   return response.json();
 }
 

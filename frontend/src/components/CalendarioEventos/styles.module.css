@@ -14,13 +14,13 @@
 }
 
 .monthTitle {
-  font-size: 1.25rem;
+  font-size: var(--font-size-xl);
   font-weight: bold;
-  color: var(--color-primary-dark, #333);
+  color: var(--color-primary-dark);
 }
 
 .navButton {
-  background: var(--color-primary-light, #f0f0f0);
+  background: var(--color-primary-light);
   border: none;
   border-radius: 50%;
   width: 32px;
@@ -29,14 +29,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-primary, #333);
+  color: var(--color-primary);
   font-weight: bold;
   transition: background 0.2s;
 }
 
 .navButton:hover {
   background: var(--color-primary);
-  color: white;
+  color: var(--color-white);
 }
 
 .weekNames {
@@ -49,8 +49,8 @@
 .weekDay {
   text-align: center;
   font-weight: bold;
-  font-size: 0.8rem;
-  color: #888;
+  font-size: var(--font-size-xsm);
+  color: var(--color-gray-medium);
 }
 
 .grid {
@@ -67,7 +67,7 @@
 .day {
   min-height: 40px;
   border-radius: 8px;
-  border: 1px solid #eee;
+  border: 1px solid var(--color-gray-100);
   padding: 4px;
   display: flex;
   flex-direction: column;
@@ -77,8 +77,8 @@
 }
 
 .dayNumber {
-  font-size: 0.9rem;
-  color: #444;
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-dark);
 }
 
 .today {
@@ -89,14 +89,14 @@
 
 .selectedDay {
   background-color: var(--color-primary);
-  color: white;
+  color: var(--color-white);
   border-color: var(--color-primary-dark);
 }
 .selectedDay .dayNumber {
-  color: white;
+  color: var(--color-white);
 }
 .selectedDay .dot {
-  background-color: white;
+  background-color: var(--color-white);
 }
 
 .hasEvent {
@@ -104,8 +104,8 @@
 }
 
 .hasEvent:hover {
-  background-color: #f8f9fa;
-  border-color: #ccc;
+  background-color: var(--color-gray-50);
+  border-color: var(--color-gray-300);
 }
 
 .eventDots {
@@ -123,7 +123,7 @@
 }
 
 .more {
-  font-size: 0.6rem;
-  color: #666;
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-600);
   line-height: 1;
 }

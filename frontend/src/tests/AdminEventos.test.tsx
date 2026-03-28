@@ -6,7 +6,7 @@ import * as api from "../services/api";
 import type { Evento } from "../types/Evento";
 
 vi.mock("../services/api", () => ({
-  getEventosAdmin: vi.fn(),
+  buscarEventosAdmin: vi.fn(),
   criarEvento: vi.fn(),
   atualizarEvento: vi.fn(),
   deletarEvento: vi.fn(),
@@ -28,7 +28,7 @@ const mockEventos: Evento[] = [
 describe("AdminEventos Component", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    (api.getEventosAdmin as any).mockResolvedValue(mockEventos);
+    (api.buscarEventosAdmin as any).mockResolvedValue(mockEventos);
     // Mock the window.alert
     vi.spyOn(window, "alert").mockImplementation(() => {});
     vi.spyOn(window, "confirm").mockReturnValue(true);

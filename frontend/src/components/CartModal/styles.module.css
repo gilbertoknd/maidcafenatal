@@ -4,7 +4,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, var(--opacity-50));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -13,12 +13,12 @@
 }
 
 .modal {
-  background: white;
+  background: var(--color-white);
   width: 90%;
   max-width: 500px;
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-lg);
   display: flex;
   flex-direction: column;
   max-height: 85vh;
@@ -28,7 +28,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 2px solid #eee;
+  border-bottom: 2px solid var(--color-gray-100);
   padding-bottom: 1rem;
   margin-bottom: 1rem;
 }
@@ -61,7 +61,7 @@
   align-items: center;
   gap: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--color-gray-100);
 }
 
 .itemImage {
@@ -77,7 +77,7 @@
 
 .itemInfo h4 {
   margin: 0 0 0.25rem 0;
-  font-size: 1rem;
+  font-size: var(--font-size-md);
   color: var(--color-text);
 }
 
@@ -90,7 +90,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: #f8f9fa;
+  background: var(--color-gray-50);
   padding: 0.2rem 0.5rem;
   border-radius: 20px;
 }
@@ -107,7 +107,7 @@
 .deleteBtn {
   background: none;
   border: none;
-  color: #ff4757;
+  color: var(--color-error);
   cursor: pointer;
   padding: 0.5rem;
 }
@@ -115,13 +115,13 @@
 .checkoutSection {
   margin-top: 1rem;
   padding-top: 1rem;
-  border-top: 2px solid #eee;
+  border-top: 2px solid var(--color-gray-100);
 }
 
 .totalRow {
   display: flex;
   justify-content: space-between;
-  font-size: 1.25rem;
+  font-size: var(--font-size-xl);
   margin-bottom: 1rem;
 }
 
@@ -133,18 +133,18 @@
 
 .input {
   padding: 0.75rem;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-gray-300);
   border-radius: 6px;
-  font-size: 1rem;
+  font-size: var(--font-content);
 }
 
 .finishBtn {
-  background: #25D366; /* WhatsApp Green */
+  background: var(--color-whatsapp);
   color: white;
   padding: 1rem;
   border: none;
   border-radius: 6px;
-  font-size: 1.1rem;
+  font-size: var(--font-size-lg);
   font-weight: bold;
   cursor: pointer;
   transition: opacity 0.2s;
@@ -155,12 +155,31 @@
 }
 
 .finishBtn:disabled {
-  background: #b6f0c7;
+  background: var(--color-success-light);
   cursor: not-allowed;
 }
 
 .emptyCart {
   text-align: center;
   padding: 2rem 0;
-  color: #888;
+  color: var(--color-gray-medium);
+}
+@media (max-width: 480px) {
+  .modal {
+    width: 95%;
+    height: 90vh;
+    max-height: 95vh;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  .totalRow {
+    font-size: var(--font-size-lg);
+  }
+  .itemImage {
+    width: 50px;
+    height: 50px;
+  }
+  .itemInfo h4 {
+    font-size: var(--font-size-sm);
+  }
 }

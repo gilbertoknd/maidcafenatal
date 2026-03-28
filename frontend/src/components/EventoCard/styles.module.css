@@ -18,8 +18,8 @@
 }
 
 .hidden {
-  opacity: 0.6;
-  border-left: 5px solid #ef4444;
+  opacity: var(--opacity-60);
+  border-left: 5px solid var(--color-error);
 }
 
 .imageWrapper {
@@ -29,7 +29,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--color-primary-light, #fce7f3);
+  background-color: var(--color-primary-light);
   overflow: hidden;
 }
 
@@ -57,9 +57,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #e2e8f0;
-  color: #64748b;
-  font-size: 0.8rem;
+  background-color: var(--color-gray-200);
+  color: var(--color-gray-500);
+  font-size: var(--font-size-xsm);
   text-align: center;
 }
 
@@ -75,18 +75,18 @@
   padding: 4px 8px;
   font-weight: 800;
   line-height: 1;
-  box-shadow: 1px -1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
 }
 
 .month {
-  font-size: 0.65rem;
+  font-size: var(--font-size-xs);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 2px;
 }
 
 .day {
-  font-size: 1.1rem;
+  font-size: var(--font-size-lg);
 }
 
 .content {
@@ -102,8 +102,8 @@
 }
 
 .title {
-  font-size: 1.05rem;
-  color: #1e293b;
+  font-size: var(--font-size-lg);
+  color: var(--color-gray-800);
   font-weight: bold;
   margin: 0 0 2px 0;
   line-height: 1.2;
@@ -111,7 +111,7 @@
 
 @media (min-width: 600px) {
   .title {
-    font-size: 1.2rem;
+    font-size: var(--font-size-xl);
   }
 }
 
@@ -125,13 +125,13 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #475569;
-  font-size: 0.85rem;
+  color: var(--color-gray-600);
+  font-size: var(--font-size-xsm);
 }
 
 .description {
-  color: #64748b;
-  font-size: 0.85rem;
+  color: var(--color-gray-500);
+  font-size: var(--font-size-xsm);
   margin: 4px 0 0 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -156,10 +156,10 @@
 }
 
 .statusBadge {
-  color: white;
+  color: var(--color-white);
   padding: 2px 6px;
   border-radius: 4px;
-  font-size: 0.7rem;
+  font-size: var(--font-size-xs);
   font-weight: bold;
 }
 
@@ -170,26 +170,26 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  font-size: 0.75rem;
-  background-color: #cbd5e1;
-  color: #334155;
+  font-size: var(--font-size-xs);
+  background-color: var(--color-gray-300);
+  color: var(--color-gray-700);
   transition: background 0.2s;
 }
 
 .editBtn {
-  background-color: #3b82f6;
-  color: white;
+  background-color: var(--color-info);
+  color: var(--color-white);
 }
 .editBtn:hover {
-  background-color: #2563eb;
+  background-color: var(--color-info-dark);
 }
 
 .deleteBtn {
-  background-color: #ef4444;
-  color: white;
+  background-color: var(--color-error);
+  color: var(--color-white);
 }
 .deleteBtn:hover {
-  background-color: #dc2626;
+  background-color: var(--color-error-dark);
 }
 
 @media (min-width: 900px) {

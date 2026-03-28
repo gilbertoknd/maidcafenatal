@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { AppError } from "../errors/AppError.js";
-import { TokenPayload } from "../types/AuthTypes.js";
+import { TokenPayload } from "../types/AutenticacaoTypes.js";
 
-export function authMiddleware(
+export function autenticacaoMiddleware(
   req: Request,
   res: Response,
   next: NextFunction,
@@ -14,14 +14,14 @@ export function authMiddleware(
     throw new AppError("Token não fornecido", 401);
   }
 
-  //O header vem como "Bearer eyJhbGci..."
+  // O header vem como "Bearer eyJhbGci..."
   const [, token] = authorization.split(" ");
 
   try {
-    const secret = process.env.JWT_SECRET || "segredo"; //Use o mesmo do AuthController
+    const secret = process.env.JWT_SECRET || "segredo";
     const decoded = jwt.verify(token, secret);
 
-    //Anexa o ID do usuário na requisição para usar nos controllers se precisar
+    // Anexa o ID do usuário na requisição para usar nos controllers se precisar
     (req as any).userId = (decoded as TokenPayload).id;
 
     return next();

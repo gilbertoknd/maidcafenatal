@@ -1,15 +1,14 @@
 import { Router } from "express";
 import { PedidoController } from "../controllers/PedidoController.js";
-import { authMiddleware } from "../middlewares/authMiddleware.js";
+import { autenticacaoMiddleware } from "../middlewares/autenticacaoMiddleware.js";
 
 const router = Router();
 
-// Endpoint público para criar o carrinho
-router.post("/", PedidoController.criarPedido);
+router.post("/", PedidoController.criar);
 
-// Endpoints protegidos para o painel admin
-router.get("/", authMiddleware, PedidoController.listarTodos);
-router.get("/:id", authMiddleware, PedidoController.buscarItens);
-router.put("/:id/status", authMiddleware, PedidoController.atualizarStatus);
+// Admin
+router.get("/", autenticacaoMiddleware, PedidoController.listarTodos);
+router.get("/:id", autenticacaoMiddleware, PedidoController.buscarItens);
+router.put("/:id/status", autenticacaoMiddleware, PedidoController.atualizarStatus);
 
 export default router;

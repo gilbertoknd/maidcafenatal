@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export function useAuth() {
+export const useAutenticacao = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const apiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -31,7 +31,7 @@ export function useAuth() {
       }
 
       try {
-        const res = await fetch(`${apiUrl}/api/auth/verify`, {
+        const res = await fetch(`${apiUrl}/api/autenticacao/verify`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -48,7 +48,7 @@ export function useAuth() {
     }
 
     checkAuth();
-  }, [apiUrl]);
+  }, []);
 
   return {
     isAuthenticated,

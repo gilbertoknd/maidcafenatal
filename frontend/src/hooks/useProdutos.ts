@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { getProdutos, getProdutosAdmin } from "../services/api";
+import { buscarProdutos, buscarProdutosAdmin } from "../services/api";
 import type { Produto } from "../types/Produto";
 
-export function useProducts(type: "menu" | "store" | "admin" = "menu", isAdminScope: boolean = false) {
+export const useProdutos = (type: "menu" | "store" | "admin" = "menu", isAdminScope: boolean = false) => {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -10,7 +10,7 @@ export function useProducts(type: "menu" | "store" | "admin" = "menu", isAdminSc
 
   const refresh = useCallback(() => {
     setLoading(true);
-    const fetchFn = isAdminScope ? getProdutosAdmin : getProdutos;
+    const fetchFn = isAdminScope ? buscarProdutosAdmin : buscarProdutos;
     
     fetchFn()
       .then((data: Produto[]) => {

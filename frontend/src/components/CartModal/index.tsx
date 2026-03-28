@@ -1,22 +1,22 @@
 import { useState } from "react";
-import { useCart } from "../../hooks/useCart";
-import { formatCurrency } from "../../utils/formatters";
+import { useCarrinho } from "../../hooks/useCarrinho";
+import { formatCurrency } from "../../utils/formatadores";
 import { X, Plus, Minus, Trash2, MapPin } from "lucide-react";
 import styles from "./styles.module.css";
-import { sendOrderToBackend } from "../../services/api"; 
+import { enviarPedido } from "../../services/api"; 
 import { AddressMapModal } from "../AddressMapModal";
 import type { AddressData } from "../AddressMapModal";
 
 export function CartModal() {
   const {
-    cart,
-    isCartOpen,
-    setIsCartOpen,
-    updateQuantity,
-    removeFromCart,
-    cartTotal,
-    clearCart,
-  } = useCart();
+    itens,
+    estaAberto,
+    setEstaAberto,
+    atualizarQuantidade,
+    removerProduto,
+    total,
+    limparCarrinho,
+  } = useCarrinho();
   const [nome, setNome] = useState("");
   const [formaPagamento, setFormaPagamento] = useState("Pix");
   const [observacao, setObservacao] = useState("");
@@ -27,11 +27,11 @@ export function CartModal() {
   const [addressData, setAddressData] = useState<AddressData | null>(null);
   const [numeroComplemento, setNumeroComplemento] = useState("");
 
-  if (!isCartOpen) return null;
+  if (!estaAberto) return null;
 
   //Fechar ao clicar fora
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) setIsCartOpen(false);
+    if (e.target === e.currentTarget) setEstaAberto(false);
   };
 
   const handleCheckout = async (e: React.FormEvent) => {
@@ -41,26 +41,26 @@ export function CartModal() {
       return;
     }
 
-    if (cart.length === 0) return;
+    if (itens.length === 0) return;
 
     try {
       setIsSubmitting(true);
-      const itens = cart.map((item) => ({
-        produto_id: item.produto.id,
+      const backendItens = itens.map((item) => ({
+        produto_id: item.id,
         quantidade: item.quantidade,
       }));
 
       //Sends order to backend
-      const response = await sendOrderToBackend({
+      const response = await enviarPedido({
         cliente_nome: nome,
         cliente_endereco: addressData.address + (numeroComplemento ? `, ${numeroComplemento}` : ""),
-        itens,
+        itens: backendItens,
       });
 
       //Format WhatsApp string
-      let message = `*Olá! Gostaria de fazer o pedido #${response.orderId}:*\n\n`;
-      cart.forEach((item) => {
-        message += `${item.quantidade}x ${item.produto.nome} (${formatCurrency(item.produto.preco)})\n`;
+      let message = `*Olá! Gostaria de fazer o pedido #${response.pedido_id}:*\n\n`;
+      itens.forEach((item) => {
+        message += `${item.quantidade}x ${item.nome} (${formatCurrency(item.preco)})\n`;
       });
       message += `\n*Total:* ${formatCurrency(response.total)}\n`;
       message += `\n*Nome:* ${nome}`;
@@ -80,8 +80,8 @@ export function CartModal() {
 
       window.open(whatsappUrl, "_blank");
 
-      clearCart();
-      setIsCartOpen(false);
+      limparCarrinho();
+      setEstaAberto(false);
     } catch (error) {
       console.error(error);
       alert("Houve um erro ao processar o pedido. Tente novamente.");
@@ -99,25 +99,25 @@ export function CartModal() {
         <div className={styles.header}>
           <h2>Seu Carrinho</h2>
           <button
-            onClick={() => setIsCartOpen(false)}
+            onClick={() => setEstaAberto(false)}
             className={styles.closeBtn}
           >
             <X size={24} />
           </button>
         </div>
 
-        {cart.length === 0 ? (
+        {itens.length === 0 ? (
           <div className={styles.emptyCart}>
             <p>Seu carrinho está vazio.</p>
           </div>
         ) : (
           <div className={styles.content}>
             <div className={styles.cartItems}>
-              {cart.map((item) => (
-                <div key={item.produto.id} className={styles.cartItem}>
+              {itens.map((item) => (
+                <div key={item.id} className={styles.cartItem}>
                   <img
-                    src={`${backendUrl}${item.produto.imagem_url}`}
-                    alt={item.produto.nome}
+                    src={`${backendUrl}${item.imagem_url}`}
+                    alt={item.nome}
                     className={styles.itemImage}
                     onError={(e) => {
                       e.currentTarget.src =
@@ -125,15 +125,15 @@ export function CartModal() {
                     }}
                   />
                   <div className={styles.itemInfo}>
-                    <h4>{item.produto.nome}</h4>
+                    <h4>{item.nome}</h4>
                     <span className={styles.itemPrice}>
-                      {formatCurrency(item.produto.preco)}
+                      {formatCurrency(item.preco)}
                     </span>
                   </div>
                   <div className={styles.quantityControls}>
                     <button
                       onClick={() =>
-                        updateQuantity(item.produto.id, item.quantidade - 1)
+                        atualizarQuantidade(item.id, item.quantidade - 1)
                       }
                     >
                       <Minus size={16} />
@@ -141,7 +141,7 @@ export function CartModal() {
                     <span>{item.quantidade}</span>
                     <button
                       onClick={() =>
-                        updateQuantity(item.produto.id, item.quantidade + 1)
+                        atualizarQuantidade(item.id, item.quantidade + 1)
                       }
                     >
                       <Plus size={16} />
@@ -149,7 +149,7 @@ export function CartModal() {
                   </div>
                   <button
                     className={styles.deleteBtn}
-                    onClick={() => removeFromCart(item.produto.id)}
+                    onClick={() => removerProduto(item.id)}
                   >
                     <Trash2 size={18} />
                   </button>
@@ -160,7 +160,7 @@ export function CartModal() {
             <div className={styles.checkoutSection}>
               <div className={styles.totalRow}>
                 <span>Total:</span>
-                <strong>{formatCurrency(cartTotal)}</strong>
+                <strong>{formatCurrency(total)}</strong>
               </div>
 
               <form onSubmit={handleCheckout} className={styles.checkoutForm}>

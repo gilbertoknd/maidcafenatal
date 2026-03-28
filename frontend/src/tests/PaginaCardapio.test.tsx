@@ -4,7 +4,7 @@ import { describe, it, expect, vi } from "vitest";
 import { MenuPage } from "../pages/Menu";
 import { BrowserRouter } from "react-router-dom";
 import type { Produto } from "../types/Produto";
-import { CartProvider } from "../hooks/useCart";
+import { CarrinhoProvider } from "../hooks/useCarrinho";
 
 // Mock API
 const mockProducts: Produto[] = [
@@ -33,7 +33,7 @@ const mockProducts: Produto[] = [
 ];
 
 vi.mock("../services/api", () => ({
-  getProdutos: vi.fn(() => Promise.resolve(mockProducts)),
+  buscarProdutos: vi.fn(() => Promise.resolve(mockProducts)),
   alternarCurtidaProduto: vi.fn(),
 }));
 
@@ -42,24 +42,24 @@ vi.mock("../components/Banner", () => ({
   ImageBanner: () => <div data-testid="image-banner">Banner</div>,
 }));
 
-describe("MenuPage", () => {
-  it("should render loading state initially", () => {
+describe("Página de Cardápio", () => {
+  it("deve renderizar o estado de carregamento inicialmente", () => {
     render(
       <BrowserRouter>
-        <CartProvider>
+        <CarrinhoProvider>
           <MenuPage />
-        </CartProvider>
+        </CarrinhoProvider>
       </BrowserRouter>,
     );
-    expect(screen.getByText("Carregando refeições...")).toBeInTheDocument();
+    expect(screen.getByText(/carregando/i)).toBeInTheDocument();
   });
 
-  it("should render products after loading", async () => {
+  it("deve renderizar produtos após carregar", async () => {
     render(
       <BrowserRouter>
-        <CartProvider>
+        <CarrinhoProvider>
           <MenuPage />
-        </CartProvider>
+        </CarrinhoProvider>
       </BrowserRouter>,
     );
 
@@ -69,12 +69,12 @@ describe("MenuPage", () => {
     });
   });
 
-  it("should filter products by search", async () => {
+  it("deve filtrar produtos pela busca", async () => {
     render(
       <BrowserRouter>
-        <CartProvider>
+        <CarrinhoProvider>
           <MenuPage />
-        </CartProvider>
+        </CarrinhoProvider>
       </BrowserRouter>,
     );
 
@@ -89,12 +89,12 @@ describe("MenuPage", () => {
     expect(screen.getByText("Café Expresso")).toBeInTheDocument();
   });
 
-  it("should filter products by category", async () => {
+  it("deve filtrar produtos por categoria", async () => {
     render(
       <BrowserRouter>
-        <CartProvider>
+        <CarrinhoProvider>
           <MenuPage />
-        </CartProvider>
+        </CarrinhoProvider>
       </BrowserRouter>,
     );
 

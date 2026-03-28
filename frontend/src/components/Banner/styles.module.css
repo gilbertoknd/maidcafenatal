@@ -28,8 +28,8 @@
   bottom: 10%;
   left: 5%;
   z-index: 10;
-  color: white;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  color: var(--color-white);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, var(--opacity-50));
   max-width: 600px;
   animation: fadeIn 1s ease-out;
 }
@@ -40,12 +40,12 @@
   line-height: 1.1;
   margin-bottom: 2rem;
   color: var(--color-white);
-  text-shadow: 2px 2px 4px rgba(25, 25, 25, 0.5);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, var(--opacity-50));
 }
 
 .scrollButton {
   background-color: var(--color-primary);
-  color: white;
+  color: var(--color-white);
   border: none;
   padding: 1rem 2.5rem;
   font-size: var(--font-size-xl);
@@ -54,7 +54,7 @@
   font-family: var(--font-main);
   font-weight: var(--font-weight-bold);
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-lg);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -63,7 +63,7 @@
 .scrollButton:hover {
   background-color: var(--color-primary-dark);
   transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-lg);
 }
 
 @keyframes fadeIn {
@@ -79,15 +79,18 @@
 
 @media (max-width: 768px) {
   .overlay {
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
+    bottom: 15%;
+    left: 10%;
+    right: 10%;
     text-align: center;
   }
   .overlayTitle {
-    font-size: 2rem;
+    font-size: var(--font-size-3xl);
+    margin-bottom: 1.5rem;
   }
   .scrollButton {
     margin: 0 auto;
+    padding: 0.8rem 2rem;
+    font-size: var(--font-size-lg);
   }
 }

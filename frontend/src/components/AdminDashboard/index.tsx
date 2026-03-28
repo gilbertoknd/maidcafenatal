@@ -8,9 +8,9 @@ import { MenuContent } from "../MenuContent";
 import { AdminPedidos } from "../AdminPedidos";
 import { AdminEventos } from "../AdminEventos";
 // Hooks e Types
-import { useAuth } from "../../hooks/useAuth";
-import { useAdminProducts } from "../../hooks/useAdminProducts";
-import { useProducts } from "../../hooks/useProducts";
+import { useAutenticacao } from "../../hooks/useAutenticacao";
+import { useAdminProdutos } from "../../hooks/useAdminProdutos";
+import { useProdutos } from "../../hooks/useProdutos";
 import type { Produto } from "../../types/Produto";
 
 export default function AdminDashboard() {
@@ -20,14 +20,14 @@ export default function AdminDashboard() {
     setIsAuthenticated,
     isLoading: authLoading,
     logout,
-  } = useAuth();
+  } = useAutenticacao();
 
   // 2. Hook de Produtos (Manuseia o CRUD)
-  const { salvarProduto, deletarProduto } = useAdminProducts();
+  const { salvarProduto, deletarProduto, alternarVisibilidade } = useAdminProdutos();
 
   // 3. Hook de Produtos (Lista/Filtros) - Fonte da verdade visual
-  const menuProductData = useProducts("menu", true);
-  const storeProductData = useProducts("store", true);
+  const menuProductData = useProdutos("menu", true);
+  const storeProductData = useProdutos("store", true);
 
   const [produtoEditando, setProdutoEditando] = useState<Produto | null>(null);
   const [activeTab, setActiveTab] = useState<"produtos" | "loja" | "pedidos" | "eventos" | "banners">("pedidos");
@@ -58,6 +58,15 @@ export default function AdminDashboard() {
   async function handleDeleteWrapper(id: number) {
     if (!window.confirm("Tem certeza que deseja excluir este produto?")) return;
     const success = await deletarProduto(id);
+    if (success) {
+      menuProductData.refresh();
+      storeProductData.refresh();
+    }
+  }
+
+  // Função wrapper para alternar visibilidade
+  async function handleToggleVisibilityWrapper(id: number) {
+    const success = await alternarVisibilidade(id);
     if (success) {
       menuProductData.refresh();
       storeProductData.refresh();
@@ -129,6 +138,7 @@ export default function AdminDashboard() {
             title="Painel Administrativo - Cardápio 🍰"
             onEdit={setProdutoEditando}
             onDelete={handleDeleteWrapper}
+            onToggleVisibility={handleToggleVisibilityWrapper}
           >
             <ProdutoForm
               produtoEditando={produtoEditando}
@@ -144,6 +154,7 @@ export default function AdminDashboard() {
             title="Painel Administrativo - Loja Online 🛍️"
             onEdit={setProdutoEditando}
             onDelete={handleDeleteWrapper}
+            onToggleVisibility={handleToggleVisibilityWrapper}
           >
             <ProdutoForm
               produtoEditando={produtoEditando}

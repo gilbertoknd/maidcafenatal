@@ -3,7 +3,7 @@ import { PedidoModel } from "../models/PedidoModel.js";
 import { AppError } from "../errors/AppError.js";
 
 export const PedidoController = {
-  criarPedido: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  criar: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { cliente_nome, cliente_endereco, itens } = req.body;
 
@@ -11,7 +11,7 @@ export const PedidoController = {
         throw new AppError("Dados inválidos: Nome, endereço e itens são obrigatórios.", 400);
       }
 
-      const pedido = await PedidoModel.criarPedido(
+      const novoPedido = await PedidoModel.criar(
         cliente_nome,
         cliente_endereco,
         itens,
@@ -19,8 +19,8 @@ export const PedidoController = {
 
       res.status(201).json({
         message: "Pedido criado com sucesso",
-        pedido_id: pedido.id,
-        total: pedido.total,
+        pedido_id: novoPedido.id,
+        total: novoPedido.total,
       });
     } catch (error) {
       next(error);
@@ -30,7 +30,13 @@ export const PedidoController = {
   listarTodos: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const pedidos = await PedidoModel.listarTodos();
-      res.status(200).json(pedidos);
+      const itensComDetalhes = await Promise.all(
+        pedidos.map(async (pedido) => {
+          const itens = await PedidoModel.buscarItens(pedido.id);
+          return { ...pedido, itens };
+        }),
+      );
+      res.status(200).json(itensComDetalhes);
     } catch (error) {
       next(error);
     }
@@ -39,7 +45,7 @@ export const PedidoController = {
   buscarItens: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params;
-      const itens = await PedidoModel.buscarItensPedido(Number(id));
+      const itens = await PedidoModel.buscarItens(Number(id));
       res.status(200).json(itens);
     } catch (error) {
       next(error);

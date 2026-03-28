@@ -3,6 +3,7 @@
 :root {
   --color-primary: #f1648c;
   --color-primary-dark: #d8456b;
+  --color-primary-light: #fce7f3;
   --color-primary-border: #fbd1dd;
   --color-secondary-border: #f9c1d1;
   --color-background: #fce0e8;
@@ -11,50 +12,69 @@
   --color-text: #555555;
   --color-white: #ffffff;
   --color-shadow: rgba(241, 100, 140, 0.3);
+  --color-modal-overlay: rgba(0, 0, 0, 0.5);
+  --color-border: #fbd1dd;
 
-  /* New Variables */
-  /* Layout */
-  --container-max-width: 1200px;
-  --radius-card: 20px;
-  --radius-button: 50px;
-  --radius-circle: 50%;
-  --shadow-card: 0 4px 6px var(--color-shadow);
-  --shadow-card-hover: 0 6px 12px var(--color-shadow);
-  --transition-default: all 0.3s ease;
+  /* Semantic Status Colors */
+  --color-success: #10a37f;
+  --color-success-light: #dcfce7;
+  --color-success-dark: #166534;
+  --color-success-border: #bbf7d0;
 
-  /* Colors */
-  --color-placeholder: #aaa;
-  --color-image-background: #f0f0f0;
-  --color-icon-inactive: #ccc;
-  --color-star-active: #ffd700;
-  --color-star-shadow: rgba(255, 215, 0, 0.5);
+  --color-warning: #f59e0b;
+  --color-warning-light: #fef08a;
+  --color-warning-dark: #854d0e;
+  --color-warning-border: #fde047;
 
-  /* Typography */
-  --font-main: "Fredoka", sans-serif;
+  --color-error: #ef4444;
+  --color-error-light: #fee2e2;
+  --color-error-dark: #991b1b;
+  --color-error-border: #fecaca;
 
-  --font-size-sm: 0.9rem;
-  --font-content: 1rem;
-  --font-size-xs: 0.75rem;
-  --font-size-xsm: 0.8rem;
-  --font-size-lg: 1.1rem;
-  --font-size-xl: 1.2rem;
-  --font-size-2xl: 1.4rem;
-  --font-size-2xl-plus: 1.5rem;
-  --font-size-3xl: 1.8rem;
-  --font-size-4xl: 2rem;
-  --font-size-5xl: 2.5rem;
-  --font-size-6xl: 3rem;
+  --color-info: #3b82f6;
+  --color-info-light: #e0f2fe;
+  --color-info-dark: #075985;
+  --color-info-border: #bae6fd;
 
-  --font-weight-regular: 400;
-  --font-weight-medium: 600;
-  --font-weight-bold: 700;
-  --font-weight-extrabold: 800;
+  /* Neutral Grays */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  /* Additional Grays frequently used */
+  --color-gray-light: #eee;
+  --color-gray-medium: #888;
+  --color-gray-dark: #444;
+
+  /* Brand Colors */
+  --color-whatsapp: #25D366;
 
   font-family: var(--font-main);
   line-height: 1.5;
   font-weight: var(--font-weight-regular);
 
   color-scheme: light dark;
+  --shadow-card: 0 4px 6px var(--color-shadow);
+  --shadow-card-hover: 0 6px 12px var(--color-shadow);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  
+  /* Opacity Variants */
+  --font-size-2xl: 1.4rem;
+  --font-size-2xl-plus: 1.6rem;
+  --opacity-80: 0.8;
+  --opacity-60: 0.6;
+  --opacity-50: 0.5;
+
+  --transition-default: all 0.3s ease;
   color: var(--color-text);
   background-color: var(--color-background);
 

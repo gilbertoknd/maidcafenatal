@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ProdutoCard } from "../ProdutoCard";
-import { getProdutosNovidades } from "../../services/api";
+import { buscarProdutosNovidades } from "../../services/api";
 import type { Produto } from "../../types/Produto";
 import styles from "./styles.module.css";
 
@@ -8,7 +8,7 @@ export function NewArrivalsSection() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
 
   useEffect(() => {
-    getProdutosNovidades().then(setProdutos).catch(console.error);
+    buscarProdutosNovidades().then(setProdutos).catch(console.error);
   }, []);
 
   return (

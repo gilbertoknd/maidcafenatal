@@ -15,7 +15,7 @@ export default function LoginModal({ onSuccess }: LoginModalProps) {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/autenticacao/login`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

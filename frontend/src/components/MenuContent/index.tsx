@@ -16,6 +16,7 @@ interface MenuContentProps {
   isAdmin?: boolean;
   onEdit?: (produto: Produto) => void;
   onDelete?: (id: number) => void;
+  onToggleVisibility?: (id: number) => void;
   title?: string;
   headerActions?: React.ReactNode;
   children?: React.ReactNode;
@@ -32,6 +33,7 @@ export function MenuContent({
   isAdmin = false,
   onEdit,
   onDelete,
+  onToggleVisibility,
   title = "🌸 Cardápio Mew Mew 🌸",
   headerActions,
   children,
@@ -78,6 +80,7 @@ export function MenuContent({
                 isAdmin={isAdmin || !!onEdit}
                 onEdit={onEdit}
                 onDelete={onDelete}
+                onToggleVisibility={onToggleVisibility}
               />
             ))
           ) : (

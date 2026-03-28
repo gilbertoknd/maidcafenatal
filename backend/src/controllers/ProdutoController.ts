@@ -2,58 +2,48 @@ import { Request, Response, NextFunction } from "express";
 import { AppError } from "../errors/AppError.js";
 import path from "path";
 import fs from "fs";
-import {
-  criarProduto,
-  listarTodosProdutos,
-  listarTodosProdutosAdmin,
-  listarNovosProdutos,
-  listarProdutosPopulares,
-  atualizarProduto,
-  deletarProduto,
-  curtirProduto,
-  descurtirProduto,
-} from "../models/ProdutoModel.js";
+import { ProdutoModel } from "../models/ProdutoModel.js";
 
-export class ProdutoController {
+export const ProdutoController = {
   // Busca de produtos
-  static async listarTodos(req: Request, res: Response, next: NextFunction) {
+  listarTodos: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const produtos = await listarTodosProdutos();
+      const produtos = await ProdutoModel.listarTodos();
       res.json(produtos);
     } catch (error) {
       next(error);
     }
-  }
+  },
 
-  static async listarTodosAdmin(req: Request, res: Response, next: NextFunction) {
+  listarTodosAdmin: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const produtos = await listarTodosProdutosAdmin();
+      const produtos = await ProdutoModel.listarTodosAdmin();
       res.json(produtos);
     } catch (error) {
       next(error);
     }
-  }
+  },
 
-  static async listarPopulares(req: Request, res: Response, next: NextFunction) {
+  listarPopulares: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const produtos = await listarProdutosPopulares();
+      const produtos = await ProdutoModel.listarPopulares();
       res.json(produtos);
     } catch (error) {
       next(error);
     }
-  }
+  },
 
-  static async listarNovos(req: Request, res: Response, next: NextFunction) {
+  listarNovidades: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const produtos = await listarNovosProdutos();
+      const produtos = await ProdutoModel.listarNovidades();
       res.json(produtos);
     } catch (error) {
       next(error);
     }
-  }
+  },
 
   // Criação de produtos
-  static async criar(req: Request, res: Response, next: NextFunction) {
+  criar: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const imagem_url = req.file ? `/images/${req.file.filename}` : null;
 
@@ -74,7 +64,7 @@ export class ProdutoController {
         );
       }
 
-      const produto = await criarProduto({
+      const produto = await ProdutoModel.criar({
         nome,
         descricao,
         preco,
@@ -95,10 +85,10 @@ export class ProdutoController {
       }
       next(error);
     }
-  }
+  },
 
   // Atualização de produtos
-  static async atualizar(req: Request, res: Response, next: NextFunction) {
+  atualizar: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
       const imagem_url = req.file ? `/images/${req.file.filename}` : null;
@@ -109,7 +99,7 @@ export class ProdutoController {
       const is_loja = req.body.is_loja === "true";
       const visivel = req.body.visivel !== undefined ? req.body.visivel === "true" : undefined;
 
-      const produto = await atualizarProduto(id, {
+      const produto = await ProdutoModel.atualizar(id, {
         nome,
         descricao,
         preco: preco as number,
@@ -135,13 +125,13 @@ export class ProdutoController {
       }
       next(error);
     }
-  }
+  },
 
   // Exclusão de produtos
-  static async deletar(req: Request, res: Response, next: NextFunction) {
+  deletar: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const produto = await deletarProduto(id);
+      const produto = await ProdutoModel.deletar(id);
 
       if (!produto) {
         throw new AppError("Produto não encontrado", 404);
@@ -149,33 +139,35 @@ export class ProdutoController {
 
       if (produto.imagem_url) {
         const nomeArquivo = produto.imagem_url.split("/").pop();
-        const imagePath = path.resolve(
-          process.cwd(),
-          "public",
-          "images",
-          nomeArquivo,
-        );
+        if (nomeArquivo) {
+          const imagePath = path.resolve(
+            process.cwd(),
+            "public",
+            "images",
+            nomeArquivo,
+          );
 
-        fs.access(imagePath, fs.constants.F_OK, (err) => {
-          if (!err) {
-            fs.unlink(imagePath, () =>
-              console.log("Imagem deletada do disco:", produto.imagem_url),
-            );
-          }
-        });
+          fs.access(imagePath, fs.constants.F_OK, (err) => {
+            if (!err) {
+              fs.unlink(imagePath, () =>
+                console.log("Imagem deletada do disco:", produto.imagem_url),
+              );
+            }
+          });
+        }
       }
 
       res.json({ message: "Produto deletado com sucesso", produto: produto });
     } catch (error) {
       next(error);
     }
-  }
+  },
 
   // Curtidas
-  static async adicionarCurtida(req: Request, res: Response, next: NextFunction) {
+  adicionarCurtida: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const novasCurtidas = await curtirProduto(id);
+      const novasCurtidas = await ProdutoModel.curtir(id);
 
       if (!novasCurtidas && novasCurtidas !== 0) {
         throw new AppError("Produto não encontrado", 404);
@@ -185,12 +177,12 @@ export class ProdutoController {
     } catch (error) {
       next(error);
     }
-  }
+  },
 
-  static async removerCurtida(req: Request, res: Response, next: NextFunction) {
+  removerCurtida: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      const novasCurtidas = await descurtirProduto(id);
+      const novasCurtidas = await ProdutoModel.descurtir(id);
 
       if (!novasCurtidas && novasCurtidas !== 0) {
         throw new AppError("Produto não encontrado", 404);
@@ -200,5 +192,20 @@ export class ProdutoController {
     } catch (error) {
       next(error);
     }
-  }
-}
+  },
+
+  alternarVisibilidade: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const produto = await ProdutoModel.alternarVisibilidade(id);
+
+      if (!produto) {
+        throw new AppError("Produto não encontrado", 404);
+      }
+
+      res.json(produto);
+    } catch (error) {
+      next(error);
+    }
+  },
+};

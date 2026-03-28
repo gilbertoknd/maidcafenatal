@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { getPedidos, atualizarStatusPedido } from "../../services/api";
-import { formatCurrency } from "../../utils/formatters";
+import { buscarPedidos, atualizarStatusPedido } from "../../services/api";
+import { formatCurrency } from "../../utils/formatadores";
 import styles from "./styles.module.css";
 
 interface Pedido {
@@ -16,10 +16,10 @@ export function AdminPedidos() {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const buscarPedidos = async (showLoading = true) => {
+  const carregarPedidos = async (showLoading = true) => {
     try {
       if (showLoading) setIsLoading(true);
-      const data = await getPedidos();
+      const data = await buscarPedidos();
       setPedidos(data);
     } catch (error) {
       console.error("Erro ao buscar pedidos em background:", error);
@@ -29,11 +29,11 @@ export function AdminPedidos() {
   };
 
   useEffect(() => {
-    buscarPedidos(true); // Primeira carga com loading
+    carregarPedidos(true); // Primeira carga com loading
 
     // Polling a cada 10 segundos
     const interval = setInterval(() => {
-      buscarPedidos(false); // Atualiza em background sem dar loading na tela
+      carregarPedidos(false); // Atualiza em background sem dar loading na tela
     }, 10000);
 
     return () => clearInterval(interval);
@@ -42,7 +42,7 @@ export function AdminPedidos() {
   const handleStatusChange = async (id: number, newStatus: string) => {
     try {
       await atualizarStatusPedido(id, newStatus);
-      buscarPedidos(false); // Recarrega a lista em background
+      carregarPedidos(false); // Recarrega a lista em background
     } catch (error) {
       console.error(error);
       alert("Erro ao atualizar status do pedido.");

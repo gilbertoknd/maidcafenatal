@@ -1,16 +1,16 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { AuthModel } from "../models/AuthModel.js";
+import { AutenticacaoModel } from "../models/AutenticacaoModel.js";
 import { AppError } from "../errors/AppError.js";
 import { Request, Response, NextFunction } from "express";
 
-export class AuthController {
-  async login(req: Request, res: Response, next: NextFunction) {
+export const AutenticacaoController = {
+  login: async (req: Request, res: Response, next: NextFunction) => {
     const { nickname, senha } = req.body;
 
     try {
       //busca o user
-      const user = await AuthModel.findByNickname(nickname);
+      const user = await AutenticacaoModel.buscarPorNickname(nickname);
 
       if (!user) {
         throw new AppError("Usuário não encontrado", 401);
@@ -34,5 +34,5 @@ export class AuthController {
     } catch (error) {
       next(error);
     }
-  }
-}
+  },
+};

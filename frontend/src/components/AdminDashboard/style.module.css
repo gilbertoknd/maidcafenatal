@@ -1,8 +1,8 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
-  font-family: sans-serif;
+  padding: var(--padding-container, 20px);
+  font-family: var(--font-main);
 }
 
 .loading {
@@ -10,14 +10,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f8f9fa;
-  color: #666;
-  font-size: 18px;
+  background-color: var(--color-gray-50);
+  color: var(--color-gray-600);
+  font-size: var(--font-size-lg);
 }
 
 .logoutBtn {
   background-color: var(--color-text);
-  color: white;
+  color: var(--color-white);
   border: none;
   padding: 0.5rem 1rem;
   border-radius: var(--radius-button);
@@ -30,8 +30,8 @@
 }
 
 .logoutBtn:hover {
-  background-color: #555;
-  opacity: 0.8;
+  background-color: var(--color-gray-700);
+  opacity: var(--opacity-80, 0.8);
 }
 
 .adminLayout {
@@ -82,4 +82,38 @@
 
 .adminMain {
   padding: 2rem 0;
+}
+
+@media (max-width: 900px) {
+  .adminHeader {
+    flex-direction: column;
+    padding: 1.5rem;
+    gap: 1.5rem;
+    text-align: center;
+  }
+
+  .tabsContainer {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .tabBtn {
+    padding: 6px 12px;
+    font-size: var(--font-size-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .tabsContainer {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .tabBtn {
+    width: 100%;
+    justify-content: center;
+  }
 }

@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { formatCurrency } from "../utils/formatters";
+import { formatCurrency } from "../utils/formatadores";
 
-describe("formatters", () => {
+describe("formatadores", () => {
   describe("formatCurrency", () => {
     it("should format number to BRL currency", () => {
       expect(formatCurrency(10)).toContain("R$");

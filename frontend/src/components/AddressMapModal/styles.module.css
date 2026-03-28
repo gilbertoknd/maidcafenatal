@@ -22,7 +22,7 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-lg);
   animation: slideUp 0.3s ease-out;
   overflow: hidden;
 }
@@ -40,7 +40,7 @@
   margin: 0;
   font-family: var(--font-main);
   color: var(--color-text);
-  font-size: 1.25rem;
+  font-size: var(--font-size-xl);
 }
 
 .closeButton {
@@ -64,7 +64,7 @@
   flex: 1;
   position: relative;
   width: 100%;
-  background-color: #f1f5f9;
+  background-color: var(--color-gray-100);
 }
 
 /* O mapa global container */
@@ -84,7 +84,7 @@
   z-index: 10;
   pointer-events: none; /* Deixa o mouse passar através do pino pro mapa */
   color: var(--color-primary);
-  filter: drop-shadow(0px 4px 4px rgba(0,0,0,0.3));
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, var(--opacity-50)));
   transition: transform 0.2s;
 }
 
@@ -100,14 +100,14 @@
 }
 
 .confirmMessage {
-  font-size: 0.9rem;
-  color: #64748b;
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-500);
   text-align: center;
   margin: 0;
 }
 
 .currentAddressText {
-  font-size: 1rem;
+  font-size: var(--font-content);
   font-weight: 600;
   color: var(--color-text);
   text-align: center;
@@ -122,7 +122,7 @@
   padding: 14px;
   border-radius: 8px;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: var(--font-content);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -136,7 +136,7 @@
 }
 
 .confirmButton:disabled {
-  background: #cbd5e1;
+  background: var(--color-gray-300);
   cursor: not-allowed;
 }
 

@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import styles from "./styles.module.css";
 import { 
-  getEventosAdmin, 
+  buscarEventosAdmin, 
   criarEvento, 
   atualizarEvento, 
   deletarEvento, 
   alterarVisibilidadeEvento 
 } from "../../services/api";
-import type { Evento, EventoFormData } from "../../types/Evento";
+import type { Evento, DadosFormEvento } from "../../types/Evento";
 import { EventoCard } from "../EventoCard";
 
 export function AdminEventos() {
@@ -15,7 +15,7 @@ export function AdminEventos() {
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<number | null>(null);
 
-  const [formData, setFormData] = useState<EventoFormData>({
+  const [formData, setFormData] = useState<DadosFormEvento>({
     titulo: "",
     descricao: "",
     data: "",
@@ -27,7 +27,7 @@ export function AdminEventos() {
   const buscarEventos = async () => {
     try {
       setLoading(true);
-      const data = await getEventosAdmin();
+      const data = await buscarEventosAdmin();
       setEventos(data);
     } catch (error) {
       console.error("Erro ao buscar eventos do admin", error);

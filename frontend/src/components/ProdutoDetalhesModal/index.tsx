@@ -2,8 +2,8 @@ import { X, ShoppingCart } from "lucide-react";
 import { createPortal } from "react-dom";
 import styles from "./styles.module.css";
 import type { Produto } from "../../types/Produto";
-import { formatCurrency } from "../../utils/formatters";
-import { useCart } from "../../hooks/useCart";
+import { formatCurrency } from "../../utils/formatadores";
+import { useCarrinho } from "../../hooks/useCarrinho";
 
 interface ProdutoDetalhesModalProps {
   produto: Produto;
@@ -12,7 +12,7 @@ interface ProdutoDetalhesModalProps {
 }
 
 export function ProdutoDetalhesModal({ produto, isOpen, onClose }: ProdutoDetalhesModalProps) {
-  const { addToCart } = useCart();
+  const { adicionarProduto } = useCarrinho();
 
   if (!isOpen) return null;
 
@@ -75,7 +75,7 @@ export function ProdutoDetalhesModal({ produto, isOpen, onClose }: ProdutoDetalh
             className={styles.addToCartBtn}
             onClick={(e) => {
               e.stopPropagation();
-              addToCart(produto);
+              adicionarProduto(produto);
               onClose(); // Optional: you can close the modal after adding, or keep it open.
             }}
           >

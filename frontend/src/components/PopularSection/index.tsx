@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ProdutoCard } from "../ProdutoCard";
-import { getProdutosPopulares } from "../../services/api";
+import { buscarProdutosPopulares } from "../../services/api";
 import type { Produto } from "../../types/Produto";
 import styles from "./styles.module.css";
 
@@ -8,7 +8,7 @@ export function PopularSection() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
 
   useEffect(() => {
-    getProdutosPopulares().then(setProdutos).catch(console.error);
+    buscarProdutosPopulares().then(setProdutos).catch(console.error);
   }, []);
 
   return (

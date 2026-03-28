@@ -10,9 +10,12 @@
 - **Resolução de Erros:** Sempre que houver um erro, é mandatório ler integralmente o output do terminal para analisar de verdade qual é o problema ANTES de prosseguir.
 - **Padronização CSS:** Sempre utilize as variáveis CSS definidas em `frontend/src/index.css` (`:root`). Se necessário criar um novo token (cor, tamanho, espaçamento), adicione-o lá. Nunca use valores hard-coded repetidos.
 - **Idioma do Código:** Nomes de tabelas, colunas, variáveis de banco e endpoints da API estão em **português** (ex: `produtos`, `pedidos`, `eventos`). Comentários e mensagens de erro também em português.
-- **Error Handling:** Para tratamentos de erro no backend, lembre-se de sempre utilizar o nosso intermediador de erros, que é o arquivo `src/middlewares/errorHandler.ts`.
+- **Error Handling:** Para tratamentos de erro no backend, lembre-se de sempre utilizar o nosso intermediador de erros, que é o arquivo `src/middlewares/gerenciadorErros.ts`.
 - **Atualizar documento** Sempre que houver alguma informação importante, atualize esse documento com ela em algum dos tópicos, ou crie um novo tópico se necessário.
 - **Melhorias** Quando estiver trabalhando em um código que não siga as regras do documento, mesmo sendo um código mais antigo, feito anteriormente, quero que você faça o possível para que ele siga as regras do documento, alterando-o.
+- **Responsividade** Quero que você foque bastante na responsividade e funcionalidades do site para dispositivos móveis, de forma que funcione bem em celulares, que é o foco principal.
+- **Hurdle** Adicione common Hurdles que você encontrar durante o desenvolvimento, com as soluções para que você não cometa os mesmos erros novamente.
+- **Identidade Visual:** O site deve seguir uma estética "fofa" (Kawaii/Maid Café), com cores pastéis (rosa, creme, branco), tipografia arredondada (Fredoka) e, crucialmente, botões e elementos com cantos muito arredondados (`var(--radius-button)` para botões e `var(--radius-card)` para cards/modais).
 
 ---
 
@@ -155,30 +158,29 @@ FRONTEND_URL=http://localhost:5173
 │       │   ├── corsOptions.ts    # Configuração de CORS
 │       │   └── upload.ts         # Configuração do Multer (disco)
 │       ├── controllers/
-│       │   ├── AuthController.ts
-│       │   ├── ProductController.ts
-│       │   ├── OrderController.ts
-│       │   └── EventController.ts
+│       │   ├── AutenticacaoController.ts
+│       │   ├── ProdutoController.ts
+│       │   ├── PedidoController.ts
+│       │   └── EventoController.ts
 │       ├── models/
-│       │   ├── AuthModel.ts
-│       │   ├── ProductModel.ts
-│       │   ├── OrderModel.ts
-│       │   └── EventModel.ts
+│       │   ├── AutenticacaoModel.ts
+│       │   ├── ProdutoModel.ts
+│       │   ├── PedidoModel.ts
+│       │   └── EventoModel.ts
 │       ├── routes/
-│       │   ├── AuthRoutes.ts
-│       │   ├── ProductRoutes.ts
-│       │   ├── OrderRoutes.ts
-│       │   └── EventRoutes.ts
+│       │   ├── AutenticacaoRoutes.ts
+│       │   ├── ProdutoRoutes.ts
+│       │   ├── PedidoRoutes.ts
+│       │   ├── EventoRoutes.ts
 │       ├── middlewares/
-│       │   ├── authMiddleware.ts  # Verificação JWT
-│       │   └── errorHandler.ts   # Error handler centralizado (AppError)
+│       │   ├── autenticacaoMiddleware.ts  # Verificação JWT
+│       │   └── gerenciadorErros.ts        # Gerenciador de erros centralizado (AppError)
 │       ├── services/
-│       │   └── ProductService.ts
 │       ├── errors/               # Classe AppError customizada
 │       ├── types/                # Tipos TypeScript
-│       │   ├── AuthTypes.d.ts
-│       │   ├── ProductTypes.d.ts
-│       │   └── EventTypes.ts
+│       │   ├── AutenticacaoTypes.ts
+│       │   ├── ProdutoTypes.ts
+│       │   └── EventoTypes.ts
 │       ├── utils/
 │       └── tests/                # Testes do backend (Vitest + Supertest)
 │
@@ -195,18 +197,17 @@ FRONTEND_URL=http://localhost:5173
 │       ├── index.css             # Design tokens (variáveis CSS globais)
 │       ├── App.css               # Estilos globais do App
 │       ├── setupTests.ts         # Config dos testes (@testing-library)
-│       ├── assets/               # Assets estáticos (logo, etc.)
 │       ├── types/
-│       │   ├── Produto.d.ts      # Interface Produto
-│       │   └── Event.ts          # Interface Event + EventFormData
+│       │   ├── Produto.ts        # Interface Produto
+│       │   └── Evento.ts         # Interface Evento + DadosFormEvento
 │       ├── services/
 │       │   └── api.ts            # Todas as chamadas HTTP ao backend
 │       ├── hooks/
-│       │   ├── useAuth.ts        # Autenticação (login, verificar token)
-│       │   ├── useCart.tsx        # Carrinho de compras (Context API)
-│       │   ├── useProducts.ts    # Fetch de produtos (público)
-│       │   ├── useAdminProducts.ts # CRUD de produtos (admin)
-│       │   └── useDebugScreen.ts # Debug de dimensões de tela
+│       │   ├── useAutenticacao.ts # Autenticação (login, verificar token)
+│       │   ├── useCarrinho.tsx    # Carrinho de compras (Context API)
+│       │   ├── useProdutos.ts     # Fetch de produtos (público)
+│       │   ├── useAdminProdutos.ts # CRUD de produtos (admin)
+│       │   └── useDebugScreen.ts  # Debug de dimensões de tela
 │       ├── pages/
 │       │   ├── Home/             # Landing page
 │       │   ├── Menu/             # Cardápio com filtros por categoria
@@ -218,19 +219,19 @@ FRONTEND_URL=http://localhost:5173
 │       │   ├── Header/           # Navegação principal
 │       │   ├── Footer/           # Rodapé
 │       │   ├── Banner/           # Banner principal
-│       │   ├── ProductCard/      # Card de produto
-│       │   ├── ProductDetailsModal/ # Modal de detalhes
-│       │   ├── ProductForm/      # Formulário CRUD produto (admin)
+│       │   ├── ProdutoCard/      # Card de produto
+│       │   ├── ProdutoDetalhesModal/ # Modal de detalhes
+│       │   ├── ProdutoForm/      # Formulário CRUD produto (admin)
 │       │   ├── CategoryFilter/   # Filtro por categorias
 │       │   ├── Search/           # Barra de busca
 │       │   ├── CartButton/       # Botão flutuante do carrinho
 │       │   ├── CartModal/        # Modal do carrinho
 │       │   ├── MenuContent/      # Conteúdo do cardápio
-│       │   ├── EventCard/        # Card de evento
-│       │   ├── EventCalendar/    # Calendário de eventos
+│       │   ├── EventoCard/       # Card de evento
+│       │   ├── CalendarioEventos/ # Calendário de eventos
 │       │   ├── AdminDashboard/   # Dashboard admin principal
-│       │   ├── AdminEvents/      # Gerenciamento de eventos
-│       │   ├── AdminOrders/      # Gerenciamento de pedidos
+│       │   ├── AdminEventos/     # Gerenciamento de eventos
+│       │   ├── AdminPedidos/     # Gerenciamento de pedidos
 │       │   ├── LoginModal/       # Modal de login
 │       │   ├── AboutSection/     # Sessão "Sobre" na Home
 │       │   ├── NewArrivalsSection/ # Novidades
@@ -312,7 +313,7 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 
 ## 6. Rotas da API
 
-### Autenticação (`/api/auth`)
+### Autenticação (`/api/autenticacao`)
 
 | Método | Rota     | Auth? | Descrição                              |
 | ------ | -------- | ----- | -------------------------------------- |
@@ -325,15 +326,15 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 | `GET`    | `/`               | ❌    | Lista produtos visíveis                  |
 | `GET`    | `/admin`          | ✅    | Lista todos os produtos (inclui ocultos) |
 | `GET`    | `/populares`      | ❌    | Produtos mais curtidos                   |
-| `GET`    | `/novidades`      | ❌    | Produtos da categoria "Novidades"        |
+| `GET`    | `/novidades`      | ❌    | Produtos novos                           |
 | `POST`   | `/`               | ✅    | Cria produto (com upload de imagem)      |
 | `PUT`    | `/:id`            | ✅    | Atualiza produto                         |
 | `DELETE` | `/:id`            | ✅    | Deleta produto                           |
 | `PATCH`  | `/:id/like`       | ❌    | Incrementa curtida                       |
 | `PATCH`  | `/:id/unlike`     | ❌    | Decrementa curtida                       |
-| `PATCH`  | `/:id/visibility` | ✅    | Alterna visibilidade                     |
+| `PATCH`  | `/:id/visibilidade` | ✅    | Alterna visibilidade                     |
 
-### Pedidos (`/api/orders`)
+### Pedidos (`/api/pedidos`)
 
 | Método | Rota          | Auth? | Descrição                 |
 | ------ | ------------- | ----- | ------------------------- |
@@ -350,7 +351,7 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 | `POST`   | `/`               | ✅    | Cria evento (com upload de imagem) |
 | `PUT`    | `/:id`            | ✅    | Atualiza evento                    |
 | `DELETE` | `/:id`            | ✅    | Deleta evento                      |
-| `PATCH`  | `/:id/visibility` | ✅    | Alterna visibilidade               |
+| `PATCH`  | `/:id/visibilidade` | ✅    | Alterna visibilidade               |
 
 ---
 
@@ -421,17 +422,17 @@ Todos os tokens de design estão centralizados em `frontend/src/index.css`:
 ### Backend — MVC (Model-View-Controller)
 
 - **Models** (`models/`): Queries SQL puras usando `pool.query()` do `pg`. Retornam dados brutos.
-- **Controllers** (`controllers/`): Recebem `req/res`, chamam Models, tratam validações e formatam a resposta HTTP.
-- **Routes** (`routes/`): Mapeiam endpoints para Controllers, aplicam middlewares (`authMiddleware`, `uploadConfig`).
-- **Erros:** Classe customizada `AppError` com `statusCode`, capturada pelo `errorHandler` centralizado.
+- **Controllers** (`controllers/`): Recebem `req/res`, chamam Models, tratam validações e formatam a resposta HTTP. Exportados como objetos `const`.
+- **Routes** (`routes/`): Mapeiam endpoints para Controllers, aplicam middlewares (`autenticacaoMiddleware`, `uploadConfig`).
+- **Erros:** Classe customizada `AppError` com `statusCode`, capturada pelo `gerenciadorErros` centralizado.
 
 ### Frontend — Hooks Pattern
 
-- **Custom Hooks** (`hooks/`): Encapsulam lógica de estado e chamadas à API (`useProducts`, `useAdminProducts`, `useAuth`, `useCart`).
+- **Custom Hooks** (`hooks/`): Encapsulam lógica de estado e chamadas à API (`useProdutos`, `useAdminProdutos`, `useAutenticacao`, `useCarrinho`).
 - **Pages** (`pages/`): Componentes de página que orquestram hooks e componentes.
 - **Components** (`components/`): Componentes de UI reutilizáveis, cada um em sua própria pasta com arquivo `.tsx` + `.css`.
 - **Services** (`services/api.ts`): Centraliza todas as chamadas `fetch()` ao backend. Funções retornam Promises tipadas.
-- **Carrinho:** Implementado via React Context API (`useCart`), armazenamento no estado local.
+- **Carrinho:** Implementado via React Context API (`useCarrinho`), armazenamento no estado local.
 
 ### Autenticação
 
@@ -447,7 +448,7 @@ Produtos e eventos possuem o campo `visivel` (BOOLEAN, default TRUE). O sistema 
 
 - **Rotas públicas** (`GET /api/produtos`, `GET /api/eventos`): Retornam apenas itens com `visivel = TRUE`.
 - **Rotas admin** (`GET /api/produtos/admin`, `GET /api/eventos/admin`): Retornam TODOS os itens.
-- **Toggle** (`PATCH /:id/visibility`): Inverte o valor de `visivel`. Requer autenticação.
+- **Toggle** (`PATCH /:id/visibilidade`): Inverte o valor de `visivel`. Requer autenticação.
 - **Uso:** Permite "esconder" itens temporariamente sem deletá-los (ex: sazonal, fora de estoque).
 
 ---
@@ -525,7 +526,17 @@ pnpm lint        # eslint
 
 ## 13. "Common Hurdles" e Soluções Documentadas
 
-**Hurdle:** Frontend não consegue acessar o backend localmente.
+---
+
+**Hurdle:** Redução de arredondamento em componentes durante refatoração de CSS.
+**Solução:** Sempre use `var(--radius-button)` ou `var(--radius-card)`. Nunca use valores fixos de `px` para bordas se não for estritamente necessário para algo minúsculo. Se um componente parecer "quadrado", ele está violando o guia.
+
+---
+
+**Hurdle:** Menu mobile com itens apertados e difícil de tocar.
+**Solução:** O menu hambúrguer deve abrir um overlay espaçoso (idealmente quase full-screen), com `flex-direction: column` e `gap` generoso entre os links. Navegação mobile é prioridade máxima.
+
+---
 
 **Solução:** Certifique-se de que `VITE_BACKEND_URL` no `frontend/.env` aponta para `http://localhost:3000` (ou a porta correta). Dentro do Docker, o CORS está configurado para aceitar `FRONTEND_URL` definido no `.env` raiz.
 
@@ -562,10 +573,10 @@ O projeto mantém testes unitários e de integração em ambos os lados:
 ### Backend (`backend/src/tests/`)
 
 - `sanity.test.ts` — Test de sanidade
-- `auth.test.ts` — Autenticação
-- `products.test.ts` — CRUD de produtos
-- `orders.test.ts` — CRUD de pedidos
-- `EventRoutes.test.ts` — CRUD de eventos
+- `autenticacao.test.ts` — Autenticação
+- `produtos.test.ts` — CRUD de produtos
+- `pedidos.test.ts` — CRUD de pedidos
+- `EventoRoutes.test.ts` — CRUD de eventos
 - `formatters.test.ts` — Funções utilitárias
 
 ### Frontend (`frontend/src/tests/`)
@@ -575,13 +586,13 @@ O projeto mantém testes unitários e de integração em ambos os lados:
 - `Header.test.tsx` — Componente Header
 - `Footer.test.tsx` — Componente Footer
 - `MenuPage.test.tsx` — Página do Cardápio
-- `ProductCard.test.tsx` — Card de produto
+- `ProdutoCard.test.tsx` — Card de produto
 - `CartModal.test.tsx` — Modal do carrinho
-- `useCart.test.tsx` — Hook de carrinho
+- `useCarrinho.test.tsx` — Hook de carrinho
 - `Search.test.tsx` — Componente de busca
-- `EventCard.test.tsx` — Card de evento
-- `EventCalendar.test.tsx` — Calendário de eventos
-- `AdminEvents.test.tsx` — CRUD admin de eventos
+- `EventoCard.test.tsx` — Card de evento
+- `CalendarioEventos.test.tsx` — Calendário de eventos
+- `AdminEventos.test.tsx` — CRUD admin de eventos
 - `formatters.test.ts` — Funções utilitárias
 
 > **Regra:** Após qualquer alteração, rode `pnpm test:ci` no módulo afetado para garantir que nada quebrou.

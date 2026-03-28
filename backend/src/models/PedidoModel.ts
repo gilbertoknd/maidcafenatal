@@ -17,7 +17,7 @@ export interface Pedido {
 
 export const PedidoModel = {
   // Cria novo pedido e seus itens em uma transação
-  criarPedido: async (
+  criar: async (
     cliente_nome: string,
     cliente_endereco: string,
     itens: ItemPedido[],
@@ -82,7 +82,7 @@ export const PedidoModel = {
     return result.rows;
   },
 
-  buscarItensPedido: async (pedidoId: number): Promise<any[]> => {
+  buscarItens: async (pedidoId: number): Promise<any[]> => {
     const result = await pool.query(
       `SELECT ip.quantidade, ip.preco_unitario, p.nome, p.imagem_url 
        FROM itens_pedido ip 

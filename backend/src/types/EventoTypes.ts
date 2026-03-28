@@ -9,7 +9,7 @@ export interface Evento {
   criado_em: string;
 }
 
-export interface EventoFormData {
+export interface DadosFormEvento {
   titulo: string;
   descricao?: string;
   data: string;

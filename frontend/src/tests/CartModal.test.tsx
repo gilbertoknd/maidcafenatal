@@ -1,12 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { CartModal } from "../components/CartModal";
-import { CartProvider, useCart } from "../hooks/useCart";
+import { CarrinhoProvider, useCarrinho } from "../hooks/useCarrinho";
 import { useEffect } from "react";
 
 // Mocking the api so we don't do real calls
 vi.mock("../services/api", () => ({
-  sendOrderToBackend: vi.fn().mockResolvedValue({ orderId: 1, total: "10.00" }),
+  enviarPedido: vi.fn().mockResolvedValue({ pedido_id: 1, total: "10.00" }),
 }));
 // Ignore Mapbox inside tests 
 vi.mock("../components/AddressMapModal", () => ({
@@ -14,25 +14,25 @@ vi.mock("../components/AddressMapModal", () => ({
 }));
 
 function ModalOpener() {
-  const { setIsCartOpen } = useCart();
+  const { setEstaAberto } = useCarrinho();
   useEffect(() => {
-    setIsCartOpen(true);
+    setEstaAberto(true);
   }, []);
   return null;
 }
 
-describe("CartModal Component", () => {
+describe("Componente CartModal", () => {
   beforeEach(() => {
     localStorage.clear();
     vi.clearAllMocks();
   });
 
-  it("should render empty cart correctly", () => {
+  it("deve renderizar o carrinho vazio corretamente", () => {
     render(
-      <CartProvider>
+      <CarrinhoProvider>
         <ModalOpener />
         <CartModal />
-      </CartProvider>
+      </CarrinhoProvider>
     );
     expect(screen.getByText("Seu carrinho está vazio.")).toBeDefined();
   });

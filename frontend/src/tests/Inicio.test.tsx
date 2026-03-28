@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { Home } from "../pages/Home";
 import { BrowserRouter } from "react-router-dom";
-import { CartProvider } from "../hooks/useCart";
+import { CarrinhoProvider } from "../hooks/useCarrinho";
 
 // Mock child components to avoid complex rendering and API calls
 vi.mock("../components/Banner", () => ({
@@ -19,13 +19,13 @@ vi.mock("../components/AboutSection", () => ({
   AboutSection: () => <div>About Section</div>,
 }));
 
-describe("Home Page", () => {
-  it("should render all sections", () => {
+describe("Página Inicial", () => {
+  it("deve renderizar todas as seções", () => {
     render(
       <BrowserRouter>
-        <CartProvider>
+        <CarrinhoProvider>
           <Home />
-        </CartProvider>
+        </CarrinhoProvider>
       </BrowserRouter>
     );
 

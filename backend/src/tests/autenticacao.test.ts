@@ -12,7 +12,7 @@ vi.mock("../config/db", () => ({
 
 import { pool } from "../config/db.js";
 
-describe("Auth Routes", () => {
+describe("Rotas de Autenticação", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -24,7 +24,7 @@ describe("Auth Routes", () => {
     (pool.query as any).mockResolvedValue({ rows: [mockUser] });
 
     const response = await request(app)
-      .post("/api/auth/login")
+      .post("/api/autenticacao/login")
       .send({ nickname: "admin", senha: "senha123" });
 
     expect(response.status).toBe(200);
@@ -36,7 +36,7 @@ describe("Auth Routes", () => {
     (pool.query as any).mockResolvedValue({ rows: [] });
 
     const response = await request(app)
-      .post("/api/auth/login")
+      .post("/api/autenticacao/login")
       .send({ nickname: "wrong", senha: "123" });
 
     expect(response.status).toBe(401);
@@ -50,7 +50,7 @@ describe("Auth Routes", () => {
     (pool.query as any).mockResolvedValue({ rows: [mockUser] });
 
     const response = await request(app)
-      .post("/api/auth/login")
+      .post("/api/autenticacao/login")
       .send({ nickname: "admin", senha: "wrongpassword" });
 
     expect(response.status).toBe(401);

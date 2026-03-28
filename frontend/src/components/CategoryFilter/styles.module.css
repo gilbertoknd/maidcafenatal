@@ -44,7 +44,7 @@
 /* Divisória opcional se quiser separar visualmente */
 .divider {
   width: 1px;
-  background-color: #e0e0e0;
+  background-color: var(--color-gray-200);
   height: 24px;
   flex-shrink: 0;
   display: none; /* Ocultei por padrão, descomente se quiser uma linha vertical */
@@ -60,7 +60,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: var(--font-main);
-  font-size: 1rem;
+  font-size: var(--font-content);
   white-space: nowrap;
   flex-shrink: 0;
 }

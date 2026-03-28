@@ -3,38 +3,38 @@ import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { describe, it, expect } from "vitest";
 import { Header } from "../components/Header";
-import { CartProvider } from "../hooks/useCart";
+import { CarrinhoProvider } from "../hooks/useCarrinho";
 
-describe("Header Component", () => {
-  it("should render the brand name", () => {
+describe("Componente Header", () => {
+  it("deve renderizar o nome da marca", () => {
     render(
       <BrowserRouter>
-        <CartProvider>
+        <CarrinhoProvider>
           <Header />
-        </CartProvider>
+        </CarrinhoProvider>
       </BrowserRouter>
     );
     expect(screen.getByText("Mew Mew Café")).toBeInTheDocument();
   });
 
-  it("should render navigation links", () => {
+  it("deve renderizar links de navegação", () => {
     render(
       <BrowserRouter>
-        <CartProvider>
+        <CarrinhoProvider>
           <Header />
-        </CartProvider>
+        </CarrinhoProvider>
       </BrowserRouter>
     );
     expect(screen.getByText(/Home/i)).toBeInTheDocument();
     expect(screen.getByText("Cardápio")).toBeInTheDocument();
   });
 
-  it("should highlight the active link", () => {
+  it("deve destacar o link ativo", () => {
     render(
       <BrowserRouter>
-        <CartProvider>
+        <CarrinhoProvider>
           <Header />
-        </CartProvider>
+        </CarrinhoProvider>
       </BrowserRouter>
     );
     const menuLinks = screen.getAllByText("Cardápio");

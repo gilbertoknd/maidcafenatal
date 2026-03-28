@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { AppError } from "../errors/AppError.js";
 
-export function errorHandler(
+export function gerenciadorErros(
   err: Error,
   req: Request,
   res: Response,

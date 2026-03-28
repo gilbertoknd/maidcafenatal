@@ -9,8 +9,8 @@ const { mQuery, mRelease, mConnect } = vi.hoisted(() => {
   return { mQuery, mRelease, mConnect };
 });
 
-vi.mock("../middlewares/authMiddleware.js", () => ({
-  authMiddleware: vi.fn((req, res, next) => next())
+vi.mock("../middlewares/autenticacaoMiddleware.js", () => ({
+  autenticacaoMiddleware: vi.fn((req, res, next) => next())
 }));
 
 vi.mock("../config/db", () => ({
