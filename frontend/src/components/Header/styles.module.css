@@ -90,12 +90,13 @@
     position: fixed;
     top: 0;
     right: -100%;
-    width: 70%;
+    width: 80%;
     height: 100vh;
     background-color: var(--color-tertiary-background);
     flex-direction: column;
-    justify-content: center;
-    gap: 2.5rem;
+    justify-content: flex-start;
+    padding-top: 5rem;
+    gap: 2rem;
     transition: var(--transition-default);
     box-shadow: -5px 0 15px var(--color-shadow);
     z-index: 1000;

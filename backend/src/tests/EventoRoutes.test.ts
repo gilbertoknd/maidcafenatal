@@ -48,6 +48,22 @@ describe("Event Routes", () => {
     expect(response.body[1].titulo).toBe("Evento Oculto");
   });
 
+  it("GET /api/eventos/:id - should return a single event", async () => {
+    (pool.query as any).mockResolvedValue({ rows: [mockEvento] });
+
+    const response = await request(app).get("/api/eventos/1");
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(mockEvento);
+  });
+
+  it("GET /api/eventos/:id - should return 404 if event not found", async () => {
+    (pool.query as any).mockResolvedValue({ rows: [] });
+
+    const response = await request(app).get("/api/eventos/999");
+    expect(response.status).toBe(404);
+    expect(response.body.error).toBe("Evento não encontrado");
+  });
+
   it("POST /api/eventos - should create an event", async () => {
     (pool.query as any).mockResolvedValue({ rows: [mockEvento] });
 
@@ -107,17 +123,15 @@ describe("Event Routes", () => {
   });
 
   it("PATCH /api/eventos/:id/visibility - should toggle visibility", async () => {
-    (pool.query as any).mockResolvedValue({ rows: [{ ...mockEvento, visivel: false }] });
-
-    const response = await request(app).patch("/api/eventos/1/visibility");
+    const response = await request(app).patch("/api/eventos/1/visibilidade");
     expect(response.status).toBe(200);
     expect(response.body.visivel).toBe(false);
   });
 
-  it("PATCH /api/eventos/:id/visibility - should return 404 if not found", async () => {
+  it("PATCH /api/eventos/:id/visibilidade - should return 404 if not found", async () => {
     (pool.query as any).mockResolvedValue({ rows: [] });
 
-    const response = await request(app).patch("/api/eventos/999/visibility");
+    const response = await request(app).patch("/api/eventos/999/visibilidade");
     expect(response.status).toBe(404);
     expect(response.body.error).toBe("Evento não encontrado");
   });

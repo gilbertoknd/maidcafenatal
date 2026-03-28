@@ -7,6 +7,7 @@ const router = Router();
 
 // Públicas
 router.get("/", EventoController.listarTodos);
+router.get("/:id", EventoController.buscarPorId);
 
 // Admin
 router.get("/admin", autenticacaoMiddleware, EventoController.listarTodosAdmin);

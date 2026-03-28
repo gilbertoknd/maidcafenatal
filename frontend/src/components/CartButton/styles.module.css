@@ -3,7 +3,7 @@
   bottom: 2rem;
   right: 2rem;
   background-color: var(--color-primary); /* Maid Cafe pink */
-  color: white;
+  color: var(--color-white);
   border: none;
   border-radius: 50%;
   width: 60px;
@@ -14,7 +14,9 @@
   cursor: pointer;
   box-shadow: 0 4px 12px var(--color-shadow);
   z-index: 1000;
-  transition: transform 0.2s ease, background-color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .cartButton:hover {
@@ -40,7 +42,7 @@
   height: 20px;
   min-width: 20px;
   padding: 0 6px;
-  border-radius: 10px;
+  border-radius: var(--radius-button);
   display: flex;
   align-items: center;
   justify-content: center;

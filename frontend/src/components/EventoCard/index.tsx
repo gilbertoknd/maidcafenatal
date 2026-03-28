@@ -1,6 +1,7 @@
 import styles from "./styles.module.css";
 import type { Evento } from "../../types/Evento";
-import { Edit, Trash2, MapPin, CalendarDays } from "lucide-react";
+import { Edit, Trash2, MapPin, CalendarDays, ExternalLink } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface EventoCardProps {
   evento: Evento;
@@ -17,6 +18,7 @@ export function EventoCard({
   onDelete,
   onToggleVisibility
 }: EventoCardProps) {
+  const navigate = useNavigate();
   const eventoDate = new Date(evento.data);
   const formattedDate = eventoDate.toLocaleDateString("pt-BR", {
     weekday: "short",
@@ -86,6 +88,15 @@ export function EventoCard({
                 <Trash2 size={15} />
               </button>
             </div>
+          )}
+          
+          {!isAdmin && (
+            <button 
+              className={styles.detailsBtn}
+              onClick={() => navigate(`/eventos/${evento.id}`)}
+            >
+              Ver Detalhes <ExternalLink size={16} />
+            </button>
           )}
         </div>
       </div>

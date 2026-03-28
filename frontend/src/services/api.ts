@@ -115,6 +115,12 @@ export async function buscarEventos(): Promise<Evento[]> {
   return response.json();
 }
 
+export async function buscarEventoPorId(id: string | number): Promise<Evento> {
+  const response = await fetch(`${BASE_URL}/api/eventos/${id}`);
+  if (!response.ok) throw new Error("Erro ao buscar detalhes do evento");
+  return response.json();
+}
+
 export async function buscarEventosAdmin(): Promise<Evento[]> {
   const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/eventos/admin`, {

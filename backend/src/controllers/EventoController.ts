@@ -24,6 +24,21 @@ export const EventoController = {
     }
   },
 
+  buscarPorId: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const evento = await EventoModel.buscarPorId(id);
+
+      if (!evento) {
+        throw new AppError("Evento não encontrado", 404);
+      }
+
+      res.status(200).json(evento);
+    } catch (error) {
+      next(error);
+    }
+  },
+
   criar: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const imagem_url = req.file ? `/images/${req.file.filename}` : null;

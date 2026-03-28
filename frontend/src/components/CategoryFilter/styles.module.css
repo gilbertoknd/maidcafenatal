@@ -53,7 +53,7 @@
 .button {
   padding: 0.5rem 1.5rem;
   border: 2px solid var(--color-primary);
-  border-radius: 25px;
+  border-radius: var(--radius-button);
   background-color: var(--color-white);
   color: var(--color-primary);
   font-weight: 600;

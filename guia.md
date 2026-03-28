@@ -57,7 +57,8 @@ Website para o **Mew Mew Café** (Maid Café) localizado em Natal/RN. O sistema 
 - **Bundler:** Vite 7
 - **Roteamento:** `react-router-dom` v7
 - **Ícones:** `lucide-react`
-- **Mapas:** `leaflet` + `react-leaflet` (mapa da localização do café)
+- **Datas:** `Intl.DateTimeFormat` (Nativo)
+- **Mapas:** `leaflet` + `react-leaflet`
 - **Testes:** Vitest + `@testing-library/react` + `@testing-library/jest-dom` + `jsdom`
 - **Linting:** ESLint 9 + `eslint-plugin-react-hooks` + `eslint-plugin-react-refresh` + `typescript-eslint`
 - **Tipografia:** Google Fonts — **Fredoka** (300..700)
@@ -528,13 +529,20 @@ pnpm lint        # eslint
 
 ---
 
-**Hurdle:** Redução de arredondamento em componentes durante refatoração de CSS.
-**Solução:** Sempre use `var(--radius-button)` ou `var(--radius-card)`. Nunca use valores fixos de `px` para bordas se não for estritamente necessário para algo minúsculo. Se um componente parecer "quadrado", ele está violando o guia.
+**Hurdle:** Perda massiva de tokens de design (`--font-*`, `--radius-*`) no `index.css`.
+**Causa:** Uso incorreto de ferramentas de edição (`replace_file_content`) em blocos grandes, resultando no apagamento acidental de definições localizadas no meio ou fim do bloco `:root`.
+**Solução:** Sempre validar a integridade total do `index.css` após edições. Os tokens de tipografia e layout são a espinha dorsal da estética "fofa" (Fredoka + Arredondamento) e não podem ser removidos sob hipótese alguma. Se o site aparecer quadrado ou com fonte padrão, a primeira verificação deve ser os tokens do `:root`.
+
+---
 
 ---
 
 **Hurdle:** Menu mobile com itens apertados e difícil de tocar.
-**Solução:** O menu hambúrguer deve abrir um overlay espaçoso (idealmente quase full-screen), com `flex-direction: column` e `gap` generoso entre os links. Navegação mobile é prioridade máxima.
+**Solução:** O menu hambúrguer deve abrir um overlay espaçoso (80%+ de largura), com `flex-direction: column` e `justify-content: flex-start` para alinhar os itens ao topo. Use `gap` generoso.
+
+---
+
+**Densidade Mobile (Cardápio/Loja):** O padrão para exibição de produtos em dispositivos móveis é de **3 colunas** sem descrição, para maximizar a visibilidade de itens por tela. A descrição deve ser ocultada com `display: none` em media queries mobile.
 
 ---
 
@@ -563,6 +571,12 @@ pnpm lint        # eslint
 **Hurdle:** Porta do PostgreSQL em conflito (5432 já em uso).
 
 **Solução:** O Docker Compose mapeia `DB_PORT_LOCAL` (padrão: 5433) para a porta local. Para conexão local fora do Docker, use a porta 5433. Dentro do Docker, os containers usam a rede interna na porta 5432 padrão.
+
+---
+
+**Hurdle:** Remoção acidental de imports críticos (ex: `styles`) durante edições parciais.
+**Causa:** Uso de `multi_replace_file_content` ou `replace_file_content` onde o bloco `TargetContent` inadvertidamente exclui linhas no topo do arquivo ao tentar "limpar" ou "organizar" imports.
+**Solução:** Sempre verificar se todos os imports necessários (especialmente `styles.module.css`) permanecem no arquivo após a edição. Se o componente falhar ao renderizar com erro de "styles is not defined", verifique o topo do arquivo.
 
 ---
 

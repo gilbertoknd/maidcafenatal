@@ -15,26 +15,15 @@
   --color-modal-overlay: rgba(0, 0, 0, 0.5);
   --color-border: #fbd1dd;
 
-  /* Semantic Status Colors */
-  --color-success: #10a37f;
-  --color-success-light: #dcfce7;
-  --color-success-dark: #166534;
-  --color-success-border: #bbf7d0;
-
-  --color-warning: #f59e0b;
-  --color-warning-light: #fef08a;
-  --color-warning-dark: #854d0e;
-  --color-warning-border: #fde047;
-
-  --color-error: #ef4444;
-  --color-error-light: #fee2e2;
-  --color-error-dark: #991b1b;
-  --color-error-border: #fecaca;
-
-  --color-info: #3b82f6;
-  --color-info-light: #e0f2fe;
-  --color-info-dark: #075985;
-  --color-info-border: #bae6fd;
+  /* New Variables */
+  /* Layout */
+  --container-max-width: 1200px;
+  --radius-card: 20px;
+  --radius-button: 50px;
+  --radius-circle: 50%;
+  --shadow-card: 0 4px 6px var(--color-shadow);
+  --shadow-card-hover: 0 6px 12px var(--color-shadow);
+  --transition-default: all 0.3s ease;
 
   /* Neutral Grays */
   --color-gray-50: #f9fafb;
@@ -54,27 +43,50 @@
   --color-gray-dark: #444;
 
   /* Brand Colors */
-  --color-whatsapp: #25D366;
+  --color-whatsapp: #25d366;
+  --color-star-active: #ffd700;
+  --color-star-shadow: rgba(255, 215, 0, 0.4);
+
+  /* Typography */
+  --font-main: "Fredoka", sans-serif;
+  --font-size-sm: 0.9rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.1rem;
+  --font-size-xl: 1.2rem;
+  --font-size-2xl: 1.4rem;
+  --font-size-2xl-plus: 1.6rem;
+  --font-size-3xl: 1.8rem;
+  --font-size-4xl: 2rem;
+  --font-size-5xl: 2.5rem;
+  --font-weight-regular: 400;
+  --font-weight-medium: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* Layout & Spacing */
+  --container-max-width: 1200px;
+  --radius-card: 20px;
+  --radius-button: 50px;
+  --transition-default: all 0.3s ease;
+
+  /* Shadows */
+  --shadow-card: 0 4px 6px var(--color-shadow);
+  --shadow-card-hover: 0 6px 12px var(--color-shadow);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+  /* Opacity Variants */
+  --opacity-90: 0.9;
+  --opacity-80: 0.8;
+  --opacity-60: 0.6;
+  --opacity-50: 0.5;
 
   font-family: var(--font-main);
   line-height: 1.5;
   font-weight: var(--font-weight-regular);
 
   color-scheme: light dark;
-  --shadow-card: 0 4px 6px var(--color-shadow);
-  --shadow-card-hover: 0 6px 12px var(--color-shadow);
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-  
-  /* Opacity Variants */
-  --font-size-2xl: 1.4rem;
-  --font-size-2xl-plus: 1.6rem;
-  --opacity-80: 0.8;
-  --opacity-60: 0.6;
-  --opacity-50: 0.5;
-
-  --transition-default: all 0.3s ease;
   color: var(--color-text);
   background-color: var(--color-background);
 

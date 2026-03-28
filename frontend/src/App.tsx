@@ -5,6 +5,7 @@ import { Admin } from "./pages/Admin";
 import { LojaOnline } from "./pages/LojaOnline";
 import { ProdutoDetalhesLoja } from "./pages/ProdutoDetalhesLoja";
 import { EventosPage } from "./pages/Eventos";
+import { EventoDetalhes } from "./pages/EventoDetalhes";
 import "./App.css";
 
 import { ScrollToTop } from "./components/ScrollToTop";
@@ -24,6 +25,7 @@ function App() {
         <Route path="/loja" element={<LojaOnline />} />
         <Route path="/loja/produto/:id" element={<ProdutoDetalhesLoja />} />
         <Route path="/eventos" element={<EventosPage />} />
+        <Route path="/eventos/:id" element={<EventoDetalhes />} />
         <Route path="/admin" element={<Admin />} />
       </Routes>
     </BrowserRouter>

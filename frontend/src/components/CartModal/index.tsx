@@ -18,7 +18,7 @@ export function CartModal() {
     limparCarrinho,
   } = useCarrinho();
   const [nome, setNome] = useState("");
-  const [formaPagamento, setFormaPagamento] = useState("Pix");
+  const [formaPagamento, setFormaPagamento] = useState("Nenhum");
   const [observacao, setObservacao] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -38,6 +38,11 @@ export function CartModal() {
     e.preventDefault();
     if (!nome.trim() || !addressData) {
       alert("Por favor, preencha nome e selecione o endereço no mapa.");
+      return;
+    }
+
+    if (formaPagamento === "Nenhum") {
+      alert("Por favor, selecione uma forma de pagamento.");
       return;
     }
 
@@ -223,6 +228,7 @@ export function CartModal() {
                   onChange={(e) => setFormaPagamento(e.target.value)}
                   className={styles.input}
                 >
+                  <option value="Nenhum">Não selecionado</option>
                   <option value="Pix">Pix</option>
                   <option value="Dinheiro">Dinheiro</option>
                   <option value="Crédito">Crédito</option>

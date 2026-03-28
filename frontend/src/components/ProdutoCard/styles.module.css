@@ -1,6 +1,6 @@
 .card {
   background: var(--color-white);
-  border-radius: 12px;
+  border-radius: var(--radius-card); /* 20px */
   box-shadow: var(--shadow-card);
   overflow: hidden;
   transition: transform 0.2s;
@@ -67,6 +67,12 @@
   overflow: hidden;
 }
 
+@media (max-width: 768px) {
+  .description {
+    display: none;
+  }
+}
+
 .footer {
   display: flex;
   justify-content: space-between;
@@ -102,7 +108,7 @@
   color: var(--color-white);
   border: none;
   padding: 8px 12px;
-  border-radius: 20px;
+  border-radius: var(--radius-button);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -133,11 +139,11 @@
   left: 8px;
   z-index: 10;
 
-  background: rgba(255, 255, 255, var(--opacity-90));
+  background: var(--color-white); /* Solid white for better visibility */
   border: none;
   cursor: pointer;
   padding: 4px 8px;
-  border-radius: 20px; /* Arredondado estilo "pill" */
+  border-radius: var(--radius-button);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -171,12 +177,7 @@
     margin-bottom: 0.25rem;
   }
   .description {
-    display: -webkit-box; /* Mostra descrição breve */
-    font-size: 0.7rem;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    display: none; /* Oculta descrição em mobile para caber 3 colunas */
   }
   .price {
     font-size: var(--font-size-md);
@@ -209,7 +210,7 @@
   }
 
   .price {
-    font-size: var(--font-size-xsm);
+    font-size: 0.8rem; /* Menor para 3 colunas */
     white-space: nowrap;
   }
 

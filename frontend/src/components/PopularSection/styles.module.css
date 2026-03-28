@@ -29,20 +29,18 @@
   gap: 1rem;
 }
 
-/* Tablets e Celulares grandes */
+/* Tablets e Celulares */
 @media (max-width: 768px) {
   .grid {
-    /* 3 COLUNAS com minmax para segurança */
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0.5rem;
   }
 }
 
-/* Celulares (abaixo de 425px) */
-@media (max-width: 425px) {
+@media (max-width: 480px) {
   .grid {
-    /* Cai para 3 colunas com minmax(0, 1fr) para evitar overflow */
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 0.4rem;
   }
 }
 
