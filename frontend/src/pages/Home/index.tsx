@@ -2,7 +2,7 @@ import styles from "./styles.module.css";
 import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
 import { Link } from "react-router-dom";
-import { VideoBanner } from "../../components/Banner";
+import { Banner } from "../../components/Banner";
 import { PopularSection } from "../../components/PopularSection";
 import { NewArrivalsSection } from "../../components/NewArrivalsSection";
 import { AboutSection } from "../../components/AboutSection";
@@ -10,7 +10,7 @@ import { AboutSection } from "../../components/AboutSection";
 export function Home() {
   return (
     <>
-      <VideoBanner />
+      <Banner pagina="home" />
       <Header />
       <main className={styles.container} id="inicio">
         <div className={styles.hero}>

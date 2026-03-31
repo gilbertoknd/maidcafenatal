@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
 import type { Produto } from "../../types/Produto";
 import { formatCurrency } from "../../utils/formatadores";
-import { alternarCurtidaProduto } from "../../services/api";
 import { StarIcon } from "../../assets/icons/StarIcon";
 import { Edit, Trash2, ShoppingCart, Eye, EyeOff } from "lucide-react";
 import { useCarrinho } from "../../hooks/useCarrinho";
 import { ProdutoDetalhesModal } from "../ProdutoDetalhesModal";
+import { useProductLike } from "../../hooks/useProductLike";
 
 interface ProdutoCardProps {
   produto: Produto;
@@ -17,9 +17,136 @@ interface ProdutoCardProps {
   onToggleVisibility?: (id: number) => void;
 }
 
-// Chave para salvar no navegador
-const STORAGE_KEY = "mewmew_liked_products";
+/**
+ * Sub-componente para a Imagem e Overlays ( SRP: Visualização do Produto )
+ */
+const CardImage = ({ 
+  produto, 
+  isAdmin, 
+  hasLiked, 
+  handleLike, 
+  likesExibicao,
+  onClick 
+}: { 
+  produto: Produto; 
+  isAdmin: boolean; 
+  hasLiked: boolean; 
+  handleLike: () => void;
+  likesExibicao: number;
+  onClick: () => void;
+}) => {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
+  const fullImageUrl = `${backendUrl}${produto.imagem_url}`;
 
+  return (
+    <div className={`${styles.imageContainer} ${styles.clickable}`} onClick={onClick}>
+      <img
+        src={fullImageUrl}
+        alt={produto.nome}
+        className={styles.image}
+        onError={(e) => {
+          e.currentTarget.src = "https://placehold.co/400?text=Sem+Foto";
+        }}
+      />
+      
+      {!produto.visivel && isAdmin && (
+        <div className={styles.overlayOculto}>
+          <span className={styles.badgeOculto}>OCULTO</span>
+        </div>
+      )}
+
+      {!isAdmin && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            handleLike();
+          }}
+          className={`${styles.likeButton} ${hasLiked ? styles.liked : ""}`}
+          aria-label={hasLiked ? "Descurtir" : "Curtir"}
+          title={hasLiked ? "Descurtir" : "Curtir"}
+        >
+          <span className={styles.likesCountText}>{likesExibicao}</span>
+          <StarIcon
+            width="20"
+            height="20"
+            fill={hasLiked ? "currentColor" : "none"}
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </button>
+      )}
+    </div>
+  );
+};
+
+/**
+ * Sub-componente para as Ações de Admin ( SRP: Gestão )
+ */
+const CardAdminActions = ({ 
+  produto, 
+  onEdit, 
+  onDelete, 
+  onToggleVisibility 
+}: { 
+  produto: Produto; 
+  onEdit?: (p: Produto) => void; 
+  onDelete?: (id: number) => void; 
+  onToggleVisibility?: (id: number) => void;
+}) => (
+  <div className={styles.adminActions}>
+    <button
+      onClick={(e) => { e.stopPropagation(); onEdit?.(produto); }}
+      className={`${styles.btnAdmin} ${styles.btnEdit}`}
+      title="Editar"
+      aria-label={`Editar ${produto.nome}`}
+    >
+      <Edit size={18} />
+    </button>
+    <button
+      onClick={(e) => { e.stopPropagation(); onDelete?.(produto.id); }}
+      className={`${styles.btnAdmin} ${styles.btnDelete}`}
+      title="Excluir"
+      aria-label={`Excluir ${produto.nome}`}
+    >
+      <Trash2 size={18} />
+    </button>
+    <button
+      onClick={(e) => { e.stopPropagation(); onToggleVisibility?.(produto.id); }}
+      className={`${styles.btnAdmin} ${produto.visivel ? styles.btnVisibility : styles.btnVisibilityOff}`}
+      title={produto.visivel ? "Ocultar" : "Mostrar"}
+      aria-label={produto.visivel ? `Ocultar ${produto.nome}` : `Mostrar ${produto.nome}`}
+    >
+      {produto.visivel ? <Eye size={18} /> : <EyeOff size={18} />}
+    </button>
+  </div>
+);
+
+/**
+ * Sub-componente para as Ações de Público ( SRP: Consumo )
+ */
+const CardPublicActions = ({ 
+  produto, 
+  onAdd 
+}: { 
+  produto: Produto; 
+  onAdd: (p: Produto) => void 
+}) => (
+  <button
+    onClick={(e) => { e.stopPropagation(); onAdd(produto); }}
+    className={styles.addToCartBtn}
+    title="Adicionar ao Carrinho"
+    aria-label={`Adicionar ${produto.nome} ao carrinho`}
+  >
+    <ShoppingCart className={styles.cartIcon} /> 
+    <span className={styles.addToCartText}>Adicionar</span>
+  </button>
+);
+
+/**
+ * COMPONENTE PRINCIPAL (Orquestrador)
+ */
 export function ProdutoCard({
   produto,
   isAdmin = false,
@@ -29,205 +156,76 @@ export function ProdutoCard({
 }: ProdutoCardProps) {
   const { adicionarProduto } = useCarrinho();
   const navigate = useNavigate();
-  // INICIALIZAÇÃO INTELIGENTE
-  const [hasLiked, setHasLiked] = useState(() => {
-    if (isAdmin) return false; // Admin não precisa disso
-    const stored = localStorage.getItem(STORAGE_KEY);
-    const likedArray: number[] = stored ? JSON.parse(stored) : [];
-    return likedArray.includes(produto.id);
-  });
-
-  const [likesCount, setLikesCount] = useState(produto.curtidas);
+  const { hasLiked, handleLike } = useProductLike(produto.id);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [likesContagem, setLikesContagem] = useState(produto.curtidas);
 
-  // Fallback para a URL
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
-  const fullImageUrl = `${backendUrl}${produto.imagem_url}`;
+  // Sincroniza com a prop caso o cache global mude (ex: vindo do servidor)
+  useEffect(() => {
+    setLikesContagem(produto.curtidas);
+  }, [produto.curtidas]);
 
-  const precoFormatado = formatCurrency(produto.preco);
-
-  async function handleLike() {
-    if (isAdmin) return; // Segurança extra
-
-    const action = hasLiked ? "unlike" : "like";
-
-    // Optimistic UI
-    setHasLiked(!hasLiked);
-    setLikesCount((prev) => (hasLiked ? prev - 1 : prev + 1));
+  const handleLikeClick = async () => {
+    // UI Otimista Local
+    const novoValor = hasLiked ? likesContagem - 1 : likesContagem + 1;
+    setLikesContagem(novoValor);
 
     try {
-      const novasCurtidas = await alternarCurtidaProduto(produto.id, action);
-      setLikesCount(novasCurtidas);
-
-      const stored = localStorage.getItem(STORAGE_KEY);
-      let likedArray: number[] = stored ? JSON.parse(stored) : [];
-
-      if (action === "like") {
-        if (!likedArray.includes(produto.id)) likedArray.push(produto.id);
-      } else {
-        likedArray = likedArray.filter((id) => id !== produto.id);
-      }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(likedArray));
-    } catch (error) {
-      console.error("Erro:", error);
-      // Rollback
-      setHasLiked(!hasLiked);
-      setLikesCount((prev) => (hasLiked ? prev + 1 : prev - 1));
+      await handleLike();
+    } catch (err) {
+      // O rollback global do TanStack Query cuidará da prop produto futuramente,
+      // mas precisamos reverter o estado local imediatamente se houver erro direto.
+      setLikesContagem(produto.curtidas);
     }
-  }
+  };
+
+  const handleOpenDetails = () => {
+    if (!isAdmin && produto.is_loja) {
+      navigate(`/loja/produto/${produto.id}`);
+    } else {
+      setIsModalOpen(true);
+    }
+  };
 
   return (
     <article className={styles.card}>
-      <div 
-        className={styles.imageContainer} 
-        onClick={() => {
-          if (!isAdmin && produto.is_loja) {
-            navigate(`/loja/produto/${produto.id}`);
-          } else {
-            setIsModalOpen(true);
-          }
-        }}
-        style={{ cursor: "pointer" }}
-      >
-        <img
-          src={fullImageUrl}
-          alt={produto.nome}
-          className={styles.image}
-          onError={(e) => {
-            e.currentTarget.src = "https://placehold.co/400?text=Sem+Foto";
-          }}
-        />
-        {!produto.visivel && isAdmin && (
-          <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.6)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 10, borderRadius: "12px" }}>
-            <span style={{ backgroundColor: "#ef4444", color: "#fff", padding: "6px 12px", borderRadius: "4px", fontWeight: "bold", fontSize: "1.1rem" }}>OCULTO</span>
-          </div>
-        )}
-        {!isAdmin && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleLike();
-            }}
-            className={`${styles.likeButton} ${hasLiked ? styles.liked : ""}`}
-            title={hasLiked ? "Descurtir" : "Curtir"}
-          >
-            <span style={{ fontSize: "0.8rem", fontWeight: "bold" }}>
-              {likesCount}
-            </span>
-            <StarIcon
-              width="20"
-              height="20"
-              fill={hasLiked ? "currentColor" : "none"}
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </button>
-        )}
-      </div>
+      <CardImage 
+        produto={produto} 
+        isAdmin={isAdmin} 
+        hasLiked={hasLiked} 
+        handleLike={handleLikeClick} 
+        likesExibicao={likesContagem}
+        onClick={handleOpenDetails}
+      />
 
       <div className={styles.content}>
-        <h3 
-          className={styles.title} 
-          onClick={() => {
-            if (!isAdmin && produto.is_loja) {
-              navigate(`/loja/produto/${produto.id}`);
-            } else {
-              setIsModalOpen(true);
-            }
-          }}
-          style={{ cursor: "pointer" }}
-        >
+        <h3 className={`${styles.title} ${styles.clickable}`} onClick={handleOpenDetails}>
           {produto.nome}
         </h3>
         <p className={styles.description}>{produto.descricao}</p>
 
         <div className={styles.footer}>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div className={styles.priceContainer}>
             {produto.preco_original && (
-              <span style={{ textDecoration: 'line-through', color: '#9ca3af', fontSize: '0.85rem' }}>
+              <span className={styles.originalPrice}>
                 {formatCurrency(produto.preco_original)}
               </span>
             )}
-            <span className={styles.price}>{precoFormatado}</span>
+            <span className={styles.price}>{formatCurrency(produto.preco)}</span>
           </div>
 
           {isAdmin ? (
-            // --- MODO ADMIN ---
-            <div style={{ display: "flex", gap: "8px" }}>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onEdit?.(produto);
-                }}
-                style={{
-                  background: "#007bff",
-                  color: "white",
-                  border: "none",
-                  padding: "6px",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-                title="Editar"
-              >
-                <Edit size={18} />
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete?.(produto.id);
-                }}
-                style={{
-                  background: "#dc3545",
-                  color: "white",
-                  border: "none",
-                  padding: "6px",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-                title="Excluir"
-              >
-                <Trash2 size={18} />
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onToggleVisibility?.(produto.id);
-                }}
-                style={{
-                  background: produto.visivel ? "#6366f1" : "#4b5563",
-                  color: "white",
-                  border: "none",
-                  padding: "6px",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-                title={produto.visivel ? "Ocultar" : "Mostrar"}
-              >
-                {produto.visivel ? <Eye size={18} /> : <EyeOff size={18} />}
-              </button>
-            </div>
+            <CardAdminActions 
+              produto={produto} 
+              onEdit={onEdit} 
+              onDelete={onDelete} 
+              onToggleVisibility={onToggleVisibility} 
+            />
           ) : (
-            // --- MODO PÚBLICO (ADD TO CART + LIKE) ---
-            <div style={{ display: "flex", gap: "8px" }}>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  adicionarProduto(produto);
-                }}
-                className={styles.addToCartBtn}
-                title="Adicionar ao Carrinho"
-              >
-                <ShoppingCart className={styles.cartIcon} /> <span className={styles.addToCartText}>Adicionar</span>
-              </button>
-            </div>
+            <CardPublicActions 
+              produto={produto} 
+              onAdd={adicionarProduto} 
+            />
           )}
         </div>
       </div>

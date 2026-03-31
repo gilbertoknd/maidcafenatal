@@ -5,6 +5,7 @@ import { MenuPage } from "../pages/Menu";
 import { BrowserRouter } from "react-router-dom";
 import type { Produto } from "../types/Produto";
 import { CarrinhoProvider } from "../hooks/useCarrinho";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Mock API
 const mockProducts: Produto[] = [
@@ -18,6 +19,7 @@ const mockProducts: Produto[] = [
     promocao: true,
     curtidas: 5,
     is_loja: false,
+    visivel: true,
   },
   {
     id: 2,
@@ -29,6 +31,7 @@ const mockProducts: Produto[] = [
     promocao: false,
     curtidas: 10,
     is_loja: false,
+    visivel: true,
   },
   {
     id: 3,
@@ -40,6 +43,7 @@ const mockProducts: Produto[] = [
     promocao: false,
     curtidas: 8,
     is_loja: false,
+    visivel: true,
   },
 ];
 
@@ -49,17 +53,31 @@ vi.mock("../services/api", () => ({
 }));
 
 vi.mock("../components/Banner", () => ({
+  Banner: () => <div data-testid="banner">Banner</div>,
   ImageBanner: () => <div data-testid="image-banner">Banner</div>,
+  VideoBanner: () => <div data-testid="video-banner">Banner</div>,
 }));
+
+const createTestQueryClient = () =>
+  new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
 
 describe("MenuSeparation - Separação por Categorias", () => {
   it("deve exibir subtítulos para cada categoria quando 'Todos' está selecionado", async () => {
+    const queryClient = createTestQueryClient();
     render(
-      <BrowserRouter>
-        <CarrinhoProvider>
-          <MenuPage />
-        </CarrinhoProvider>
-      </BrowserRouter>,
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <CarrinhoProvider>
+            <MenuPage />
+          </CarrinhoProvider>
+        </BrowserRouter>
+      </QueryClientProvider>,
     );
 
     // Esperar carregar produtos
@@ -69,13 +87,19 @@ describe("MenuSeparation - Separação por Categorias", () => {
 
     // Verificar se os subtítulos das categorias estão presentes (usando H2 conforme planejado)
     // Usamos getByRole para evitar ambiguidade com os botões do CategoryFilter
-    expect(screen.getByRole("heading", { name: "Doces", level: 2 })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Bebidas", level: 2 })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Salgados", level: 2 })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Doces", level: 2 }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Bebidas", level: 2 }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Salgados", level: 2 }),
+    ).toBeInTheDocument();
 
     // Eles devem ser renderizados como subtítulos (heading level 2)
     const subtitles = screen.getAllByRole("heading", { level: 2 });
-    const subtitleTexts = subtitles.map(s => s.textContent);
+    const subtitleTexts = subtitles.map((s) => s.textContent);
 
     expect(subtitleTexts).toContain("Doces");
     expect(subtitleTexts).toContain("Bebidas");

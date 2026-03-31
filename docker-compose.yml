@@ -1,9 +1,9 @@
 services:
-  #Banco de Dados
+  # Banco de Dados
   db:
     image: postgres:15-alpine
     container_name: maid_postgres
-    restart: unless-stopped #always ou unless-stopped
+    restart: always
     ports:
       - "${DB_PORT_LOCAL:-5432}:5432"
     environment:
@@ -17,58 +17,58 @@ services:
       - maid_network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 5
 
-  #Backend
+  # Backend (Produção)
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      target: runner
     container_name: maid_backend
-    restart: unless-stopped
+    restart: always
     ports:
-      - "${PORT:-3000}:${PORT:-3000}"
+      - "${PORT:-3000}:3000"
     environment:
       DB_HOST: db
       DB_PORT: 5432
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
-      PORT: ${PORT:-3000}
+      PORT: 3000
       FRONTEND_URL: ${FRONTEND_URL}
       JWT_SECRET: ${JWT_SECRET}
-    command: pnpm dev
+      NODE_ENV: production
     volumes:
-      - ./backend:/app
-      - /app/node_modules
+      # Apenas uploads persistem
       - ./backend/public/images/:/app/public/images/
     networks:
       - maid_network
-    depends_on: #Inicia após o health check do banco
+    depends_on:
       db:
         condition: service_healthy
 
+  # Frontend (Produção - Nginx)
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      target: runner
     container_name: maid_frontend
-    restart: unless-stopped
+    restart: always
     ports:
-      - "${FRONTEND_PORT:-5173}:${FRONTEND_PORT:-5173}"
-    env_file:
-      - ./frontend/.env
-    volumes:
-      - ./frontend:/app #Permite o Hot Reload
-      - /app/node_modules
+      # O Nginx/Vite internamente usa a porta 5174
+      - "${FRONTEND_PORT:-5174}:5174"
     networks:
       - maid_network
-    depends_on: #Inicia após o backend
+    depends_on:
       - backend
 
-  #Tunnel cloudflare
+  # Tunnel Cloudflare
   tunnel:
     container_name: maid_tunnel
     image: cloudflare/cloudflared:latest
-    restart: unless-stopped
+    restart: always
     command: tunnel run
     environment:
       - TUNNEL_TOKEN=${TUNNEL_TOKEN}
@@ -76,11 +76,13 @@ services:
       - maid_network
     depends_on:
       - backend
+      - frontend
 
-#Rede privada para comunicação entre os containers
+# Rede privada
 networks:
   maid_network:
     driver: bridge
 
+# Volumes persistentes
 volumes:
   postgres_data:

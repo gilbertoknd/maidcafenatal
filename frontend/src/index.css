@@ -14,6 +14,12 @@
   --color-shadow: rgba(241, 100, 140, 0.3);
   --color-modal-overlay: rgba(0, 0, 0, 0.5);
   --color-border: #fbd1dd;
+  --color-error: #ef4444;
+  --color-error-dark: #dc2626;
+  --color-info: #6366f1;
+  --color-gray-dark-secondary: #4b5563;
+  --color-overlay-dark: rgba(0, 0, 0, 0.6);
+  --color-icon-inactive: #9ca3af;
 
   /* New Variables */
   /* Layout */
@@ -46,6 +52,10 @@
   --color-whatsapp: #25d366;
   --color-star-active: #ffd700;
   --color-star-shadow: rgba(255, 215, 0, 0.4);
+  --color-success: #10b981; /* Verde esmeralda fofo */
+  --color-success-dark: #059669;
+  --color-warning: #fbbf24; /* Amarelo quente fofo */
+  --color-warning-dark: #d97706;
 
   /* Typography */
   --font-main: "Fredoka", sans-serif;

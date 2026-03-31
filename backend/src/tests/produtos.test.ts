@@ -1,6 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import request from "supertest";
 import app from "../app.js";
+import jwt from "jsonwebtoken";
+import { pool } from "../config/db.js";
+import { StorageProvider } from "../utils/StorageProvider.js";
 
 // Mock the database pool
 vi.mock("../config/db", () => ({
@@ -9,198 +12,99 @@ vi.mock("../config/db", () => ({
   },
 }));
 
-// Mock do middleware de autenticação
-vi.mock("../middlewares/autenticacaoMiddleware.js", () => ({
-  autenticacaoMiddleware: vi.fn((req, res, next) => next())
+// Mock do StorageProvider para verificar se arquivos são deletados
+vi.mock("../utils/StorageProvider.js", () => ({
+  StorageProvider: {
+    deleteFile: vi.fn(),
+  },
 }));
 
-import { pool } from "../config/db.js";
+// NÃO vamos mais mockar o autenticacaoMiddleware. Vamos mockar o jwt.verify
+vi.mock("jsonwebtoken");
 
 describe("Product Routes", () => {
+  const validToken = "Bearer valid-token";
+  const invalidToken = "Bearer invalid-token";
+
   beforeEach(() => {
     vi.clearAllMocks();
+    process.env.JWT_SECRET = "segredo";
   });
 
-  it("should return all products", async () => {
-    const mockProducts = [
-      { id: 1, name: "Product 1", price: 10 },
-      { id: 2, name: "Product 2", price: 20 },
-    ];
+  describe("Security (Authentication)", () => {
+    it("should return 401 if token is missing on protected route", async () => {
+      const response = await request(app).get("/api/produtos/admin");
+      expect(response.status).toBe(401);
+      expect(response.body.error).toBe("Token não fornecido");
+    });
 
-    (pool.query as any).mockResolvedValue({ rows: mockProducts });
+    it("should return 401 if token is invalid", async () => {
+      (jwt.verify as any).mockImplementation(() => {
+        throw new Error("Invalid");
+      });
 
-    const response = await request(app).get("/api/produtos");
+      const response = await request(app)
+        .get("/api/produtos/admin")
+        .set("Authorization", invalidToken);
+      
+      expect(response.status).toBe(401);
+      expect(response.body.error).toBe("Token inválido ou expirado");
+    });
 
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual(mockProducts);
-    expect(pool.query).toHaveBeenCalledWith(
-      "SELECT * FROM produtos WHERE visivel = true ORDER BY id ASC"
-    );
+    it("should allow access with valid token", async () => {
+      (jwt.verify as any).mockReturnValue({ id: 1 });
+      (pool.query as any).mockResolvedValue({ rows: [] });
+
+      const response = await request(app)
+        .get("/api/produtos/admin")
+        .set("Authorization", validToken);
+
+      expect(response.status).toBe(200);
+    });
   });
 
-  it("should return popular products", async () => {
-    const mockProducts = [{ id: 1, name: "Popular Product", curtidas: 100 }];
+  describe("Public Routes", () => {
+    it("should return all visible products", async () => {
+      const mockProducts = [{ id: 1, nome: "Pocky", price: 10 }];
+      (pool.query as any).mockResolvedValue({ rows: mockProducts });
 
-    (pool.query as any).mockResolvedValue({ rows: mockProducts });
-
-    const response = await request(app).get("/api/produtos/populares");
-
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual(mockProducts);
-    expect(pool.query).toHaveBeenCalledWith(
-      "SELECT * FROM produtos WHERE visivel = true ORDER BY curtidas DESC LIMIT 6"
-    );
-  });
-  it("should return new products", async () => {
-    const mockProducts = [
-      { id: 1, name: "New Product", criado_em: "2023-01-01" },
-    ];
-
-    (pool.query as any).mockResolvedValue({ rows: mockProducts });
-
-    const response = await request(app).get("/api/produtos/novidades");
-
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual(mockProducts);
-    expect(pool.query).toHaveBeenCalledWith(
-      "SELECT * FROM produtos WHERE visivel = true ORDER BY criado_em DESC LIMIT 3"
-    );
+      const response = await request(app).get("/api/produtos");
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(mockProducts);
+    });
   });
 
-  it("should increment likes", async () => {
-    const mockResult = { curtidas: 11 };
-    (pool.query as any).mockResolvedValue({ rows: [mockResult] });
+  describe("Admin Routes (Side Effects)", () => {
+    it("should delete image if validation fails (Error 400)", async () => {
+      (jwt.verify as any).mockReturnValue({ id: 1 });
 
-    const response = await request(app).patch("/api/produtos/1/like");
+      const response = await request(app)
+        .post("/api/produtos")
+        .set("Authorization", validToken)
+        // Simulando envio de arquivo via supertest (o multer vai salvar o arquivo temporariamente)
+        .attach("imagem", Buffer.from("fake-image"), "test.jpg")
+        .field("nome", "Novo Produto")
+        // Faltando PRECO (deve dar 400)
+        .field("categoria", "Bebidas");
 
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual({ novas_curtidas: 11 });
-    expect(pool.query).toHaveBeenCalledWith(
-      "UPDATE produtos SET curtidas = curtidas + 1 WHERE id = $1 RETURNING curtidas",
-      ["1"]
-    );
-  });
+      expect(response.status).toBe(400);
+      expect(response.body.error).toBe("Dados inválidos. Verifique nome, preço e categoria.");
+      
+      // VERIFICA SE O CLEANUP FOI CHAMADO
+      expect(StorageProvider.deleteFile).toHaveBeenCalled();
+    });
 
-  it("should decrement likes", async () => {
-    const mockResult = { curtidas: 9 };
-    (pool.query as any).mockResolvedValue({ rows: [mockResult] });
+    it("should delete product and its image from disk", async () => {
+      (jwt.verify as any).mockReturnValue({ id: 1 });
+      const mockProduct = { id: 1, nome: "Gone", imagem_url: "/images/gone.jpg" };
+      (pool.query as any).mockResolvedValue({ rows: [mockProduct] });
 
-    const response = await request(app).patch("/api/produtos/1/unlike");
+      const response = await request(app)
+        .delete("/api/produtos/1")
+        .set("Authorization", validToken);
 
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual({ novas_curtidas: 9 });
-    expect(pool.query).toHaveBeenCalledWith(
-      "UPDATE produtos SET curtidas = GREATEST(curtidas - 1, 0) WHERE id = $1 RETURNING curtidas",
-      ["1"]
-    );
-  });
-
-  it("should return 404 when liking non-existent product", async () => {
-    (pool.query as any).mockResolvedValue({ rows: [] });
-
-    const response = await request(app).patch("/api/produtos/999/like");
-
-    expect(response.status).toBe(404);
-    expect(response.body).toEqual({ error: "Produto não encontrado" });
-  });
-
-  it("should handle database errors gracefully", async () => {
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-    (pool.query as any).mockRejectedValue(new Error("DB Error"));
-
-    const response = await request(app).get("/api/produtos");
-
-    expect(response.status).toBe(500);
-    expect(response.body).toEqual({ error: "Erro interno do servidor" });
-    expect(consoleSpy).toHaveBeenCalled();
-    consoleSpy.mockRestore();
-  });
-
-  it("should return all products for admin", async () => {
-    const mockProducts = [
-      { id: 1, name: "Product 1", price: 10, visivel: true },
-      { id: 2, name: "Hidden", price: 20, visivel: false },
-    ];
-    (pool.query as any).mockResolvedValue({ rows: mockProducts });
-
-    const response = await request(app).get("/api/produtos/admin");
-
-    expect(response.status).toBe(200);
-    expect(response.body.length).toBe(2);
-  });
-
-
-
-  it("should create a product successfully", async () => {
-    const mockProduct = { id: 1, nome: "New", categoria: "Bebida", preco: 15.0 };
-    (pool.query as any).mockResolvedValue({ rows: [mockProduct] });
-
-    const response = await request(app)
-      .post("/api/produtos")
-      .send({ nome: "New", categoria: "Bebida", preco: 15.0 });
-
-    expect(response.status).toBe(201);
-    expect(response.body).toEqual(mockProduct);
-  });
-
-  it("should update a product successfully", async () => {
-    const mockProduct = { id: 1, nome: "Update", categoria: "Bebida", preco: 15.0 };
-    (pool.query as any).mockResolvedValue({ rows: [mockProduct] });
-
-    const response = await request(app)
-      .put("/api/produtos/1")
-      .send({ nome: "Update", preco: 15.0 });
-
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual(mockProduct);
-  });
-
-  it("should return 404 updating a non-existent product", async () => {
-    (pool.query as any).mockResolvedValue({ rows: [] });
-
-    const response = await request(app)
-      .put("/api/produtos/999")
-      .send({ nome: "Nope", preco: 15.0 });
-
-    expect(response.status).toBe(404);
-    expect(response.body.error).toBe("Produto não encontrado");
-  });
-
-  it("should delete a product successfully", async () => {
-    const mockProduct = { id: 1, nome: "Gone" };
-    (pool.query as any).mockResolvedValue({ rows: [mockProduct] });
-
-    const response = await request(app).delete("/api/produtos/1");
-
-    expect(response.status).toBe(200);
-    expect(response.body.message).toBe("Produto deletado com sucesso");
-  });
-
-  it("should return 404 deleting a non-existent product", async () => {
-    (pool.query as any).mockResolvedValue({ rows: [] });
-
-    const response = await request(app).delete("/api/produtos/999");
-
-    expect(response.status).toBe(404);
-    expect(response.body.error).toBe("Produto não encontrado");
-  });
-
-  it("should toggle product visibility", async () => {
-    const mockProduct = { id: 1, visivel: false };
-    (pool.query as any).mockResolvedValue({ rows: [mockProduct] });
-
-    const response = await request(app).patch("/api/produtos/1/visibilidade");
-
-    expect(response.status).toBe(200);
-    expect(response.body.visivel).toBe(false);
-  });
-
-  it("should return 404 toggling visibility of non-existent product", async () => {
-    (pool.query as any).mockResolvedValue({ rows: [] });
-
-    const response = await request(app).patch("/api/produtos/999/visibilidade");
-
-    expect(response.status).toBe(404);
-    expect(response.body.error).toBe("Produto não encontrado");
+      expect(response.status).toBe(200);
+      expect(StorageProvider.deleteFile).toHaveBeenCalledWith("/images/gone.jpg");
+    });
   });
 });

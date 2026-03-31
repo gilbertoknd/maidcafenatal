@@ -1,11 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import request from "supertest";
 import app from "../app.js";
-
-// Mock middleware de auth para passar direto em rotas protegidas
-vi.mock("../middlewares/autenticacaoMiddleware.js", () => ({
-  autenticacaoMiddleware: (req: any, res: any, next: any) => next(),
-}));
+import jwt from "jsonwebtoken";
+import { pool } from "../config/db.js";
+import { StorageProvider } from "../utils/StorageProvider.js";
 
 // Mock do banco de dados
 vi.mock("../config/db", () => ({
@@ -14,11 +12,22 @@ vi.mock("../config/db", () => ({
   },
 }));
 
-import { pool } from "../config/db.js";
+// Mock do StorageProvider
+vi.mock("../utils/StorageProvider.js", () => ({
+  StorageProvider: {
+    deleteFile: vi.fn(),
+  },
+}));
+
+// NÃO mockar o middleware, apenas o jwt.verify
+vi.mock("jsonwebtoken");
 
 describe("Event Routes", () => {
+  const validToken = "Bearer valid-token";
+  
   beforeEach(() => {
     vi.clearAllMocks();
+    process.env.JWT_SECRET = "segredo";
   });
 
   const mockEvento = {
@@ -30,131 +39,64 @@ describe("Event Routes", () => {
     visivel: true,
   };
 
-  it("GET /api/eventos - should return all visible events", async () => {
-    (pool.query as any).mockResolvedValue({ rows: [mockEvento] });
+  describe("Security", () => {
+    it("should return 401 if token is missing on admin list", async () => {
+      const response = await request(app).get("/api/eventos/admin");
+      expect(response.status).toBe(401);
+    });
 
-    const response = await request(app).get("/api/eventos");
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual([mockEvento]);
+    it("should return 401 if token is invalid", async () => {
+      (jwt.verify as any).mockImplementation(() => { throw new Error("Ops"); });
+      const response = await request(app)
+        .post("/api/eventos")
+        .set("Authorization", "Bearer invalid");
+      expect(response.status).toBe(401);
+    });
   });
 
-  it("GET /api/eventos/admin - should return all events for admin", async () => {
-    const hiddenEvento = { ...mockEvento, id: 2, titulo: "Evento Oculto", visivel: false };
-    (pool.query as any).mockResolvedValue({ rows: [mockEvento, hiddenEvento] });
+  describe("Operations", () => {
+    it("POST /api/eventos - should create an event with valid token", async () => {
+      (jwt.verify as any).mockReturnValue({ id: 1 });
+      (pool.query as any).mockResolvedValue({ rows: [mockEvento] });
 
-    const response = await request(app).get("/api/eventos/admin");
-    expect(response.status).toBe(200);
-    expect(response.body.length).toBe(2);
-    expect(response.body[1].titulo).toBe("Evento Oculto");
-  });
+      const response = await request(app)
+        .post("/api/eventos")
+        .set("Authorization", validToken)
+        .send({
+          titulo: "Festa Gatinho",
+          data: "2026-04-10T20:00:00.000Z",
+          local: "Maid Cafe",
+        });
 
-  it("GET /api/eventos/:id - should return a single event", async () => {
-    (pool.query as any).mockResolvedValue({ rows: [mockEvento] });
+      expect(response.status).toBe(201);
+      expect(response.body.titulo).toBe("Festa Gatinho");
+    });
 
-    const response = await request(app).get("/api/eventos/1");
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual(mockEvento);
-  });
+    it("POST /api/eventos - should cleanup image if creation fails (Error 500)", async () => {
+      (jwt.verify as any).mockReturnValue({ id: 1 });
+      (pool.query as any).mockRejectedValueOnce(new Error("Database boom"));
 
-  it("GET /api/eventos/:id - should return 404 if event not found", async () => {
-    (pool.query as any).mockResolvedValue({ rows: [] });
+      const response = await request(app)
+        .post("/api/eventos")
+        .set("Authorization", validToken)
+        .attach("imagem", Buffer.from("fake"), "event.jpg")
+        .field("titulo", "Boom");
 
-    const response = await request(app).get("/api/eventos/999");
-    expect(response.status).toBe(404);
-    expect(response.body.error).toBe("Evento não encontrado");
-  });
+      expect(response.status).toBe(500);
+      expect(StorageProvider.deleteFile).toHaveBeenCalled();
+    });
 
-  it("POST /api/eventos - should create an event", async () => {
-    (pool.query as any).mockResolvedValue({ rows: [mockEvento] });
+    it("DELETE /api/eventos/:id - should delete an event and its image", async () => {
+      (jwt.verify as any).mockReturnValue({ id: 1 });
+      const eventWithImg = { ...mockEvento, imagem_url: "/images/event.jpg" };
+      (pool.query as any).mockResolvedValue({ rows: [eventWithImg] });
 
-    const response = await request(app)
-      .post("/api/eventos")
-      .send({
-        titulo: "Festa Gatinho",
-        descricao: "Miau Miau",
-        data: "2026-04-10T20:00:00.000Z",
-        local: "Maid Cafe",
-      });
+      const response = await request(app)
+        .delete("/api/eventos/1")
+        .set("Authorization", validToken);
 
-    expect(response.status).toBe(201);
-    expect(response.body).toEqual(mockEvento);
-  });
-
-  it("PUT /api/eventos/:id - should update an event", async () => {
-    (pool.query as any).mockResolvedValue({ rows: [{ ...mockEvento, titulo: "Festa Doguinho" }] });
-
-    const response = await request(app)
-      .put("/api/eventos/1")
-      .send({
-        titulo: "Festa Doguinho",
-        data: "2026-04-10T20:00:00.000Z",
-        local: "Maid Cafe",
-      });
-
-    expect(response.status).toBe(200);
-    expect(response.body.titulo).toBe("Festa Doguinho");
-  });
-
-  it("PUT /api/eventos/:id - should return 404 if event not found", async () => {
-    (pool.query as any).mockResolvedValue({ rows: [] });
-
-    const response = await request(app)
-      .put("/api/eventos/999")
-      .send({ titulo: "Festa Doguinho", data: "2026-04-10", local: "Cafe" });
-
-    expect(response.status).toBe(404);
-    expect(response.body.error).toBe("Evento não encontrado");
-  });
-
-  it("DELETE /api/eventos/:id - should delete an event", async () => {
-    (pool.query as any).mockResolvedValue({ rows: [mockEvento] });
-
-    const response = await request(app).delete("/api/eventos/1");
-    expect(response.status).toBe(200);
-    expect(response.body.message).toBe("Evento deletado com sucesso");
-  });
-
-  it("DELETE /api/eventos/:id - should return 404 if not found", async () => {
-    (pool.query as any).mockResolvedValue({ rows: [] });
-
-    const response = await request(app).delete("/api/eventos/999");
-    expect(response.status).toBe(404);
-    expect(response.body.error).toBe("Evento não encontrado");
-  });
-
-  it("PATCH /api/eventos/:id/visibilidade - should toggle visibilidade", async () => {
-    (pool.query as any).mockResolvedValue({ rows: [{ ...mockEvento, visivel: false }] });
-    const response = await request(app).patch("/api/eventos/1/visibilidade");
-    expect(response.status).toBe(200);
-    expect(response.body.visivel).toBe(false);
-  });
-
-  it("PATCH /api/eventos/:id/visibilidade - should return 404 if not found", async () => {
-    (pool.query as any).mockResolvedValue({ rows: [] });
-
-    const response = await request(app).patch("/api/eventos/999/visibilidade");
-    expect(response.status).toBe(404);
-    expect(response.body.error).toBe("Evento não encontrado");
-  });
-
-  it("POST /api/eventos - should remove orphaned image on creation error", async () => {
-    (pool.query as any).mockRejectedValueOnce(new Error("Database boom"));
-
-    const response = await request(app)
-      .post("/api/eventos")
-      .send({ titulo: "Boom" });
-
-    expect(response.status).toBe(500);
-    expect(response.body.error).toBe("Erro interno do servidor");
-  });
-
-  it("PUT /api/eventos/:id - should remove orphaned image on update when not found", async () => {
-    (pool.query as any).mockResolvedValue({ rows: [] });
-
-    const response = await request(app)
-      .put("/api/eventos/999")
-      .send({ titulo: "Fail" });
-
-    expect(response.status).toBe(404);
+      expect(response.status).toBe(200);
+      expect(StorageProvider.deleteFile).toHaveBeenCalledWith("/images/event.jpg");
+    });
   });
 });

@@ -6,6 +6,7 @@ import { gerenciadorErros } from "./middlewares/gerenciadorErros.js";
 import path from "path";
 import autenticacaoRoutes from "./routes/AutenticacaoRoutes.js";
 import eventoRoutes from "./routes/EventoRoutes.js";
+import bannerRoutes from "./routes/BannerRoutes.js";
 import corsOptions from "./config/corsOptions.js";
 
 const app = express();
@@ -21,6 +22,7 @@ app.use("/api/autenticacao", autenticacaoRoutes);
 app.use("/api/produtos", produtoRoutes);
 app.use("/api/pedidos", pedidoRoutes);
 app.use("/api/eventos", eventoRoutes);
+app.use("/api/banners", bannerRoutes);
 
 // Error Handler deve SEMPRE vir DEPOIS das rotas
 app.use(gerenciadorErros);

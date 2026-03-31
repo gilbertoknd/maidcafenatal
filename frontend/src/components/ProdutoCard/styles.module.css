@@ -114,8 +114,6 @@
   align-items: center;
   gap: 6px;
   font-weight: bold;
-  flex: 1;
-  justify-content: center;
   box-shadow: var(--shadow-sm);
   transition:
     transform 0.2s ease,
@@ -230,4 +228,87 @@
   .addToCartText {
     display: none;
   }
+}
+
+.overlayOculto {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--color-overlay-dark);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  border-radius: 12px;
+}
+
+.badgeOculto {
+  background-color: var(--color-error);
+  color: var(--color-white);
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.adminActions {
+  display: flex;
+  gap: 8px;
+}
+
+.btnAdmin {
+  color: var(--color-white);
+  border: none;
+  padding: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.btnEdit {
+  background: #007bff;
+}
+
+.btnEdit:hover {
+  background: #0056b3;
+}
+
+.btnDelete {
+  background: var(--color-error);
+}
+
+.btnDelete:hover {
+  background: var(--color-error-dark);
+}
+
+.btnVisibility {
+  background: var(--color-info);
+}
+
+.btnVisibilityOff {
+  background: var(--color-gray-dark-secondary);
+}
+
+.priceContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.originalPrice {
+  text-decoration: line-through;
+  color: var(--color-gray-400);
+  font-size: 0.85rem;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.likesCountText {
+  font-size: 0.8rem;
+  font-weight: bold;
 }

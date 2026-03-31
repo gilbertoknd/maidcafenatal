@@ -6,7 +6,7 @@
 - **Gerenciador de Pacotes:** Utilize EXCLUSIVAMENTE o `pnpm` (nunca use `npm` ou `yarn`).
 - **Infraestrutura Local (Docker):** Utilizamos o `docker-compose.yml` na raiz do projeto para orquestrar todos os containers: `db` (PostgreSQL 15), `backend` (Node/Express), `frontend` (Vite/React) e `tunnel` (Cloudflare).
 - **Controle de Versão:** O `.gitignore` raiz ignora `node_modules`, `.env` de todos os níveis, pastas de build (`dist/`, `build/`), coverage, dados do PostgreSQL (`pgdata/`, `postgres_data/`) e arquivos de OS/IDE.
-- **Contexto:** Use SEMPRE o `guia.md` como a fonte da verdade para as regras de negócio, arquitetura e contexto. Atualize este documento constantemente com novas regras, dependências e soluções de erros.
+- **Contexto:** Use SEMPRE o `GEMINI.md` como a fonte da verdade para as regras de negócio, arquitetura e contexto. Atualize este documento constantemente com novas regras, dependências e soluções de erros.
 - **Resolução de Erros:** Sempre que houver um erro, é mandatório ler integralmente o output do terminal para analisar de verdade qual é o problema ANTES de prosseguir.
 - **Padronização CSS:** Sempre utilize as variáveis CSS definidas em `frontend/src/index.css` (`:root`). Se necessário criar um novo token (cor, tamanho, espaçamento), adicione-o lá. Nunca use valores hard-coded repetidos.
 - **Idioma do Código:** Nomes de tabelas, colunas, variáveis de banco e endpoints da API estão em **português** (ex: `produtos`, `pedidos`, `eventos`). Comentários e mensagens de erro também em português.
@@ -32,7 +32,7 @@ Website para o **Mew Mew Café** (Maid Café) localizado em Natal/RN. O sistema 
 ┌────────────────┐     ┌──────────────────┐     ┌──────────────────────┐
 │   Frontend     │────▶│    Backend       │────▶│   PostgreSQL 15      │
 │  (Vite+React)  │ API │  (Express 5)     │ pg  │  (Docker Container)  │
-│  :5173         │     │  :3000           │     │  :5432               │
+│  :5174         │     │  :3000           │     │  :5432               │
 └────────────────┘     └──────────────────┘     └──────────────────────┘
                               │
                        ┌──────┴──────┐
@@ -43,7 +43,9 @@ Website para o **Mew Mew Café** (Maid Café) localizado em Natal/RN. O sistema 
 
 ### 1.2. Hospedagem e Deploy
 
-- **Produção:** Todos os containers rodam via Docker Compose em uma máquina com acesso à internet.
+- **Produção:** Todos os containers rodam via Docker Compose em uma máquina com acesso à internet. Utilizamos **Multi-stage builds** para otimização de performance e segurança.
+- **Frontend em Produção:** Servido por um container **Nginx** (porta 80 interna), otimizado para Single Page Applications (SPA).
+- **Backend em Produção:** Executa o código transpilado da pasta `/dist` via Node.js em modo produção.
 - **Domínio:** `jcafenatal.store` (via Cloudflare Tunnel — container `maid_tunnel`).
 - **Imagens:** Servidas localmente a partir de `backend/public/images/` via `express.static`. A rota `/images/*` no backend serve os arquivos estáticos.
 
@@ -59,6 +61,7 @@ Website para o **Mew Mew Café** (Maid Café) localizado em Natal/RN. O sistema 
 - **Ícones:** `lucide-react`
 - **Datas:** `Intl.DateTimeFormat` (Nativo)
 - **Mapas:** `leaflet` + `react-leaflet`
+- **Estado Global/Cache:** `@tanstack/react-query` (TanStack Query v5)
 - **Testes:** Vitest + `@testing-library/react` + `@testing-library/jest-dom` + `jsdom`
 - **Linting:** ESLint 9 + `eslint-plugin-react-hooks` + `eslint-plugin-react-refresh` + `typescript-eslint` + `globals`
 - **Validação de Schemas:** `zod`
@@ -105,7 +108,7 @@ DB_NAME=maid_cafe_db
 
 # Backend
 PORT=3000
-FRONTEND_URL=http://localhost:5173
+FRONTEND_URL=http://localhost:5174
 JWT_SECRET=seu_segredo_jwt
 
 # Cloudflare Tunnel
@@ -128,7 +131,7 @@ DB_PASSWORD=sua_senha_segura
 DB_NAME=maid_cafe_db
 PORT=3000
 JWT_SECRET=segredo
-FRONTEND_URL=http://localhost:5173
+FRONTEND_URL=http://localhost:5174
 ```
 
 > **Nota:** Dentro do Docker, o `DB_HOST` é `db` (nome do serviço). Fora do Docker (dev local), use `localhost` com a porta `DB_PORT_LOCAL` (5433).
@@ -142,7 +145,7 @@ FRONTEND_URL=http://localhost:5173
 ├── .env                          # Variáveis do Docker Compose
 ├── .gitignore
 ├── docker-compose.yml            # Orquestração de containers
-├── guia.md                       # ESTE ARQUIVO — fonte da verdade
+├── GEMINI.md                     # ESTE ARQUIVO — fonte da verdade
 │
 ├── database/
 │   └── init.sql                  # Schema DDL + seed data (roda no init do container)
@@ -284,6 +287,17 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 | `visivel`    | `BOOLEAN`      | Visível para usuários? |
 | `criado_em`  | `TIMESTAMP`    | Data de criação        |
 
+### `banners`
+
+| Coluna                      | Tipo                 | Descrição                           |
+| --------------------------- | -------------------- | ----------------------------------- |
+| `id`                        | `SERIAL PK`          | ID auto-incremento                  |
+| `pagina`                    | `VARCHAR(50) UNIQUE` | Ex: 'home', 'cardapio', ou 'padrao' |
+| `tipo`                      | `VARCHAR(20)`        | `video` ou `image`                  |
+| `url`                       | `VARCHAR(255)`       | URL da mídia (no disco)             |
+| `titulo`, `subtitulo`       | `VARCHAR`            | Opcional: Textos sobrepostos        |
+| `texto_botao`, `link_botao` | `VARCHAR`            | Opcional: Call to Action            |
+
 ### `users`
 
 | Coluna      | Tipo                 | Descrição            |
@@ -324,6 +338,13 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 | ------ | -------- | ----- | -------------------------------------- |
 | `POST` | `/login` | ❌    | Login (nickname + senha) → retorna JWT |
 
+### Banners (`/api/banners`)
+
+| Método | Rota       | Auth? | Descrição                                                   |
+| ------ | ---------- | ----- | ----------------------------------------------------------- |
+| `GET`  | `/`        | ❌    | Lista todos os banners parametrizados                       |
+| `PUT`  | `/:pagina` | ✅    | Cria/Atualiza o banner atrelado a uma página (upload midia) |
+
 ### Produtos (`/api/produtos`)
 
 | Método   | Rota                | Auth? | Descrição                                |
@@ -358,8 +379,6 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 | `DELETE` | `/:id`              | ✅    | Deleta evento                      |
 | `PATCH`  | `/:id/visibilidade` | ✅    | Alterna visibilidade               |
 
----
-
 ## 7. Rotas do Frontend (React Router)
 
 | Path                | Página                | Descrição                                          |
@@ -370,6 +389,13 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 | `/loja/produto/:id` | `StoreProductDetails` | Detalhes de produto da loja                        |
 | `/eventos`          | `EventsPage`          | Calendário de eventos                              |
 | `/admin`            | `Admin`               | Painel administrativo (protegido por login)        |
+
+### Components & UI Adicionais (Admin Dashboard)
+
+- A aba `/admin` inclui sub-rotas/tabs renderizando os paineis `AdminProdutos`, `AdminLoja`, `AdminPedidos`, `AdminEventos` e `AdminBanners`.
+- **Admin Banners:** Adicionado suporte para mídias `.mp4` e `.webm` com limite estendido para 50MB e textos opcionais. A API de Banners reflete globalmente qual componente deve ser exibido por página.
+- **Formulários Dinâmicos:** O `ProdutoForm` e outros painéis contam com inputs fluídos que extraem "Categorias" e "Tags" já salvas em cache local (via TanStack Query) para preenchimento de Autocomplete Inteligente ilimitado, criando padronização nas listagens públicas.
+- Padrão **FormGrid**: Para manutenção da unidade visual, novos componentes adotam `.formContainer` em CSS grid respeitando padding e limitações `--container-max-width`.
 
 ---
 
@@ -389,6 +415,9 @@ Todos os tokens de design estão centralizados em `frontend/src/index.css`:
 --color-text: #555555; /* Texto padrão */
 --color-white: #ffffff;
 --color-star-active: #ffd700; /* Estrela ativa (likes) */
+--color-error: #ef4444; /* Erros e Deletar */
+--color-info: #6366f1; /* Informação e Visibilidade */
+--color-overlay-dark: rgba(0, 0, 0, 0.6);
 ```
 
 ### Layout
@@ -428,15 +457,16 @@ Todos os tokens de design estão centralizados em `frontend/src/index.css`:
 
 - **Models** (`models/`): Queries SQL puras usando `pool.query()` do `pg`. Retornam dados brutos.
 - **Controllers** (`controllers/`): Recebem `req/res`, chamam Models, tratam validações e formatam a resposta HTTP. Exportados como objetos `const`.
-- **Routes** (`routes/`): Mapeiam endpoints para Controllers, aplicam middlewares (`autenticacaoMiddleware`, `uploadConfig`).
+- **Routes** (`routes/`): Mapeiam endpoints para Controllers, aplicam middlewares (`autenticacaoMiddleware`, `uploadConfig`). A config de Upload (`Multer`) hoje **permite Imagens e Vídeos até 50MB**.
 - **Erros:** Classe customizada `AppError` com `statusCode`, capturada pelo `gerenciadorErros` centralizado.
+- **Storage:** Utilitário `StorageProvider` (`utils/StorageProvider.ts`) abstrai a deleção de arquivos físicos, permitindo trocar o storage local por nuvem (S3/GCS) facilmente.
 
 ### Frontend — Hooks Pattern
 
-- **Custom Hooks** (`hooks/`): Encapsulam lógica de estado e chamadas à API (`useProdutos`, `useAdminProdutos`, `useAutenticacao`, `useCarrinho`).
+- **Hooks Customizados** (`hooks/`): Encapsulam lógica de estado e chamadas à API (`useProdutos` agora usa TanStack Query, `useProductLike` gerencia curtidas globais).
 - **Pages** (`pages/`): Componentes de página que orquestram hooks e componentes.
-- **Components** (`components/`): Componentes de UI reutilizáveis, cada um em sua própria pasta com arquivo `.tsx` + `.css`.
-- **Services** (`services/api.ts`): Centraliza todas as chamadas `fetch()` ao backend. Funções retornam Promises tipadas.
+- **Components** (`components/`): Componentes de UI reutilizáveis. Componentes complexos (ex: `ProdutoCard`) seguem o padrão de sub-componentes internos no mesmo arquivo para manter a coesão.
+- **Acessibilidade:** Todos os elementos interativos devem possuir `aria-label` descritivo.
 - **Carrinho:** Implementado via React Context API (`useCarrinho`), armazenamento no estado local.
 
 ### Autenticação
@@ -490,8 +520,11 @@ As categorias atuais do cardápio e loja são:
 ### Docker (ambiente completo)
 
 ```bash
-# Subir todos os containers (db + backend + frontend + tunnel)
+# Subir ambiente de DESENVOLVIMENTO (Docker usa docker-compose.override.yml automaticamente)
 docker compose up -d
+
+# Subir ambiente de PRODUÇÃO explicitamente
+docker compose -f docker-compose.yml up -d
 
 # Ver logs
 docker compose logs -f backend
@@ -514,6 +547,7 @@ pnpm test        # vitest watch
 pnpm test:ci     # vitest run (uma vez)
 pnpm build       # tsc produção
 pnpm lint        # eslint
+pnpm db:reset    # Limpa e reseta o banco (TRUNCATE)
 ```
 
 ### Frontend (dev local, fora do Docker)
@@ -521,7 +555,7 @@ pnpm lint        # eslint
 ```bash
 cd frontend
 pnpm install
-pnpm dev         # vite dev server :5173
+pnpm dev         # vite dev server :5174
 pnpm test        # vitest watch
 pnpm test:ci     # vitest run (uma vez)
 pnpm build       # tsc + vite build
@@ -563,7 +597,7 @@ pnpm lint        # eslint
 
 **Hurdle:** `init.sql` reseta o banco a cada restart do container.
 
-**Solução:** O arquivo `init.sql` contém `TRUNCATE TABLE ... CASCADE` que apaga todos os dados ao reiniciar. Isso é intencional para desenvolvimento. Em produção, remova essas linhas e use migrations (`backend/migrations/`) para alterações incrementais no schema.
+**Solução:** O arquivo `init.sql` anteriormente continha `TRUNCATE TABLE ... CASCADE`. Para evitar perda de dados em produção e persistir dados em dev, essas linhas foram comentadas. Se precisar resetar o banco manualmente em desenvolvimento, utilize o comando `pnpm db:reset` na pasta /backend. Em produção, use sempre migrations (`backend/migrations/`).
 
 ---
 
@@ -640,7 +674,7 @@ O projeto mantém testes unitários e de integração em ambos os lados:
 - [ ] Se criou nova rota, ela segue o padrão existente (Model → Controller → Route)?
 - [ ] Se é rota admin, o `authMiddleware` foi aplicado?
 - [ ] Loading e Error states estão sendo tratados na UI?
-- [ ] O `guia.md` foi atualizado com as novas informações?
+- [ ] O `GEMINI.md` foi atualizado com as novas informações?
 
 ---
 
@@ -649,10 +683,10 @@ O projeto mantém testes unitários e de integração em ambos os lados:
 Ao longo das otimizações dos testes e padronização contínua do Maid Café, estas convenções de código tornaram-se vitais:
 
 15. **Cobertura Mínima de Testes (TDD):**
-   Ao estruturar as APIs do servidor (como Middlewares guardiões), **não deixe código vital de segurança com linhas não-cobertas**. Assegure que as rotinas de verificação do `AppError` dentro de chaves (`catch`) ou retornos de transação bloqueiam e recebem mockups apropriados (`vi.spyOn(jwt, 'verify')`). Todas as rotas administrativas (`/admin`, POSTs, PUTs, DELETEs) devem ter simulação de status válidos (200, 201) e inválidos (404, 500) usando `supertest` no framework Backend. 
-   **Catálogo Backend TDD (`vitest --coverage > 85%`)**: `EventoRoutes.test.ts` (Teste de Cleanup de Imagens falho via `fs.unlink`), `produtos.test.ts` (Painel Amin de Produtos e Delete), `pedidos.test.ts` (Update de Status) e `autenticacaoMiddleware.test.ts` (Guard JWT).
-   
-   Isso se repete para o Frontend. Rotas Privadas React devem ter suas amarras cobertas por `AdminRestrito.test.tsx` provando que o LoginModal acende na ausência de Token (`localStorage.getItem("token")`). Use `vi.mock` extensivamente para desviar componentes-filhos indesejados nas baterias curtas. Componentes dependentes de `useNavigate` precisam sempre ser renderizados dentor do Wrapper `<BrowserRouter>`.
+    Ao estruturar as APIs do servidor (como Middlewares guardiões), **não deixe código vital de segurança com linhas não-cobertas**. Assegure que as rotinas de verificação do `AppError` dentro de chaves (`catch`) ou retornos de transação bloqueiam e recebem mockups apropriados (`vi.spyOn(jwt, 'verify')`). Todas as rotas administrativas (`/admin`, POSTs, PUTs, DELETEs) devem ter simulação de status válidos (200, 201) e inválidos (404, 500) usando `supertest` no framework Backend.
+    **Catálogo Backend TDD (`vitest --coverage > 85%`)**: `EventoRoutes.test.ts` (Teste de Cleanup de Imagens falho via `fs.unlink`), `produtos.test.ts` (Painel Amin de Produtos e Delete), `pedidos.test.ts` (Update de Status) e `autenticacaoMiddleware.test.ts` (Guard JWT).
+
+Isso se repete para o Frontend. Rotas Privadas React devem ter suas amarras cobertas por `AdminRestrito.test.tsx` provando que o LoginModal acende na ausência de Token (`localStorage.getItem("token")`). Use `vi.mock` extensivamente para desviar componentes-filhos indesejados nas baterias curtas. Componentes dependentes de `useNavigate` precisam sempre ser renderizados dentor do Wrapper `<BrowserRouter>`.
 
 2. **Laços de Mockamento Assíncronos (Vitest + pg):**
    Quando mockamos o método `pool.query` ou assemelhados e o controlador testado faz buscas em cadeia (como um `.map` executando `buscarItens` em cada pedido listado), deve-se enfileirar chamadas com `mQuery.mockResolvedValueOnce()` adequadas para suprir tanto a listagem primária _quanto_ os iteradores secundários, ou o teste sofrerá colapso por array vazia acidental.
@@ -662,3 +696,75 @@ Ao longo das otimizações dos testes e padronização contínua do Maid Café, 
 
 4. **Tratamento de Ciclos Síncronos do React 19:**
    O React Linter agora ataca a inserção prematura de `setState` correndo abertamente na função `useEffect`. Requererá sempre o uso de atrasos inofensivos (`setTimeout`), derivação direta do `.map` no render, ou lazy initializer callback ao extrair storage na montagem (`useState(() => localStorage.getItem("X"))`).
+
+---
+
+### 17. Gerenciamento de Estado Assíncrono (TanStack Query)
+
+- **Regra de Requisições:** Todas as requisições GET para consumo de dados públicos do projeto (Produtos, Eventos) devem ser encapsuladas por hooks do `@tanstack/react-query` (ex: `useQuery`).
+- **Testes com TanStack Query:** Todo e qualquer teste de componente React que renderize indiretamente um hook como `useProdutos` **obrigatoriamente** precisa ter seu Wrapper englobado por um `<QueryClientProvider client={queryClient}>`. Caso contrário, os testes do Vitest falharão com o erro `No QueryClient set`.
+- **Exemplo de Wrapper para testes:**
+  ```tsx
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  render(
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Componente />
+      </BrowserRouter>
+    </QueryClientProvider>,
+  );
+  ```
+
+### 18. Passos Exatos de Deploy e Atualização (Docker)
+
+Quando for realizar o deploy ou atualizar a aplicação em produção com novos códigos, utilize a seguinte sequência:
+
+1. Faça pull das alterações do repositório no servidor.
+2. Certifique-se de que o arquivo `.env` da raiz está configurado (especialmente o `TUNNEL_TOKEN` e as senhas de banco).
+3. Execute o build limpo forçado das imagens multi-stage:
+   `docker compose build --no-cache`
+4. Recrie e suba os containers sem afetar os volumes persistentes:
+   `docker compose up -d`
+5. (Apenas em primeira execução ou grandes mudanças no schema) Entre no bash do backend e rode as migrations:
+   `docker exec -it maid_backend pnpm tsx scripts/migrate_db.ts`
+
+### 19. Padrões de Variáveis em Build de Frontend
+
+- O Nginx serve arquivos estáticos já construídos (build phase). Diferente do backend, o container do frontend não lê o `.env` em tempo de execução (runtime). Todas as variáveis de ambiente necessárias (ex: `VITE_BACKEND_URL`) devem estar presentes no momento do `docker compose build`.
+
+---
+
+### 20. 🛡️ Vulnerabilidades Corrigidas
+
+1. **Upload de Arquivos Sem Restrição (Crítico):**
+   - **Brecha:** O servidor aceitava qualquer tipo de arquivo, permitindo que atacantes subissem scripts maliciosos (RCE).
+   - **Correção:** Implementei um `fileFilter` no Multer para aceitar apenas imagens (JPEG, PNG, GIF, WEBP) e adicionei um limite de tamanho de 50MB (para imagens de alta qualidade).
+
+2. **Segredo JWT Inseguro (Médio):**
+   - **Brecha:** Havia um valor padrão ("segredo") caso a variável de ambiente não fosse carregada, o que facilitaria ataques de força bruta.
+   - **Correção:** Removi o fallback. Agora, se `JWT_SECRET` não estiver no `.env`, o servidor lança um erro interno, garantindo que nunca rode em modo inseguro.
+
+3. **Validação de Header Fraca (Baixo):**
+   - **Brecha:** O código não verificava se o header de autorização seguia o padrão `Bearer <token>`, podendo causar erros inesperados.
+   - **Correção:** Adicionei uma validação estrita do formato do header antes do processamento.
+
+### 21. Gerenciamento Dinâmico de Banners
+
+- **Chave de Página:** Os banners são atrelados a uma `pagina` (ex: 'home', 'cardapio', 'eventos', 'loja').
+- **Fallback Automático:** Caso uma página não tenha banner definido, o sistema busca obrigatoriamente a entrada com `pagina = 'padrao'`.
+- **Mídia Suportada:** Imagens (JPEG, PNG, WEBP) e Vídeos (MP4, WEBM) até 50MB.
+
+### 22. Autocomplete Inteligente (Admin)
+
+- **Categorias e Tags:** O `ProdutoForm` realiza extração automática de todas as categorias e tags já existentes no banco de dados para sugerir ao administrador durante o cadastro.
+- **Scroll Infinito:** Dropdowns de sugestão não possuem limite de exibição e utilizam `max-height` com scroll interno para manter a usabilidade.
+
+### 23. Padronização de Layout Admin (UI/UX)
+
+- **Max-Width:** Todas as abas administrativas (`/admin/*`) devem respeitar o `max-width: var(--container-max-width)` e estarem centralizadas (`margin: 0 auto`).
+- **Padding Superior:** O distanciamento padrão do topo para o primeiro elemento das abas (geralmente o formulário de cadastro) é de `1rem`.
+- **Identidade Visual:** Botões de ação seguem `--color-success` (verde/salvar) e `--color-warning` (amarelo/editar) para rápida identificação funcional.
+
+---

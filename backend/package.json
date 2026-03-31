@@ -10,7 +10,8 @@
     "start": "node dist/server.js",
     "test": "vitest watch",
     "test:ci": "vitest run",
-    "lint": "eslint src/ && tsc --noEmit"
+    "lint": "eslint src/ && tsc --noEmit",
+    "db:reset": "tsx scripts/reset_db.ts"
   },
   "keywords": [],
   "author": "",

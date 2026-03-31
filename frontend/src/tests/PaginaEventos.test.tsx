@@ -4,10 +4,20 @@ import { describe, it, expect, vi } from "vitest";
 import { EventosPage } from "../pages/Eventos";
 import { BrowserRouter } from "react-router-dom";
 import * as api from "../services/api";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { CarrinhoProvider } from "../hooks/useCarrinho";
 
 vi.mock("../services/api", () => ({
   buscarEventos: vi.fn(),
 }));
+
+vi.mock("../components/Banner", () => ({
+  Banner: () => <div data-testid="banner">Banner</div>,
+}));
+
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { retry: false } },
+});
 
 describe("PaginaEventos", () => {
   it("deve renderizar a página principal de eventos e seus componentes", async () => {
@@ -16,9 +26,13 @@ describe("PaginaEventos", () => {
     ]);
     
     render(
-      <BrowserRouter>
-        <EventosPage />
-      </BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <CarrinhoProvider>
+            <EventosPage />
+          </CarrinhoProvider>
+        </BrowserRouter>
+      </QueryClientProvider>
     );
     
     expect(screen.getByText("Carregando eventos...")).toBeInTheDocument();

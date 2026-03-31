@@ -40,35 +40,43 @@ export function MenuContent({
   children,
 }: MenuContentProps) {
   const groupedProducts = useMemo(() => {
-    return filteredProducts.reduce((acc, produto) => {
-      const cat = produto.categoria || "Outros";
-      if (!acc[cat]) acc[cat] = [];
-      acc[cat].push(produto);
-      return acc;
-    }, {} as Record<string, Produto[]>);
+    return filteredProducts.reduce(
+      (acc, produto) => {
+        const cat = produto.categoria || "Outros";
+        if (!acc[cat]) acc[cat] = [];
+        acc[cat].push(produto);
+        return acc;
+      },
+      {} as Record<string, Produto[]>,
+    );
   }, [filteredProducts]);
 
-  const categoriesToShow = useMemo(() => Object.keys(groupedProducts), [groupedProducts]);
+  const categoriesToShow = useMemo(
+    () => Object.keys(groupedProducts),
+    [groupedProducts],
+  );
 
   return (
     <div className={styles.container}>
-      <header className={styles.header} id="cardapio">
-        <div
-          style={{
-            position: "relative",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <h1 className={styles.title}>{title}</h1>
-          {headerActions && (
-            <div style={{ position: "absolute", right: 0 }}>
-              {headerActions}
-            </div>
-          )}
-        </div>
-      </header>
+      {title && (
+        <header className={styles.header} id="cardapio">
+          <div
+            style={{
+              position: "relative",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <h1 className={styles.title}>{title}</h1>
+            {headerActions && (
+              <div style={{ position: "absolute", right: 0 }}>
+                {headerActions}
+              </div>
+            )}
+          </div>
+        </header>
+      )}
 
       {children}
 

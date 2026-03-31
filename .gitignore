@@ -78,3 +78,17 @@ postgres_data/
 # ===========================
 backend/coverage*.txt
 frontend/coverage*.txt
+backend/public/images/1c1811333664fa6683258b8b2f0d646a-test.jpg
+backend/public/images/8ec87e101825d6c262c66f7128dd7b76-test.jpg
+backend/public/images/93e2d081862e121965da255f9d77f7b3-event.jpg
+backend/public/images/6451da24bd5400616d71593da9eb5d4a-event.jpg
+backend/public/images/1774982287761-test.jpg
+backend/public/images/1774982287763-event.jpg
+backend/public/images/1774982441154-event.jpg
+backend/public/images/1774982441166-test.jpg
+backend/public/images/1774982687226-test.jpg
+backend/public/images/1774982687238-event.jpg
+backend/public/images/1774983720871-test.jpg
+backend/public/images/1774983720872-event.jpg
+backend/public/images/d9e850096de7a68aa1156f8bcde2cac5-event.jpg
+backend/public/images/fcd329f3105f4625db80a8f1b34144ce-test.jpg

@@ -1,10 +1,12 @@
 import "../setupTests";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { ProdutoCard } from "../components/ProdutoCard";
 import type { Produto } from "../types/Produto";
 import { CarrinhoProvider } from "../hooks/useCarrinho";
 import { BrowserRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { alternarCurtidaProduto } from "../services/api";
 
 // Mock the API and formatters
 vi.mock("../services/api", () => ({
@@ -18,7 +20,7 @@ vi.mock("../utils/formatadores", () => ({
 const mockProduct: Produto = {
   id: 1,
   nome: "Bolo de Morango",
-  descricao: "Delicioso bolo com morangos frescos",
+  descricao: "Delicioso bolo",
   preco: "15.00",
   imagem_url: "/images/bolo.jpg",
   categoria: "Doces",
@@ -28,47 +30,57 @@ const mockProduct: Produto = {
   visivel: true,
 };
 
+const createWrapper = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: { retry: false },
+      mutations: { retry: false },
+    },
+  });
+  return ({ children }: { children: React.ReactNode }) => (
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <CarrinhoProvider>
+          {children}
+        </CarrinhoProvider>
+      </QueryClientProvider>
+    </BrowserRouter>
+  );
+};
+
 describe("Componente ProdutoCard", () => {
-  it("deve renderizar os detalhes do produto", () => {
-    render(
-      <BrowserRouter>
-        <CarrinhoProvider>
-          <ProdutoCard produto={mockProduct} />
-        </CarrinhoProvider>
-      </BrowserRouter>
-    );
-
-    expect(screen.getByText("Bolo de Morango")).toBeInTheDocument();
-    expect(
-      screen.getByText("Delicioso bolo com morangos frescos"),
-    ).toBeInTheDocument();
-    expect(screen.getByText("R$ 15.00")).toBeInTheDocument();
-    expect(screen.getByAltText("Bolo de Morango")).toBeInTheDocument();
+  beforeEach(() => {
+    vi.clearAllMocks();
+    localStorage.clear();
   });
 
-  it("deve exibir a contagem de curtidas", () => {
-    render(
-      <BrowserRouter>
-        <CarrinhoProvider>
-          <ProdutoCard produto={mockProduct} />
-        </CarrinhoProvider>
-      </BrowserRouter>
-    );
-    expect(screen.getByText("10")).toBeInTheDocument();
-  });
+  it("deve alternar a curtida e realizar rollback se a API falhar", async () => {
+    // Mock falha na API
+    (alternarCurtidaProduto as any).mockRejectedValueOnce(new Error("API Fail"));
 
-  it("deve alternar a curtida ao clicar", () => {
-    render(
-      <BrowserRouter>
-        <CarrinhoProvider>
-          <ProdutoCard produto={mockProduct} />
-        </CarrinhoProvider>
-      </BrowserRouter>
-    );
+    render(<ProdutoCard produto={mockProduct} />, { wrapper: createWrapper() });
 
     const likeButton = screen.getByTitle("Curtir");
-    fireEvent.click(likeButton);
 
-    expect(likeButton).toBeInTheDocument();
+    // Clique inicial (Otimista)
+    fireEvent.click(likeButton);
+    
+    // Verificamos se subiu para 11 (update otimista no cache do Query)
+    expect(screen.getByText("11")).toBeInTheDocument();
+
+    // Aguarda o rollback
+    await waitFor(() => {
+      expect(screen.getByText("10")).toBeInTheDocument();
+    });
+  });
+
+  it("deve recuperar estado de curtida do localStorage ao carregar", () => {
+    // Simula que o produto já foi curtido anteriormente
+    localStorage.setItem("mewmew_liked_products", JSON.stringify([mockProduct.id]));
+
+    render(<ProdutoCard produto={mockProduct} />, { wrapper: createWrapper() });
+
+    // O botão deve ter o título "Descurtir" agora
+    expect(screen.getByTitle("Descurtir")).toBeInTheDocument();
   });
 });

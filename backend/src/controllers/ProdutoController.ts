@@ -1,8 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { AppError } from "../errors/AppError.js";
-import path from "path";
-import fs from "fs";
 import { ProdutoModel } from "../models/ProdutoModel.js";
+import { StorageProvider } from "../utils/StorageProvider.js";
 
 export const ProdutoController = {
   // Busca de produtos
@@ -55,7 +54,7 @@ export const ProdutoController = {
 
       if (!nome || isNaN(preco) || !categoria) {
         if (req.file) {
-          fs.unlinkSync(req.file.path);
+          await StorageProvider.deleteFile(req.file.path);
         }
 
         throw new AppError(
@@ -79,9 +78,7 @@ export const ProdutoController = {
       res.status(201).json(produto);
     } catch (error) {
       if (req.file) {
-        fs.unlink(req.file.path, (err) => {
-          if (err) console.error("Erro ao apagar imagem órfã:", err);
-        });
+        await StorageProvider.deleteFile(req.file.path);
       }
       next(error);
     }
@@ -113,7 +110,7 @@ export const ProdutoController = {
 
       if (!produto) {
         if (req.file) {
-          fs.unlinkSync(req.file.path);
+          await StorageProvider.deleteFile(req.file.path);
         }
         throw new AppError("Produto não encontrado", 404);
       }
@@ -121,7 +118,7 @@ export const ProdutoController = {
       res.json(produto);
     } catch (error) {
       if (req.file) {
-        fs.unlink(req.file.path, (err) => {});
+        await StorageProvider.deleteFile(req.file.path);
       }
       next(error);
     }
@@ -138,23 +135,7 @@ export const ProdutoController = {
       }
 
       if (produto.imagem_url) {
-        const nomeArquivo = produto.imagem_url.split("/").pop();
-        if (nomeArquivo) {
-          const imagePath = path.resolve(
-            process.cwd(),
-            "public",
-            "images",
-            nomeArquivo,
-          );
-
-          fs.access(imagePath, fs.constants.F_OK, (err) => {
-            if (!err) {
-              fs.unlink(imagePath, () =>
-                console.log("Imagem deletada do disco:", produto.imagem_url),
-              );
-            }
-          });
-        }
+        await StorageProvider.deleteFile(produto.imagem_url);
       }
 
       res.json({ message: "Produto deletado com sucesso", produto: produto });

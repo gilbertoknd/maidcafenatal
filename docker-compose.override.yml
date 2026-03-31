@@ -1,0 +1,25 @@
+services:
+  # Backend Dev Override
+  backend:
+    build:
+      context: ./backend
+      target: builder
+    command: pnpm dev
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./backend:/app
+      - /app/node_modules # Impede que o volume externo apague o interno
+      - ./backend/public/images/:/app/public/images/
+
+  # Frontend Dev Override
+  frontend:
+    build:
+      context: ./frontend
+      target: builder
+    command: pnpm dev --host
+    env_file:
+      - ./frontend/.env
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules

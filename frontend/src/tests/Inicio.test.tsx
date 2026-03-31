@@ -7,7 +7,7 @@ import { CarrinhoProvider } from "../hooks/useCarrinho";
 
 // Mock child components to avoid complex rendering and API calls
 vi.mock("../components/Banner", () => ({
-  VideoBanner: () => <div data-testid="video-banner">Video Banner</div>,
+  Banner: () => <div data-testid="video-banner">Banner</div>,
 }));
 vi.mock("../components/PopularSection", () => ({
   PopularSection: () => <div>Popular Section</div>,

@@ -47,6 +47,43 @@
   box-shadow: 0 0 0 3px var(--color-shadow);
 }
 
+/* --- Dropdown customizado --- */
+.autocompleteContainer {
+  position: relative;
+  width: 100%;
+}
+
+.dropdownList {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-primary-border);
+  border-radius: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 50;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: var(--shadow-card);
+}
+
+.dropdownItem {
+  padding: 10px 15px;
+  cursor: pointer;
+  font-family: var(--font-main);
+  font-size: var(--font-size-md);
+  color: var(--color-text);
+  transition: background-color 0.2s;
+}
+
+.dropdownItem:hover {
+  background-color: var(--color-tertiary-background);
+  color: var(--color-primary-dark);
+}
+
 .textarea {
   grid-column: span 2;
   min-height: 100px;

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Edit, Plus, X } from "lucide-react";
 import styles from "./styles.module.css";
 import { 
   buscarEventosAdmin, 
@@ -88,6 +89,7 @@ export function AdminEventos() {
 
   const handleEdit = (evento: Evento) => {
     setEditingId(evento.id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
     
     // Converter a data para o formato aceito pelo input datetime-local
     // A API retorna uma string ISO. input datetime-local espera YYYY-MM-DDThh:mm
@@ -138,65 +140,40 @@ export function AdminEventos() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.formPanel}>
-        <h2>{editingId ? "Editar Evento" : "Novo Evento"}</h2>
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <div className={styles.inputGroup}>
-            <label>Título do Evento *</label>
-            <input 
-              name="titulo" 
-              value={formData.titulo} 
-              onChange={handleInputChange} 
-              required 
-              placeholder="Ex: Festa do Chá"
-            />
-          </div>
+      <div className={styles.formContainer}>
+        <h2 className={styles.formTitle}>
+          {editingId ? "Editando Evento" : "Novo Evento"}
+        </h2>
+        <form onSubmit={handleSubmit} className={styles.formGrid}>
+          <input 
+            name="titulo" 
+            value={formData.titulo} 
+            onChange={handleInputChange} 
+            required 
+            placeholder="Título do Evento (Ex: Festa do Chá)"
+            className={styles.input}
+          />
           
-          <div className={styles.inputGroup}>
-            <label>Descrição</label>
-            <textarea 
-              name="descricao" 
-              value={formData.descricao} 
-              onChange={handleInputChange} 
-              rows={3} 
-              placeholder="Detalhes sobre o evento..."
-            />
-          </div>
+          <input 
+            name="local" 
+            value={formData.local} 
+            onChange={handleInputChange} 
+            required 
+            placeholder="Localização (Ex: Mew Mew Café Centro)"
+            className={styles.input}
+          />
 
-          <div className={styles.inputGroup}>
-            <label>Imagem de Divulgação</label>
-            <input 
-              type="file" 
-              name="imagem" 
-              accept="image/*"
-              onChange={handleFileChange} 
-            />
-          </div>
+          <input 
+            name="data" 
+            type="datetime-local" 
+            value={formData.data} 
+            onChange={handleInputChange} 
+            required 
+            className={styles.input}
+            style={{ color: '#000' }}
+          />
 
-          <div className={styles.row}>
-            <div className={styles.inputGroup}>
-              <label>Data e Hora *</label>
-              <input 
-                name="data" 
-                type="datetime-local" 
-                value={formData.data} 
-                onChange={handleInputChange} 
-                required 
-              />
-            </div>
-            <div className={styles.inputGroup}>
-              <label>Local *</label>
-              <input 
-                name="local" 
-                value={formData.local} 
-                onChange={handleInputChange} 
-                required 
-                placeholder="Ex: Mew Mew Café Centro"
-              />
-            </div>
-          </div>
-
-          <div className={styles.checkboxGroup}>
+          <div className={styles.checkboxContainer}>
             <input 
               type="checkbox" 
               name="visivel" 
@@ -204,18 +181,39 @@ export function AdminEventos() {
               checked={formData.visivel}
               onChange={handleInputChange} 
             />
-            <label htmlFor="event-visivel">Evento Visível para o Público</label>
+            <label htmlFor="event-visivel" className={styles.checkboxLabel}>
+              Evento Visível para o Público
+            </label>
           </div>
 
-          <div className={styles.formActions}>
+          <textarea 
+            name="descricao" 
+            value={formData.descricao} 
+            onChange={handleInputChange} 
+            placeholder="Descrição detalhada do evento..."
+            className={`${styles.input} ${styles.textarea}`}
+          />
+
+          <div className={styles.fileInputContainer}>
+            <label className={styles.fileLabel}>Imagem de Divulgação (Opcional na Edição)</label>
+            <input 
+              type="file" 
+              name="imagem" 
+              accept="image/*"
+              onChange={handleFileChange} 
+              className={styles.fileInput}
+            />
+          </div>
+
+          <div className={styles.actions}>
+            <button type="submit" className={`${styles.btn} ${styles.btnSubmit} ${editingId ? styles.edit : styles.create}`}>
+              {editingId ? <><Edit size={18} /> Salvar Alterações</> : <><Plus size={18} /> Cadastrar Evento</>}
+            </button>
             {editingId && (
-              <button type="button" onClick={resetForm} className={styles.cancelBtn}>
-                Cancelar
+              <button type="button" onClick={resetForm} className={`${styles.btn} ${styles.btnCancel}`}>
+                <X size={18} /> Cancelar
               </button>
             )}
-            <button type="submit" className={styles.submitBtn}>
-              {editingId ? "Salvar Alterações" : "Criar Evento"}
-            </button>
           </div>
         </form>
       </div>

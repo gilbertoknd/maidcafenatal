@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
+import { Banner } from "../../components/Banner";
 import styles from "./styles.module.css";
 import { buscarEventos } from "../../services/api";
 import type { Evento } from "../../types/Evento";
@@ -65,6 +66,7 @@ export function EventosPage() {
 
   return (
     <>
+      <Banner pagina="eventos" />
       <Header />
       <main className={styles.container}>
         <section className={styles.heroSection}>

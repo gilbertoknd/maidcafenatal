@@ -3,7 +3,7 @@ import { useDebugTela } from "../../hooks/useDebugTela";
 import { MenuContent } from "../../components/MenuContent";
 import { Footer } from "../../components/Footer";
 import { Header } from "../../components/Header";
-import { ImageBanner } from "../../components/Banner";
+import { Banner } from "../../components/Banner";
 
 export function MenuPage() {
   useDebugTela();
@@ -11,7 +11,7 @@ export function MenuPage() {
 
   return (
     <>
-      <ImageBanner />
+      <Banner pagina="cardapio" />
       <Header />
       <MenuContent {...productData} />
       <Footer />

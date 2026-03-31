@@ -182,3 +182,24 @@ export async function alterarVisibilidadeProduto(id: number): Promise<Produto> {
   return response.json();
 }
 
+// --- BANNERS ---
+import type { Banner } from "../types/Banner";
+
+export async function buscarBanners(): Promise<Banner[]> {
+  const response = await fetch(`${BASE_URL}/api/banners`);
+  if (!response.ok) throw new Error("Erro ao buscar banners");
+  return response.json();
+}
+
+export async function atualizarBanner(pagina: string, data: FormData): Promise<Banner> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${BASE_URL}/api/banners/${pagina}`, {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${token}` },
+    body: data
+  });
+  
+  if (!response.ok) throw new Error("Erro ao atualizar banner");
+  return response.json();
+}
+

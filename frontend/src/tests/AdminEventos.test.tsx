@@ -6,6 +6,12 @@ import { BrowserRouter } from "react-router-dom";
 import * as api from "../services/api";
 import type { Evento } from "../types/Evento";
 
+vi.mock("../components/Banner", () => ({
+  Banner: () => <div data-testid="banner">Banner</div>,
+  ImageBanner: () => <div data-testid="image-banner">Banner</div>,
+  VideoBanner: () => <div data-testid="video-banner">Banner</div>,
+}));
+
 vi.mock("../services/api", () => ({
   buscarEventosAdmin: vi.fn(),
   criarEvento: vi.fn(),
@@ -59,8 +65,8 @@ describe("AdminEventos Component", () => {
     );
     await waitFor(() => screen.getByText("Festa do Chá Admin"));
 
-    const titleInput = screen.getByPlaceholderText("Ex: Festa do Chá");
-    const localInput = screen.getByPlaceholderText("Ex: Mew Mew Café Centro");
+    const titleInput = screen.getByPlaceholderText(/Ex: Festa do Chá/i);
+    const localInput = screen.getByPlaceholderText(/Ex: Mew Mew Café Centro/i);
 
     fireEvent.change(titleInput, { target: { value: "Novo Evento" } });
     fireEvent.change(localInput, { target: { value: "Praca" } });
@@ -72,7 +78,7 @@ describe("AdminEventos Component", () => {
       fireEvent.change(dateInput, { target: { value: "2027-01-01T12:00" } });
     }
 
-    const createBtn = screen.getByRole("button", { name: "Criar Evento" });
+    const createBtn = screen.getByRole("button", { name: /Cadastrar Evento/i });
     fireEvent.click(createBtn);
 
     await waitFor(() => {

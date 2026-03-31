@@ -2,8 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { EventoModel } from "../models/EventoModel.js";
 import { Evento } from "../types/EventoTypes.js";
 import { AppError } from "../errors/AppError.js";
-import fs from "fs";
-import path from "path";
+import { StorageProvider } from "../utils/StorageProvider.js";
 
 export const EventoController = {
   listarTodos: async (req: Request, res: Response, next: NextFunction) => {
@@ -59,9 +58,7 @@ export const EventoController = {
       res.status(201).json(novoEvento);
     } catch (error) {
       if (req.file) {
-        fs.unlink(req.file.path, (err: NodeJS.ErrnoException | null) => {
-          if (err) console.error("Erro ao apagar imagem órfã do evento:", err);
-        });
+        await StorageProvider.deleteFile(req.file.path);
       }
       next(error);
     }
@@ -88,7 +85,7 @@ export const EventoController = {
 
       if (!eventoAtualizado) {
         if (req.file) {
-          fs.unlinkSync(req.file.path);
+          await StorageProvider.deleteFile(req.file.path);
         }
         throw new AppError("Evento não encontrado", 404);
       }
@@ -96,9 +93,7 @@ export const EventoController = {
       res.status(200).json(eventoAtualizado);
     } catch (error) {
       if (req.file) {
-        fs.unlink(req.file.path, (err: NodeJS.ErrnoException | null) => {
-          if (err) console.error("Erro deletando imagem falha de update", err);
-        });
+        await StorageProvider.deleteFile(req.file.path);
       }
       next(error);
     }
@@ -114,15 +109,7 @@ export const EventoController = {
       }
 
       if (eventoDeletado.imagem_url) {
-        const nomeArquivo = eventoDeletado.imagem_url.split("/").pop();
-        if (nomeArquivo) {
-          const imagePath = path.resolve(process.cwd(), "public", "images", nomeArquivo);
-          fs.access(imagePath, fs.constants.F_OK, (err) => {
-            if (!err) {
-              fs.unlink(imagePath, () => console.log("Imagem de evento deletada do disco:", eventoDeletado.imagem_url));
-            }
-          });
-        }
+        await StorageProvider.deleteFile(eventoDeletado.imagem_url);
       }
 
       res

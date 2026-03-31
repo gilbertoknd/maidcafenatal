@@ -3,11 +3,16 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { CarrinhoProvider } from './hooks/useCarrinho'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <CarrinhoProvider>
-      <App />
-    </CarrinhoProvider>
+    <QueryClientProvider client={queryClient}>
+      <CarrinhoProvider>
+        <App />
+      </CarrinhoProvider>
+    </QueryClientProvider>
   </StrictMode>,
 )
