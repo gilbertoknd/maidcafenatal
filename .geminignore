@@ -1,0 +1,96 @@
+# ===========================
+# 1. Dependências e Logs (Geral)
+# ===========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# ===========================
+# 2. Variáveis de Ambiente (CRÍTICO DE SEGURANÇA)
+# ===========================
+# O Gemini CLI nunca deve ler seus segredos
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+backend/.env
+frontend/.env
+
+# ===========================
+# 3. Frontend (Vue.js / Vite)
+# ===========================
+frontend/dist/
+frontend/.output/
+frontend/.eslintcache
+
+# ===========================
+# 4. Backend (Node.js / Express)
+# ===========================
+coverage/
+backend/coverage/
+dist/
+build/
+logs/
+*.log
+pid
+pids
+*.pid
+
+# ===========================
+# 5. Sistema Operacional e IDEs
+# ===========================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ===========================
+# 6. Docker & Banco de Dados Local
+# ===========================
+pgdata/
+postgres_data/
+/data/db/
+
+# ===========================
+# 7. REGRAS EXTRAS PARA O GEMINI CLI (Otimização de Contexto)
+# ===========================
+# Ignorar Lockfiles (são arquivos gigantes gerados automaticamente e não ajudam na auditoria lógica)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Ignorar arquivos de mídia e binários (A IA via CLI consome texto, binários só geram ruído)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+*.mp4
+*.webm
+*.ogg
+*.mp3
+*.wav
+*.pdf
+*.zip
+*.tar
+*.gz
+
+# Ignorar fontes
+*.ttf
+*.woff
+*.woff2
+*.eot
+
+# Ignorar arquivos de dump de banco de dados
+*.sql
+*.sqlite
+*.sqlite3
