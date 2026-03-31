@@ -60,7 +60,8 @@ Website para o **Mew Mew Café** (Maid Café) localizado em Natal/RN. O sistema 
 - **Datas:** `Intl.DateTimeFormat` (Nativo)
 - **Mapas:** `leaflet` + `react-leaflet`
 - **Testes:** Vitest + `@testing-library/react` + `@testing-library/jest-dom` + `jsdom`
-- **Linting:** ESLint 9 + `eslint-plugin-react-hooks` + `eslint-plugin-react-refresh` + `typescript-eslint`
+- **Linting:** ESLint 9 + `eslint-plugin-react-hooks` + `eslint-plugin-react-refresh` + `typescript-eslint` + `globals`
+- **Validação de Schemas:** `zod`
 - **Tipografia:** Google Fonts — **Fredoka** (300..700)
 
 ### Backend
@@ -73,6 +74,9 @@ Website para o **Mew Mew Café** (Maid Café) localizado em Natal/RN. O sistema 
 - **Upload de Arquivos:** `multer` (disco local em `public/images/`)
 - **Testes:** Vitest + `supertest`
 - **Build:** `tsc` + `rimraf`
+- **Linting:** `eslint` (Flat Config) + `typescript-eslint` + `globals`
+- **Utilitários:** `cors` (Segurança), `dotenv` (Variáveis de Ambiente)
+- **Validação de Schemas:** `zod`
 
 ### Infraestrutura
 
@@ -322,17 +326,17 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 
 ### Produtos (`/api/produtos`)
 
-| Método   | Rota              | Auth? | Descrição                                |
-| -------- | ----------------- | ----- | ---------------------------------------- |
-| `GET`    | `/`               | ❌    | Lista produtos visíveis                  |
-| `GET`    | `/admin`          | ✅    | Lista todos os produtos (inclui ocultos) |
-| `GET`    | `/populares`      | ❌    | Produtos mais curtidos                   |
-| `GET`    | `/novidades`      | ❌    | Produtos novos                           |
-| `POST`   | `/`               | ✅    | Cria produto (com upload de imagem)      |
-| `PUT`    | `/:id`            | ✅    | Atualiza produto                         |
-| `DELETE` | `/:id`            | ✅    | Deleta produto                           |
-| `PATCH`  | `/:id/like`       | ❌    | Incrementa curtida                       |
-| `PATCH`  | `/:id/unlike`     | ❌    | Decrementa curtida                       |
+| Método   | Rota                | Auth? | Descrição                                |
+| -------- | ------------------- | ----- | ---------------------------------------- |
+| `GET`    | `/`                 | ❌    | Lista produtos visíveis                  |
+| `GET`    | `/admin`            | ✅    | Lista todos os produtos (inclui ocultos) |
+| `GET`    | `/populares`        | ❌    | Produtos mais curtidos                   |
+| `GET`    | `/novidades`        | ❌    | Produtos novos                           |
+| `POST`   | `/`                 | ✅    | Cria produto (com upload de imagem)      |
+| `PUT`    | `/:id`              | ✅    | Atualiza produto                         |
+| `DELETE` | `/:id`              | ✅    | Deleta produto                           |
+| `PATCH`  | `/:id/like`         | ❌    | Incrementa curtida                       |
+| `PATCH`  | `/:id/unlike`       | ❌    | Decrementa curtida                       |
 | `PATCH`  | `/:id/visibilidade` | ✅    | Alterna visibilidade                     |
 
 ### Pedidos (`/api/pedidos`)
@@ -345,13 +349,13 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 
 ### Eventos (`/api/eventos`)
 
-| Método   | Rota              | Auth? | Descrição                          |
-| -------- | ----------------- | ----- | ---------------------------------- |
-| `GET`    | `/`               | ❌    | Lista eventos visíveis             |
-| `GET`    | `/admin`          | ✅    | Lista todos os eventos             |
-| `POST`   | `/`               | ✅    | Cria evento (com upload de imagem) |
-| `PUT`    | `/:id`            | ✅    | Atualiza evento                    |
-| `DELETE` | `/:id`            | ✅    | Deleta evento                      |
+| Método   | Rota                | Auth? | Descrição                          |
+| -------- | ------------------- | ----- | ---------------------------------- |
+| `GET`    | `/`                 | ❌    | Lista eventos visíveis             |
+| `GET`    | `/admin`            | ✅    | Lista todos os eventos             |
+| `POST`   | `/`                 | ✅    | Cria evento (com upload de imagem) |
+| `PUT`    | `/:id`              | ✅    | Atualiza evento                    |
+| `DELETE` | `/:id`              | ✅    | Deleta evento                      |
 | `PATCH`  | `/:id/visibilidade` | ✅    | Alterna visibilidade               |
 
 ---
@@ -509,6 +513,7 @@ pnpm dev         # tsx watch src/server.ts
 pnpm test        # vitest watch
 pnpm test:ci     # vitest run (uma vez)
 pnpm build       # tsc produção
+pnpm lint        # eslint
 ```
 
 ### Frontend (dev local, fora do Docker)
@@ -586,6 +591,12 @@ pnpm lint        # eslint
 
 ---
 
+**Hurdle:** Erro de Linter `Error: Calling setState synchronously within an effect can trigger cascading renders`
+**Causa:** A nova versão do React/linter (`react-hooks/set-state-in-effect`) não permite chamadas síncronas de `setState` diretamente dentro do corpo do `useEffect`. Isso se aplica mesmo para funções de refresh encapsuladas em hooks e chamadas lá dentro.
+**Solução:** 1. Utilize derivação de estado (_derived state_) síncrono durante o próprio `render` para evitar `useState` extra. 2. Inicializadores locais podem usar a sintaxe callback/lazy no `useState(() => getLocalItem)`. 3. Utilize um `setTimeout(..., 0)` para jogar o setState fora da _stack_ síncrona do useEffect. 4. Em último caso, use a flag `// eslint-disable-next-line react-hooks/set-state-in-effect` se for assíncrono garantido.
+
+---
+
 ## 14. Testes
 
 O projeto mantém testes unitários e de integração em ambos os lados:
@@ -630,3 +641,24 @@ O projeto mantém testes unitários e de integração em ambos os lados:
 - [ ] Se é rota admin, o `authMiddleware` foi aplicado?
 - [ ] Loading e Error states estão sendo tratados na UI?
 - [ ] O `guia.md` foi atualizado com as novas informações?
+
+---
+
+## 16. Boas Práticas e Protocolos de Qualidade Recentes
+
+Ao longo das otimizações dos testes e padronização contínua do Maid Café, estas convenções de código tornaram-se vitais:
+
+15. **Cobertura Mínima de Testes (TDD):**
+   Ao estruturar as APIs do servidor (como Middlewares guardiões), **não deixe código vital de segurança com linhas não-cobertas**. Assegure que as rotinas de verificação do `AppError` dentro de chaves (`catch`) ou retornos de transação bloqueiam e recebem mockups apropriados (`vi.spyOn(jwt, 'verify')`). Todas as rotas administrativas (`/admin`, POSTs, PUTs, DELETEs) devem ter simulação de status válidos (200, 201) e inválidos (404, 500) usando `supertest` no framework Backend. 
+   **Catálogo Backend TDD (`vitest --coverage > 85%`)**: `EventoRoutes.test.ts` (Teste de Cleanup de Imagens falho via `fs.unlink`), `produtos.test.ts` (Painel Amin de Produtos e Delete), `pedidos.test.ts` (Update de Status) e `autenticacaoMiddleware.test.ts` (Guard JWT).
+   
+   Isso se repete para o Frontend. Rotas Privadas React devem ter suas amarras cobertas por `AdminRestrito.test.tsx` provando que o LoginModal acende na ausência de Token (`localStorage.getItem("token")`). Use `vi.mock` extensivamente para desviar componentes-filhos indesejados nas baterias curtas. Componentes dependentes de `useNavigate` precisam sempre ser renderizados dentor do Wrapper `<BrowserRouter>`.
+
+2. **Laços de Mockamento Assíncronos (Vitest + pg):**
+   Quando mockamos o método `pool.query` ou assemelhados e o controlador testado faz buscas em cadeia (como um `.map` executando `buscarItens` em cada pedido listado), deve-se enfileirar chamadas com `mQuery.mockResolvedValueOnce()` adequadas para suprir tanto a listagem primária _quanto_ os iteradores secundários, ou o teste sofrerá colapso por array vazia acidental.
+
+3. **Qualidade Estrita do ESLint 9+ (Full Stack):**
+   A nova infraestrutura abraça a checagem sintática dupla (Frontend e Backend) usando Flat Configuration (`eslint.config.js`). Qualquer código novo submetido no backend deverá passar obrigatoriamente pelas amarras do `pnpm lint` via `eslint src/ && tsc --noEmit` garantindo unificação de boas práticas.
+
+4. **Tratamento de Ciclos Síncronos do React 19:**
+   O React Linter agora ataca a inserção prematura de `setState` correndo abertamente na função `useEffect`. Requererá sempre o uso de atrasos inofensivos (`setTimeout`), derivação direta do `.map` no render, ou lazy initializer callback ao extrair storage na montagem (`useState(() => localStorage.getItem("X"))`).

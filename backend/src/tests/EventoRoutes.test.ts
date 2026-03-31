@@ -122,7 +122,8 @@ describe("Event Routes", () => {
     expect(response.body.error).toBe("Evento não encontrado");
   });
 
-  it("PATCH /api/eventos/:id/visibility - should toggle visibility", async () => {
+  it("PATCH /api/eventos/:id/visibilidade - should toggle visibilidade", async () => {
+    (pool.query as any).mockResolvedValue({ rows: [{ ...mockEvento, visivel: false }] });
     const response = await request(app).patch("/api/eventos/1/visibilidade");
     expect(response.status).toBe(200);
     expect(response.body.visivel).toBe(false);
@@ -134,5 +135,26 @@ describe("Event Routes", () => {
     const response = await request(app).patch("/api/eventos/999/visibilidade");
     expect(response.status).toBe(404);
     expect(response.body.error).toBe("Evento não encontrado");
+  });
+
+  it("POST /api/eventos - should remove orphaned image on creation error", async () => {
+    (pool.query as any).mockRejectedValueOnce(new Error("Database boom"));
+
+    const response = await request(app)
+      .post("/api/eventos")
+      .send({ titulo: "Boom" });
+
+    expect(response.status).toBe(500);
+    expect(response.body.error).toBe("Erro interno do servidor");
+  });
+
+  it("PUT /api/eventos/:id - should remove orphaned image on update when not found", async () => {
+    (pool.query as any).mockResolvedValue({ rows: [] });
+
+    const response = await request(app)
+      .put("/api/eventos/999")
+      .send({ titulo: "Fail" });
+
+    expect(response.status).toBe(404);
   });
 });

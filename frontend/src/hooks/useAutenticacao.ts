@@ -48,7 +48,7 @@ export const useAutenticacao = () => {
     }
 
     checkAuth();
-  }, []);
+  }, [apiUrl]);
 
   return {
     isAuthenticated,

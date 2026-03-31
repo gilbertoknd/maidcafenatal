@@ -159,7 +159,7 @@ export function ProdutoCard({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  onEdit && onEdit(produto);
+                  onEdit?.(produto);
                 }}
                 style={{
                   background: "#007bff",
@@ -178,7 +178,7 @@ export function ProdutoCard({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  onDelete && onDelete(produto.id);
+                  onDelete?.(produto.id);
                 }}
                 style={{
                   background: "#dc3545",
@@ -197,7 +197,7 @@ export function ProdutoCard({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  onToggleVisibility && onToggleVisibility(produto.id);
+                  onToggleVisibility?.(produto.id);
                 }}
                 style={{
                   background: produto.visivel ? "#6366f1" : "#4b5563",

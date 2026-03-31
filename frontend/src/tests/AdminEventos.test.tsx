@@ -2,6 +2,7 @@ import "../setupTests";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { AdminEventos } from "../components/AdminEventos";
+import { BrowserRouter } from "react-router-dom";
 import * as api from "../services/api";
 import type { Evento } from "../types/Evento";
 
@@ -28,14 +29,18 @@ const mockEventos: Evento[] = [
 describe("AdminEventos Component", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    (api.buscarEventosAdmin as any).mockResolvedValue(mockEventos);
+    vi.mocked(api.buscarEventosAdmin).mockResolvedValue(mockEventos);
     // Mock the window.alert
     vi.spyOn(window, "alert").mockImplementation(() => {});
     vi.spyOn(window, "confirm").mockReturnValue(true);
   });
 
   it("should render events list on mount", async () => {
-    render(<AdminEventos />);
+    render(
+      <BrowserRouter>
+        <AdminEventos />
+      </BrowserRouter>
+    );
 
     expect(screen.getByText("Carregando...")).toBeInTheDocument();
 
@@ -45,9 +50,13 @@ describe("AdminEventos Component", () => {
   });
 
   it("should create a new event successfully", async () => {
-    (api.criarEvento as any).mockResolvedValue(mockEventos[0]);
+    vi.mocked(api.criarEvento).mockResolvedValue(mockEventos[0]);
 
-    render(<AdminEventos />);
+    render(
+      <BrowserRouter>
+        <AdminEventos />
+      </BrowserRouter>
+    );
     await waitFor(() => screen.getByText("Festa do Chá Admin"));
 
     const titleInput = screen.getByPlaceholderText("Ex: Festa do Chá");
@@ -72,9 +81,13 @@ describe("AdminEventos Component", () => {
   });
 
   it("should populate form on edit and call update API", async () => {
-    (api.atualizarEvento as any).mockResolvedValue(mockEventos[0]);
+    vi.mocked(api.atualizarEvento).mockResolvedValue(mockEventos[0]);
 
-    render(<AdminEventos />);
+    render(
+      <BrowserRouter>
+        <AdminEventos />
+      </BrowserRouter>
+    );
     await waitFor(() => screen.getByText("Festa do Chá Admin"));
 
     const editBtn = screen.getByTitle("Editar");
@@ -92,7 +105,11 @@ describe("AdminEventos Component", () => {
   });
 
   it("should delete event", async () => {
-    render(<AdminEventos />);
+    render(
+      <BrowserRouter>
+        <AdminEventos />
+      </BrowserRouter>
+    );
     await waitFor(() => screen.getByText("Festa do Chá Admin"));
 
     const deleteBtn = screen.getByTitle("Excluir");
@@ -104,7 +121,11 @@ describe("AdminEventos Component", () => {
   });
 
   it("should toggle visibility", async () => {
-    render(<AdminEventos />);
+    render(
+      <BrowserRouter>
+        <AdminEventos />
+      </BrowserRouter>
+    );
     await waitFor(() => screen.getByText("Festa do Chá Admin"));
 
     const hideBtn = screen.getByTitle("Ocultar");

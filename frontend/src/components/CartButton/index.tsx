@@ -10,10 +10,10 @@ export function CartButton() {
   useEffect(() => {
     if (contagemItens === 0) return;
     
-    setIsBumping(true);
+    const bumpTimer = setTimeout(() => setIsBumping(true), 0);
     const timer = setTimeout(() => setIsBumping(false), 300);
     
-    return () => clearTimeout(timer);
+    return () => { clearTimeout(bumpTimer); clearTimeout(timer); };
   }, [contagemItens]);
 
   if (contagemItens === 0) return null;

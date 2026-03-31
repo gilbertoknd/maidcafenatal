@@ -23,16 +23,11 @@ const CarrinhoContext = createContext<CarrinhoContextType | undefined>(undefined
 export const CarrinhoProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [itens, setItens] = useState<CarrinhoItem[]>([]);
-  const [estaAberto, setEstaAberto] = useState(false);
-
-  // Carregar do localStorage ao iniciar
-  useEffect(() => {
+  const [itens, setItens] = useState<CarrinhoItem[]>(() => {
     const salvo = localStorage.getItem("carrinho");
-    if (salvo) {
-      setItens(JSON.parse(salvo));
-    }
-  }, []);
+    return salvo ? JSON.parse(salvo) : [];
+  });
+  const [estaAberto, setEstaAberto] = useState(false);
 
   // Salvar no localStorage ao mudar
   useEffect(() => {
@@ -96,6 +91,7 @@ export const CarrinhoProvider: React.FC<{ children: ReactNode }> = ({
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useCarrinho = () => {
   const context = useContext(CarrinhoContext);
   if (context === undefined) {

@@ -102,10 +102,12 @@ describe("Página de Cardápio", () => {
       expect(screen.getByText("Bolo de Chocolate")).toBeInTheDocument();
     });
 
-    const categoryButton = screen.getByText("Bebidas");
+    const categoryButton = screen.getByRole("button", { name: "Bebidas" });
     fireEvent.click(categoryButton);
 
-    expect(screen.queryByText("Bolo de Chocolate")).not.toBeInTheDocument();
-    expect(screen.getByText("Café Expresso")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText("Bolo de Chocolate")).not.toBeInTheDocument();
+      expect(screen.getByText("Café Expresso")).toBeInTheDocument();
+    });
   });
 });

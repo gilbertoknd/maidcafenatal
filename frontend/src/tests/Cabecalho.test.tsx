@@ -25,7 +25,7 @@ describe("Componente Header", () => {
         </CarrinhoProvider>
       </BrowserRouter>
     );
-    expect(screen.getByText(/Home/i)).toBeInTheDocument();
+    expect(screen.getByText("Início")).toBeInTheDocument();
     expect(screen.getByText("Cardápio")).toBeInTheDocument();
   });
 

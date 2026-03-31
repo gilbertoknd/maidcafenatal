@@ -7,10 +7,12 @@ const router = Router();
 
 // Públicas
 router.get("/", EventoController.listarTodos);
-router.get("/:id", EventoController.buscarPorId);
 
-// Admin
+// Admin (definidas primeiro para evitar interceptação pelo /:id)
 router.get("/admin", autenticacaoMiddleware, EventoController.listarTodosAdmin);
+
+// Públicas (com parâmetros)
+router.get("/:id", EventoController.buscarPorId);
 router.post("/", autenticacaoMiddleware, uploadConfig.single("imagem"), EventoController.criar);
 router.put("/:id", autenticacaoMiddleware, uploadConfig.single("imagem"), EventoController.atualizar);
 

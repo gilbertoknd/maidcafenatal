@@ -8,8 +8,8 @@ export const useProdutos = (type: "menu" | "store" | "admin" = "menu", isAdminSc
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Todos");
 
-  const refresh = useCallback(() => {
-    setLoading(true);
+  const refresh = useCallback((setLoadState = true) => {
+    if (setLoadState) setLoading(true);
     const fetchFn = isAdminScope ? buscarProdutosAdmin : buscarProdutos;
     
     fetchFn()
@@ -26,10 +26,11 @@ export const useProdutos = (type: "menu" | "store" | "admin" = "menu", isAdminSc
         console.error(err);
         setLoading(false);
       });
-  }, []);
+  }, [type, isAdminScope]);
 
   useEffect(() => {
-    refresh();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    refresh(false);
   }, [refresh]);
 
   const categories = useMemo(() => {

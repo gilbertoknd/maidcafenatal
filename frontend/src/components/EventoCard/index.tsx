@@ -80,7 +80,7 @@ export function EventoCard({
               <button 
                 onClick={(e) => {
                   e.stopPropagation();
-                  onToggleVisibility && onToggleVisibility(evento.id);
+                  onToggleVisibility?.(evento.id);
                 }} 
                 className={styles.adminBtn} 
                 title={evento.visivel ? "Ocultar" : "Mostrar"}
@@ -90,7 +90,7 @@ export function EventoCard({
               <button 
                 onClick={(e) => {
                   e.stopPropagation();
-                  onEdit && onEdit(evento);
+                  onEdit?.(evento);
                 }} 
                 className={`${styles.adminBtn} ${styles.editBtn}`} 
                 title="Editar"
@@ -100,7 +100,7 @@ export function EventoCard({
               <button 
                 onClick={(e) => {
                   e.stopPropagation();
-                  onDelete && onDelete(evento.id);
+                  onDelete?.(evento.id);
                 }} 
                 className={`${styles.adminBtn} ${styles.deleteBtn}`} 
                 title="Excluir"

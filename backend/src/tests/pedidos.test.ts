@@ -30,11 +30,12 @@ describe("Pedido Routes", () => {
       { id: 1, cliente_nome: "Maria", total: "50.00" }
     ];
     mQuery.mockResolvedValueOnce({ rows: mockOrders });
+    mQuery.mockResolvedValueOnce({ rows: [] }); // O controller faz um map e chama buscarItens para cada pedido
 
     const response = await request(app).get("/api/pedidos");
 
     expect(response.status).toBe(200);
-    expect(response.body).toEqual(mockOrders);
+    expect(response.body).toEqual(mockOrders.map(o => ({ ...o, itens: [] })));
   });
 
   it("should return 400 on missing create order data", async () => {
@@ -79,5 +80,17 @@ describe("Pedido Routes", () => {
 
     expect(response.status).toBe(404);
     expect(response.body).toEqual({ error: "Pedido não encontrado" });
+  });
+
+  it("should update order status successfully", async () => {
+    const mockOrder = { id: 1, status: "Concluído" };
+    mQuery.mockResolvedValueOnce({ rows: [mockOrder] });
+
+    const response = await request(app)
+      .put("/api/pedidos/1/status")
+      .send({ status: "Concluído" });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(mockOrder);
   });
 });

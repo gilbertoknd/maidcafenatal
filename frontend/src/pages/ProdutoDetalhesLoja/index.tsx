@@ -1,8 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+
 import { useProdutos } from "../../hooks/useProdutos";
 import { useCarrinho } from "../../hooks/useCarrinho";
-import type { Produto } from "../../types/Produto";
+
 import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
 import { formatCurrency } from "../../utils/formatadores";
@@ -14,14 +14,7 @@ export function ProdutoDetalhesLoja() {
   const { produtos, loading } = useProdutos("store");
   const { adicionarProduto } = useCarrinho();
   
-  const [produto, setProduto] = useState<Produto | null>(null);
-
-  useEffect(() => {
-    if (!loading && produtos.length > 0) {
-      const found = produtos.find(p => p.id === Number(id));
-      setProduto(found || null);
-    }
-  }, [id, produtos, loading]);
+  const produto = produtos.length > 0 ? produtos.find(p => p.id === Number(id)) || null : null;
 
   if (loading) {
     return (

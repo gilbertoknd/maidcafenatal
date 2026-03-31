@@ -72,3 +72,9 @@ Desktop.ini
 pgdata/
 postgres_data/
 /data/db/
+
+# ===========================
+# 7. Testes
+# ===========================
+backend/coverage*.txt
+frontend/coverage*.txt

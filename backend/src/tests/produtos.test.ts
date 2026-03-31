@@ -9,6 +9,11 @@ vi.mock("../config/db", () => ({
   },
 }));
 
+// Mock do middleware de autenticação
+vi.mock("../middlewares/autenticacaoMiddleware.js", () => ({
+  autenticacaoMiddleware: vi.fn((req, res, next) => next())
+}));
+
 import { pool } from "../config/db.js";
 
 describe("Product Routes", () => {
@@ -109,5 +114,93 @@ describe("Product Routes", () => {
     expect(response.body).toEqual({ error: "Erro interno do servidor" });
     expect(consoleSpy).toHaveBeenCalled();
     consoleSpy.mockRestore();
+  });
+
+  it("should return all products for admin", async () => {
+    const mockProducts = [
+      { id: 1, name: "Product 1", price: 10, visivel: true },
+      { id: 2, name: "Hidden", price: 20, visivel: false },
+    ];
+    (pool.query as any).mockResolvedValue({ rows: mockProducts });
+
+    const response = await request(app).get("/api/produtos/admin");
+
+    expect(response.status).toBe(200);
+    expect(response.body.length).toBe(2);
+  });
+
+
+
+  it("should create a product successfully", async () => {
+    const mockProduct = { id: 1, nome: "New", categoria: "Bebida", preco: 15.0 };
+    (pool.query as any).mockResolvedValue({ rows: [mockProduct] });
+
+    const response = await request(app)
+      .post("/api/produtos")
+      .send({ nome: "New", categoria: "Bebida", preco: 15.0 });
+
+    expect(response.status).toBe(201);
+    expect(response.body).toEqual(mockProduct);
+  });
+
+  it("should update a product successfully", async () => {
+    const mockProduct = { id: 1, nome: "Update", categoria: "Bebida", preco: 15.0 };
+    (pool.query as any).mockResolvedValue({ rows: [mockProduct] });
+
+    const response = await request(app)
+      .put("/api/produtos/1")
+      .send({ nome: "Update", preco: 15.0 });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(mockProduct);
+  });
+
+  it("should return 404 updating a non-existent product", async () => {
+    (pool.query as any).mockResolvedValue({ rows: [] });
+
+    const response = await request(app)
+      .put("/api/produtos/999")
+      .send({ nome: "Nope", preco: 15.0 });
+
+    expect(response.status).toBe(404);
+    expect(response.body.error).toBe("Produto não encontrado");
+  });
+
+  it("should delete a product successfully", async () => {
+    const mockProduct = { id: 1, nome: "Gone" };
+    (pool.query as any).mockResolvedValue({ rows: [mockProduct] });
+
+    const response = await request(app).delete("/api/produtos/1");
+
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe("Produto deletado com sucesso");
+  });
+
+  it("should return 404 deleting a non-existent product", async () => {
+    (pool.query as any).mockResolvedValue({ rows: [] });
+
+    const response = await request(app).delete("/api/produtos/999");
+
+    expect(response.status).toBe(404);
+    expect(response.body.error).toBe("Produto não encontrado");
+  });
+
+  it("should toggle product visibility", async () => {
+    const mockProduct = { id: 1, visivel: false };
+    (pool.query as any).mockResolvedValue({ rows: [mockProduct] });
+
+    const response = await request(app).patch("/api/produtos/1/visibilidade");
+
+    expect(response.status).toBe(200);
+    expect(response.body.visivel).toBe(false);
+  });
+
+  it("should return 404 toggling visibility of non-existent product", async () => {
+    (pool.query as any).mockResolvedValue({ rows: [] });
+
+    const response = await request(app).patch("/api/produtos/999/visibilidade");
+
+    expect(response.status).toBe(404);
+    expect(response.body.error).toBe("Produto não encontrado");
   });
 });

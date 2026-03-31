@@ -32,13 +32,16 @@ export default function AdminDashboard() {
   const [produtoEditando, setProdutoEditando] = useState<Produto | null>(null);
   const [activeTab, setActiveTab] = useState<"produtos" | "loja" | "pedidos" | "eventos" | "banners">("pedidos");
 
+  const { refresh: refreshMenu } = menuProductData;
+  const { refresh: refreshStore } = storeProductData;
+
   // Busca produtos ao logar
   useEffect(() => {
     if (isAuthenticated) {
-      menuProductData.refresh();
-      storeProductData.refresh();
+      refreshMenu();
+      refreshStore();
     }
-  }, [isAuthenticated, menuProductData.refresh, storeProductData.refresh]);
+  }, [isAuthenticated, refreshMenu, refreshStore]);
 
   // Função wrapper para salvar
   async function handleSaveWrapper(formData: FormData) {

@@ -17,7 +17,7 @@ function ModalOpener() {
   const { setEstaAberto } = useCarrinho();
   useEffect(() => {
     setEstaAberto(true);
-  }, []);
+  }, [setEstaAberto]);
   return null;
 }
 
