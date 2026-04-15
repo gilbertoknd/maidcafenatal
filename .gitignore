@@ -97,3 +97,4 @@ frontend/test_output.txt
 frontend/test_results.txt
 
 .agents
+coverage*.txt
