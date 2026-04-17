@@ -46,7 +46,7 @@ Website para o **Mew Mew Café** (Maid Café) localizado em Natal/RN. O sistema 
 - **Produção:** Todos os containers rodam via Docker Compose em uma máquina com acesso à internet. Utilizamos **Multi-stage builds** para otimização de performance e segurança.
 - **Frontend em Produção:** Servido por um container **Nginx** (porta 80 interna), otimizado para Single Page Applications (SPA).
 - **Backend em Produção:** Executa o código transpilado da pasta `/dist` via Node.js em modo produção.
-- **Domínio:** `jcafenatal.store` (via Cloudflare Tunnel — container `maid_tunnel`).
+- **Domínio:** `mewworld.space` (via Cloudflare Tunnel — container `maid_tunnel`).
 - **Imagens:** Servidas localmente a partir de `backend/public/images/` via `express.static`. A rota `/images/*` no backend serve os arquivos estáticos.
 
 ---
@@ -603,7 +603,7 @@ pnpm lint        # eslint
 
 **Hurdle:** CORS bloqueando requests do frontend em produção.
 
-**Solução:** A variável `FRONTEND_URL` no `.env` raiz deve conter a URL exata do frontend em produção (ex: `https://jcafenatal.store`). O backend usa `cors(corsOptions)` que apenas aceita a origin configurada.
+**Solução:** A variável `FRONTEND_URL` no `.env` raiz deve conter a URL exata do frontend em produção (ex: `https://mewworld.space`). O backend usa `cors(corsOptions)` que apenas aceita a origin configurada.
 
 ---
 
