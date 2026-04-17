@@ -12,7 +12,7 @@ export function useDebugTela() {
         category = "Tablet/Large Phone (3 Cols)";
       }
 
-      //console.log(`[DEBUG] Width: ${width}px | Mode: ${category}`);
+      console.log(`[DEBUG] Width: ${width}px | Mode: ${category}`);
     }
 
     //Call once on mount to show initial state
