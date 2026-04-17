@@ -66,6 +66,8 @@ services:
 
   # Tunnel Cloudflare
   tunnel:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     container_name: maid_tunnel
     image: cloudflare/cloudflared:latest
     restart: always

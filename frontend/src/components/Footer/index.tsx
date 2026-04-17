@@ -21,7 +21,7 @@ export function Footer() {
 
         <div className={styles.socials}>
           <a
-            href="https://www.instagram.com/maidcafenatal/"
+            href="https://www.instagram.com/mewmewnatal/"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.iconLink}

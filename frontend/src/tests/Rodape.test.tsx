@@ -21,7 +21,7 @@ describe("Footer Component", () => {
     expect(instagramLink).toBeInTheDocument();
     expect(instagramLink).toHaveAttribute(
       "href",
-      "https://www.instagram.com/maidcafenatal/"
+      "https://www.instagram.com/mewmewnatal/"
     );
 
     const whatsappLink = screen.getByLabelText("Fale conosco no WhatsApp");
