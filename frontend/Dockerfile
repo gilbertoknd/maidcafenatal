@@ -11,7 +11,7 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 
 # Variável de build para produção
-ARG VITE_BACKEND_URL=https://api.jcafenatal.store
+ARG VITE_BACKEND_URL=https://api.mewworld.space
 ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
 
 RUN pnpm build

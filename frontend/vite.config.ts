@@ -7,6 +7,6 @@ export default defineConfig({
   server: {
     host: true,
     port: 5174,
-    allowedHosts: ["jcafenatal.store", "www.jcafenatal.store", "localhost"],
+    allowedHosts: ["mewworld.space", "www.mewworld.space", "localhost"],
   },
 });
