@@ -1,19 +1,36 @@
 @import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap");
 
 :root {
-  --color-primary: #f1648c;
-  --color-primary-dark: #d8456b;
-  --color-primary-light: #fce7f3;
-  --color-primary-border: #fbd1dd;
-  --color-secondary-border: #f9c1d1;
-  --color-background: #fce0e8;
-  --color-secondary-background: #fbd1dd;
-  --color-tertiary-background: #fff0f5;
-  --color-text: #555555;
-  --color-white: #ffffff;
-  --color-shadow: rgba(241, 100, 140, 0.3);
+  /* ═══ Paleta Principal ═══ */
+  --color-primary: #E84D8A;          /* Rosa Fúcsia — Logo, botões e títulos */
+  --color-primary-dark: #C73872;     /* Rosa Fúcsia escuro (hover) */
+  --color-primary-light: #FCE4EC;    /* Rosa Algodão Doce (claro) */
+  --color-primary-border: #F8BBD0;   /* Borda rosa derivada da paleta */
+  --color-secondary-border: #F0A4C0; /* Borda rosa secundária */
+
+  /* ═══ Cores Base ═══ */
+  --color-background: #FFFFFF;       /* Branco Neve — Fundo principal */
+  --color-secondary-background: #FCE4EC; /* Rosa Algodão Doce — Fundos de seção e cards */
+  --color-tertiary-background: #FFF0F5;  /* Lavanda rosada — Fundo terciário suave */
+  --color-white: #FFFFFF;            /* Branco Neve */
+
+  /* ═══ Cores de Destaque ═══ */
+  --color-accent-mint: #A8E6CF;      /* Verde Menta — Botões de comprar/ícones */
+  --color-accent-mint-dark: #7DD3B0; /* Verde Menta escuro (hover) */
+  --color-accent-star: #FFF3B0;      /* Amarelo Estelar — Ofertas e novidades */
+  --color-accent-star-dark: #FFE57F; /* Amarelo Estelar escuro (hover) */
+
+  /* ═══ Cor de Apoio ═══ */
+  --color-accent-lilac: #D1C4E9;     /* Lilás Místico — Bordas e detalhes decorativos */
+  --color-accent-lilac-dark: #B39DDB; /* Lilás Místico escuro (hover) */
+
+  /* ═══ Cor de Contraste ═══ */
+  --color-text: #37474F;             /* Cinza Antracite — Texto principal */
+
+  /* ═══ Utilitários ═══ */
+  --color-shadow: rgba(232, 77, 138, 0.25);  /* Sombra derivada do Rosa Fúcsia */
   --color-modal-overlay: rgba(0, 0, 0, 0.5);
-  --color-border: #fbd1dd;
+  --color-border: #F8BBD0;           /* Borda padrão (rosa suave) */
   --color-error: #ef4444;
   --color-error-dark: #dc2626;
   --color-info: #6366f1;
@@ -50,12 +67,12 @@
 
   /* Brand Colors */
   --color-whatsapp: #25d366;
-  --color-star-active: #ffd700;
-  --color-star-shadow: rgba(255, 215, 0, 0.4);
-  --color-success: #10b981; /* Verde esmeralda fofo */
-  --color-success-dark: #059669;
-  --color-warning: #fbbf24; /* Amarelo quente fofo */
-  --color-warning-dark: #d97706;
+  --color-star-active: #FFF3B0;        /* Amarelo Estelar — Estrelas e curtidas */
+  --color-star-shadow: rgba(255, 243, 176, 0.5);
+  --color-success: #A8E6CF;            /* Verde Menta — Sucesso */
+  --color-success-dark: #7DD3B0;
+  --color-warning: #FFF3B0;            /* Amarelo Estelar — Avisos */
+  --color-warning-dark: #FFE57F;
 
   /* Typography */
   --font-main: "Fredoka", sans-serif;
