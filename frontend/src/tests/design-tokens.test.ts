@@ -70,4 +70,14 @@ describe("Design Tokens - Paleta de Cores", () => {
     expect(cssContent).toMatch(/--color-secondary-border:/);
     expect(cssContent).toMatch(/--color-border:/);
   });
+
+  // ─── Tipografia ───
+  it("deve usar a fonte Sweet Apricot via @font-face local", () => {
+    expect(cssContent).toContain("font-family: 'Sweet Apricot'");
+    expect(cssContent).toContain("sweet-apricot.woff2");
+  });
+
+  it("deve ter --font-main usando Sweet Apricot", () => {
+    expect(cssContent).toContain("--font-main: 'Sweet Apricot'");
+  });
 });

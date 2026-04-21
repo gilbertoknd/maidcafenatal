@@ -1,4 +1,8 @@
-@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap");
+@font-face {
+  font-family: 'Sweet Apricot';
+  src: url('/fonts/sweet-apricot.woff2') format('woff2');
+  font-display: swap;
+}
 
 :root {
   /* ═══ Paleta Principal ═══ */
@@ -75,7 +79,7 @@
   --color-warning-dark: #FFE57F;
 
   /* Typography */
-  --font-main: "Fredoka", sans-serif;
+  --font-main: 'Sweet Apricot', cursive, sans-serif;
   --font-size-sm: 0.9rem;
   --font-size-md: 1rem;
   --font-size-lg: 1.1rem;

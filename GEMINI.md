@@ -15,7 +15,7 @@
 - **Melhorias** Quando estiver trabalhando em um código que não siga as regras do documento, mesmo sendo um código mais antigo, feito anteriormente, quero que você faça o possível para que ele siga as regras do documento, alterando-o.
 - **Responsividade** Quero que você foque bastante na responsividade e funcionalidades do site para dispositivos móveis, de forma que funcione bem em celulares, que é o foco principal.
 - **Hurdle** Adicione common Hurdles que você encontrar durante o desenvolvimento, com as soluções para que você não cometa os mesmos erros novamente.
-- **Identidade Visual:** O site deve seguir uma estética "fofa" (Kawaii/Maid Café), com cores pastéis (rosa, creme, branco), tipografia arredondada (Fredoka) e, crucialmente, botões e elementos com cantos muito arredondados (`var(--radius-button)` para botões e `var(--radius-card)` para cards/modais).
+- **Identidade Visual:** O site deve seguir uma estética "fofa" (Kawaii/Maid Café), com cores pastéis (rosa, creme, branco), tipografia cursiva decorativa (Sweet Apricot) e, crucialmente, botões e elementos com cantos muito arredondados (`var(--radius-button)` para botões e `var(--radius-card)` para cards/modais).
 
 ---
 
@@ -65,7 +65,7 @@ Website para o **Mew Mew Café** (Maid Café) localizado em Natal/RN. O sistema 
 - **Testes:** Vitest + `@testing-library/react` + `@testing-library/jest-dom` + `jsdom`
 - **Linting:** ESLint 9 + `eslint-plugin-react-hooks` + `eslint-plugin-react-refresh` + `typescript-eslint` + `globals`
 - **Validação de Schemas:** `zod`
-- **Tipografia:** Google Fonts — **Fredoka** (300..700)
+- **Tipografia:** **Sweet Apricot** (fonte local `.woff2` em `public/fonts/`)
 
 ### Backend
 
@@ -464,7 +464,7 @@ Todos os tokens de design estão centralizados em `frontend/src/index.css`:
 ### Tipografia
 
 ```css
---font-main: "Fredoka", sans-serif;
+--font-main: 'Sweet Apricot', cursive, sans-serif;
 --font-size-sm: 0.9rem;
 --font-size-md: 1rem;
 --font-size-lg: 1.1rem;
