@@ -403,21 +403,52 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 
 Todos os tokens de design estão centralizados em `frontend/src/index.css`:
 
-### Cores
+### Paleta de Cores
+
+| Estilo    | Nome da Cor        | Hexadecimal | Variável CSS                    | Uso Recomendado                         |
+| --------- | ------------------ | ----------- | ------------------------------- | --------------------------------------- |
+| Principal | Rosa Fúcsia        | `#E84D8A`   | `--color-primary`               | Logo, botões principais e títulos       |
+| Principal | Rosa Fúcsia Escuro | `#C73872`   | `--color-primary-dark`          | Hover de botões principais              |
+| Base      | Branco Neve        | `#FFFFFF`   | `--color-white`, `--color-background` | Fundos e áreas de respiro         |
+| Base      | Rosa Algodão Doce  | `#FCE4EC`   | `--color-secondary-background`  | Fundos de seção e cards                 |
+| Destaque  | Verde Menta        | `#A8E6CF`   | `--color-accent-mint`           | Botões de "Comprar" ou ícones, sucesso  |
+| Destaque  | Amarelo Estelar    | `#FFF3B0`   | `--color-star-active`, `--color-accent-star` | Ofertas, estrelas e novidades |
+| Apoio     | Lilás Místico      | `#D1C4E9`   | `--color-accent-lilac`          | Bordas e detalhes decorativos           |
+| Contraste | Cinza Antracite    | `#37474F`   | `--color-text`                  | Textos longos e leitura principal       |
 
 ```css
---color-primary: #f1648c; /* Rosa principal */
---color-primary-dark: #d8456b; /* Rosa escuro (hover) */
---color-primary-border: #fbd1dd; /* Borda rosa claro */
---color-background: #fce0e8; /* Fundo geral */
---color-secondary-background: #fbd1dd; /* Fundo secundário */
---color-tertiary-background: #fff0f5; /* Fundo terciário */
---color-text: #555555; /* Texto padrão */
---color-white: #ffffff;
---color-star-active: #ffd700; /* Estrela ativa (likes) */
---color-error: #ef4444; /* Erros e Deletar */
---color-info: #6366f1; /* Informação e Visibilidade */
---color-overlay-dark: rgba(0, 0, 0, 0.6);
+/* ═══ Paleta Principal ═══ */
+--color-primary: #E84D8A;          /* Rosa Fúcsia */
+--color-primary-dark: #C73872;     /* Rosa Fúcsia escuro (hover) */
+--color-primary-light: #FCE4EC;    /* Rosa Algodão Doce (claro) */
+--color-primary-border: #F8BBD0;   /* Borda rosa derivada */
+--color-secondary-border: #F0A4C0; /* Borda rosa secundária */
+
+/* ═══ Cores Base ═══ */
+--color-background: #FFFFFF;       /* Branco Neve */
+--color-secondary-background: #FCE4EC; /* Rosa Algodão Doce */
+--color-tertiary-background: #FFF0F5;  /* Lavanda rosada */
+--color-white: #FFFFFF;
+
+/* ═══ Cores de Destaque ═══ */
+--color-accent-mint: #A8E6CF;      /* Verde Menta */
+--color-accent-mint-dark: #7DD3B0;
+--color-accent-star: #FFF3B0;      /* Amarelo Estelar */
+--color-accent-star-dark: #FFE57F;
+
+/* ═══ Cor de Apoio ═══ */
+--color-accent-lilac: #D1C4E9;     /* Lilás Místico */
+--color-accent-lilac-dark: #B39DDB;
+
+/* ═══ Cor de Contraste ═══ */
+--color-text: #37474F;             /* Cinza Antracite */
+
+/* ═══ Brand Colors ═══ */
+--color-star-active: #FFF3B0;      /* Amarelo Estelar */
+--color-success: #A8E6CF;          /* Verde Menta */
+--color-warning: #FFF3B0;          /* Amarelo Estelar */
+--color-error: #ef4444;
+--color-info: #6366f1;
 ```
 
 ### Layout
@@ -426,7 +457,7 @@ Todos os tokens de design estão centralizados em `frontend/src/index.css`:
 --container-max-width: 1200px;
 --radius-card: 20px;
 --radius-button: 50px;
---shadow-card: 0 4px 6px rgba(241, 100, 140, 0.3);
+--shadow-card: 0 4px 6px rgba(232, 77, 138, 0.25);
 --transition-default: all 0.3s ease;
 ```
 
