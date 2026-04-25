@@ -43,7 +43,7 @@
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-primary);
-  font-family: var(--font-main);
+  font-family: var(--font-title);
 }
 
 /*Navegacao*/
@@ -59,7 +59,7 @@
   font-weight: var(--font-weight-medium);
   font-size: var(--font-size-md);
   transition: all 0.3s ease;
-  font-family: var(--font-main);
+
   position: relative;
   padding: 0.5rem 0.2rem;
   display: flex;

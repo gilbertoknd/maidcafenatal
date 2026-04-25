@@ -72,12 +72,24 @@ describe("Design Tokens - Paleta de Cores", () => {
   });
 
   // ─── Tipografia ───
-  it("deve usar a fonte Sweet Apricot via @font-face local", () => {
+  it("deve ter a fonte Sweet Apricot declarada via @font-face local", () => {
     expect(cssContent).toContain("font-family: 'Sweet Apricot'");
     expect(cssContent).toContain("sweet-apricot.woff2");
   });
 
-  it("deve ter --font-main usando Sweet Apricot", () => {
-    expect(cssContent).toContain("--font-main: 'Sweet Apricot'");
+  it("deve ter --font-title usando Sweet Apricot (apenas para títulos)", () => {
+    expect(cssContent).toMatch(/--font-title:\s*'Sweet Apricot'/);
+  });
+
+  it("deve ter --font-main usando Inter como fonte do corpo/geral", () => {
+    expect(cssContent).toMatch(/--font-main:\s*'Inter'/);
+  });
+
+  it("NÃO deve usar Sweet Apricot como a fonte global do :root", () => {
+    // A fonte global (font-family no :root) deve ser --font-main (Inter), não Sweet Apricot
+    const rootBlock = cssContent.match(/:root\s*\{[\s\S]*?\n\}/);
+    expect(rootBlock).toBeTruthy();
+    // A última font-family no :root deve apontar para --font-main (Inter)
+    expect(cssContent).toContain("font-family: var(--font-main)");
   });
 });

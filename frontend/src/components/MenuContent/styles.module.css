@@ -12,7 +12,7 @@
 .title {
   color: var(--color-primary);
   font-size: var(--font-size-5xl);
-  font-family: var(--font-main);
+  font-family: var(--font-title);
 }
 
 .loading {
@@ -27,7 +27,7 @@
 
 .categorySubtitle {
   color: var(--color-gray-600);
-  font-family: var(--font-main);
+  font-family: var(--font-title);
   font-size: var(--font-size-2xl-plus);
   margin-bottom: 1.5rem;
   padding-bottom: 0.5rem;

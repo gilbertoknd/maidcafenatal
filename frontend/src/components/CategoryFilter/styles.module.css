@@ -59,7 +59,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: var(--font-main);
+  font-family: var(--font-title);
   font-size: var(--font-content);
   white-space: nowrap;
   flex-shrink: 0;

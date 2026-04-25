@@ -23,7 +23,7 @@
 .previewPanel h3 {
   margin: 0;
   color: var(--color-primary-dark);
-  font-family: var(--font-main);
+  font-family: var(--font-title);
   align-self: flex-start;
 }
 
@@ -51,7 +51,7 @@
   color: var(--color-primary-dark);
   margin-bottom: 1.5rem;
   font-size: var(--font-size-2xl);
-  font-family: var(--font-main);
+  font-family: var(--font-title);
   font-weight: var(--font-weight-bold);
 }
 
@@ -68,7 +68,7 @@
   font-size: var(--font-size-md);
   width: 100%;
   box-sizing: border-box;
-  font-family: var(--font-main);
+
   color: #000000;
   background-color: #ffffff;
   -webkit-text-fill-color: #000000;
@@ -125,7 +125,7 @@
 }
 
 .fileInput {
-  font-family: var(--font-main);
+
   color: var(--color-text);
   width: fit-content;
   display: inline-block;
@@ -151,7 +151,7 @@
   align-items: center;
   gap: 8px;
   color: var(--color-white);
-  font-family: var(--font-main);
+
   font-size: var(--font-size-md);
   transition: var(--transition-default);
   box-shadow: var(--shadow-card);

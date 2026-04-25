@@ -6,7 +6,7 @@ import { Footer } from "../components/Footer";
 describe("Footer Component", () => {
   it("should render the copyright text", () => {
     render(<Footer />);
-    const currentYear = new Date().getFullYear();
+    const currentYear = 2024;
     expect(
       screen.getByText((content) =>
         content.includes(`© ${currentYear} Mew Mew Maid Café`)

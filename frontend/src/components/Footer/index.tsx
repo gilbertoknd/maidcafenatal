@@ -17,7 +17,7 @@ export function Footer() {
 
         <h2 className={styles.title}>Mew Mew Maid Café</h2>
 
-        <p className={styles.phrase}>O lugar mais mágico da cidade ✨️💖</p>
+        <p className={styles.phrase}>A experiência mais mágica da cidade ✨️💖</p>
 
         <div className={styles.socials}>
           <a
@@ -43,7 +43,7 @@ export function Footer() {
 
         {/*Copyright*/}
         <p style={{ fontSize: "0.8rem", marginTop: "1rem" }}>
-          © {new Date().getFullYear()} Mew Mew Maid Café. Todos os direitos
+          © 2024 Mew Mew Maid Café. Todos os direitos
           reservados.
         </p>
       </div>

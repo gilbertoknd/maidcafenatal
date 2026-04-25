@@ -14,7 +14,7 @@
   font-size: var(--font-size-6xl);
   color: var(--color-primary);
   margin-bottom: 1rem;
-  font-family: var(--font-main);
+  font-family: var(--font-title);
 }
 
 .subtitle {
@@ -34,7 +34,7 @@
   transition:
     transform 0.2s,
     background-color 0.2s;
-  font-family: var(--font-main);
+
   box-shadow: 0 4px 10px var(--color-shadow);
 }
 

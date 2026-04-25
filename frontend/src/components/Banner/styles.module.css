@@ -51,7 +51,7 @@
   font-size: var(--font-size-xl);
   border-radius: var(--radius-button);
   cursor: pointer;
-  font-family: var(--font-main);
+
   font-weight: var(--font-weight-bold);
   transition: all 0.3s ease;
   box-shadow: var(--shadow-lg);

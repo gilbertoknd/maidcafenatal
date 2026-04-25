@@ -72,7 +72,7 @@
 
 .title {
   font-size: var(--font-size-2xl-plus);
-  font-family: var(--font-main);
+  font-family: var(--font-title);
   color: var(--color-text);
   margin: 0;
   line-height: 1.2;
@@ -82,7 +82,7 @@
   font-size: var(--font-size-xl);
   font-weight: bold;
   color: var(--color-primary);
-  font-family: var(--font-main);
+
 }
 
 .tagsContainer {

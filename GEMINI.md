@@ -15,7 +15,7 @@
 - **Melhorias** Quando estiver trabalhando em um código que não siga as regras do documento, mesmo sendo um código mais antigo, feito anteriormente, quero que você faça o possível para que ele siga as regras do documento, alterando-o.
 - **Responsividade** Quero que você foque bastante na responsividade e funcionalidades do site para dispositivos móveis, de forma que funcione bem em celulares, que é o foco principal.
 - **Hurdle** Adicione common Hurdles que você encontrar durante o desenvolvimento, com as soluções para que você não cometa os mesmos erros novamente.
-- **Identidade Visual:** O site deve seguir uma estética "fofa" (Kawaii/Maid Café), com cores pastéis (rosa, creme, branco), tipografia cursiva decorativa (Sweet Apricot) e, crucialmente, botões e elementos com cantos muito arredondados (`var(--radius-button)` para botões e `var(--radius-card)` para cards/modais).
+- **Identidade Visual:** O site deve seguir uma estética "fofa" (Kawaii/Maid Café), com cores pastéis (rosa, creme, branco), tipografia cursiva decorativa **Sweet Apricot** exclusivamente em **títulos de páginas, nomes de categorias e títulos de itens** (via `var(--font-title)`), e fonte **Inter** (via `var(--font-main)`) para corpo de texto, navbar, botões e demais elementos de UI. Crucialmente, botões e elementos com cantos muito arredondados (`var(--radius-button)` para botões e `var(--radius-card)` para cards/modais).
 
 ---
 
@@ -65,7 +65,7 @@ Website para o **Mew Mew Café** (Maid Café) localizado em Natal/RN. O sistema 
 - **Testes:** Vitest + `@testing-library/react` + `@testing-library/jest-dom` + `jsdom`
 - **Linting:** ESLint 9 + `eslint-plugin-react-hooks` + `eslint-plugin-react-refresh` + `typescript-eslint` + `globals`
 - **Validação de Schemas:** `zod`
-- **Tipografia:** **Sweet Apricot** (fonte local `.woff2` em `public/fonts/`)
+- **Tipografia:** **Sweet Apricot** (fonte local `.woff2` em `public/fonts/`) para títulos (`--font-title`) + **Inter** (Google Fonts) para corpo/UI (`--font-main`)
 
 ### Backend
 
@@ -388,6 +388,7 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 | `/loja`             | `OnlineStore`         | Loja de produtos importados/artesanais             |
 | `/loja/produto/:id` | `StoreProductDetails` | Detalhes de produto da loja                        |
 | `/eventos`          | `EventsPage`          | Calendário de eventos                              |
+| `/maids/:id`        | `MaidDetalhes`        | Perfil detalhado das maids                         |
 | `/admin`            | `Admin`               | Painel administrativo (protegido por login)        |
 
 ### Components & UI Adicionais (Admin Dashboard)
@@ -464,7 +465,10 @@ Todos os tokens de design estão centralizados em `frontend/src/index.css`:
 ### Tipografia
 
 ```css
---font-main: 'Sweet Apricot', cursive, sans-serif;
+/* Fonte do corpo/UI (navbar, botões, inputs, textos gerais) */
+--font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+/* Fonte decorativa (títulos de páginas, nomes de categorias, títulos de itens) */
+--font-title: 'Sweet Apricot', cursive, sans-serif;
 --font-size-sm: 0.9rem;
 --font-size-md: 1rem;
 --font-size-lg: 1.1rem;
@@ -689,6 +693,8 @@ O projeto mantém testes unitários e de integração em ambos os lados:
 - `EventoCard.test.tsx` — Card de evento
 - `CalendarioEventos.test.tsx` — Calendário de eventos
 - `AdminEventos.test.tsx` — CRUD admin de eventos
+- `MaidCarousel.test.tsx` — Carrossel de Maids (Home)
+- `MaidDetalhes.test.tsx` — Página de perfil da Maid
 - `formatters.test.ts` — Funções utilitárias
 
 > **Regra:** Após qualquer alteração, rode `pnpm test:ci` no módulo afetado para garantir que nada quebrou.

@@ -13,7 +13,7 @@
   color: var(--color-primary-dark);
   margin-bottom: 1.5rem;
   font-size: var(--font-size-2xl);
-  font-family: var(--font-main);
+  font-family: var(--font-title);
   font-weight: var(--font-weight-bold);
 }
 
@@ -31,7 +31,7 @@
   font-size: var(--font-size-md);
   width: 100%;
   box-sizing: border-box;
-  font-family: var(--font-main);
+
   /* Background e color estão sendo definidos inline no componente para garantir compatibilidade */
 }
 
@@ -73,7 +73,7 @@
 .dropdownItem {
   padding: 10px 15px;
   cursor: pointer;
-  font-family: var(--font-main);
+
   font-size: var(--font-size-md);
   color: var(--color-text);
   transition: background-color 0.2s;
@@ -123,7 +123,7 @@
 }
 
 .fileInput {
-  font-family: var(--font-main);
+
   color: var(--color-text);
   width: fit-content;
   display: inline-block;
@@ -149,7 +149,7 @@
   align-items: center;
   gap: 8px;
   color: var(--color-white);
-  font-family: var(--font-main);
+
   font-size: var(--font-size-md);
   transition: var(--transition-default);
   box-shadow: var(--shadow-card);

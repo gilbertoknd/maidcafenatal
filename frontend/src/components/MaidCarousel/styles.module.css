@@ -1,0 +1,296 @@
+.section {
+  padding: 3rem 0;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    var(--color-tertiary-background) 0%,
+    var(--color-secondary-background) 100%
+  );
+}
+
+.sectionTitle {
+  font-family: var(--font-title);
+  color: var(--color-primary);
+  font-size: var(--font-size-5xl);
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 0 1rem;
+}
+
+/* ═══ Carrossel ═══ */
+.carouselContainer {
+  position: relative;
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.carouselTrack {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  cursor: grab;
+  padding-bottom: 1rem;
+}
+
+.carouselTrack:active {
+  cursor: grabbing;
+}
+
+.carouselTrack::-webkit-scrollbar {
+  display: none;
+}
+
+/* ═══ Slide (par de maids com divisão diagonal) ═══ */
+.slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  display: flex;
+  position: relative;
+  height: 450px;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+/* ═══ Painel individual da maid ═══ */
+.maidPanel {
+  position: relative;
+  width: 55%;
+  height: 100%;
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--color-white);
+  display: block;
+}
+
+/* Painel esquerdo — clip diagonal */
+.maidPanel:first-child {
+  clip-path: polygon(0 0, 100% 0, 80% 100%, 0 100%);
+  z-index: 2;
+}
+
+/* Painel direito — compensar a diagonal */
+.maidPanel:last-child {
+  margin-left: -10%;
+  clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%);
+  z-index: 1;
+}
+
+.maidImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 0.5s ease, filter 0.5s ease;
+}
+
+.maidPanel:hover .maidImage {
+  transform: scale(1.08);
+  filter: brightness(0.75);
+}
+
+/* ═══ Overlay com informações ═══ */
+.overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.4) 50%,
+    transparent 100%
+  );
+  transform: translateY(60%);
+  transition: transform 0.4s ease;
+  pointer-events: none;
+}
+
+.maidPanel:hover .overlay {
+  transform: translateY(0);
+}
+
+.maidName {
+  font-family: var(--font-title);
+  font-size: var(--font-size-3xl);
+  margin: 0 0 0.5rem 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.maidDescription {
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+  opacity: 0;
+  transition: opacity 0.4s ease 0.1s;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  margin: 0;
+}
+
+.maidPanel:hover .maidDescription {
+  opacity: 1;
+}
+
+/* ═══ Indicador "Conheça-me" ═══ */
+.meetMe {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  margin-top: 0.8rem;
+  opacity: 0;
+  transition: opacity 0.4s ease 0.2s;
+  color: var(--color-white);
+}
+
+.maidPanel:hover .meetMe {
+  opacity: 1;
+}
+
+/* ═══ Navegação do carrossel ═══ */
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: var(--radius-circle);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: var(--shadow-md);
+  color: var(--color-primary);
+  transition: var(--transition-default);
+}
+
+.navButton:hover {
+  background: var(--color-primary);
+  color: var(--color-white);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.navPrev {
+  left: 0.5rem;
+}
+
+.navNext {
+  right: 0.5rem;
+}
+
+/* ═══ Dots de navegação ═══ */
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-circle);
+  background: var(--color-primary-border);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-default);
+  padding: 0;
+}
+
+.dot:hover {
+  background: var(--color-primary);
+  transform: scale(1.2);
+}
+
+.dotActive {
+  background: var(--color-primary);
+  width: 28px;
+  border-radius: 5px;
+}
+
+/* ═══ Slide com maid solo (quando ímpar) ═══ */
+.maidPanelSolo {
+  width: 100%;
+  clip-path: none;
+  margin-left: 0;
+}
+
+/* ═══ Responsividade ═══ */
+@media (max-width: 768px) {
+  .slide {
+    height: 350px;
+  }
+
+  .sectionTitle {
+    font-size: var(--font-size-3xl);
+    margin-bottom: 1.5rem;
+  }
+
+  .maidName {
+    font-size: var(--font-size-2xl);
+  }
+
+  .overlay {
+    transform: translateY(40%);
+    padding: 1rem;
+  }
+
+  .navButton {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 2rem 0;
+  }
+
+  .slide {
+    height: 300px;
+    flex-direction: column;
+  }
+
+  /* Em mobile: empilhar em vez de diagonal */
+  .maidPanel {
+    width: 100%;
+    height: 50%;
+    clip-path: none !important;
+    margin-left: 0 !important;
+  }
+
+  .maidPanel:first-child {
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%) !important;
+  }
+
+  .maidPanel:last-child {
+    margin-top: -10% !important;
+    clip-path: polygon(0 15%, 100% 0, 100% 100%, 0 100%) !important;
+  }
+
+  .overlay {
+    transform: translateY(30%);
+    padding: 0.8rem;
+  }
+
+  .maidName {
+    font-size: var(--font-size-xl);
+  }
+
+  .maidDescription {
+    font-size: 0.75rem;
+  }
+
+  .navButton {
+    display: none;
+  }
+}

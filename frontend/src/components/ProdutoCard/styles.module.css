@@ -50,7 +50,7 @@
   font-weight: var(--font-weight-bold);
   margin: 0 0 0.25rem 0;
   color: var(--color-text);
-  font-family: var(--font-main);
+  font-family: var(--font-title);
   line-height: 1.2;
 }
 
@@ -84,7 +84,7 @@
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   color: var(--color-primary);
-  font-family: var(--font-main);
+
 }
 
 .button {
@@ -95,7 +95,7 @@
   border-radius: var(--radius-card);
   cursor: pointer;
   font-weight: var(--font-weight-medium);
-  font-family: var(--font-main);
+
   font-size: var(--font-size-sm);
 }
 

@@ -2,7 +2,7 @@
   max-width: var(--container-max-width);
   margin: 0 auto;
   padding: var(--padding-container, 20px);
-  font-family: var(--font-main);
+
 }
 
 .loading {
@@ -25,7 +25,7 @@
   display: flex;
   gap: 5px;
   align-items: center;
-  font-family: var(--font-main);
+
   transition: var(--transition-default);
 }
 
@@ -59,7 +59,7 @@
 .tabBtn {
   display: flex;
   align-items: center;
-  font-family: var(--font-main);
+
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-bold);
   color: var(--color-primary-dark);
