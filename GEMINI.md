@@ -15,7 +15,7 @@
 - **Melhorias** Quando estiver trabalhando em um código que não siga as regras do documento, mesmo sendo um código mais antigo, feito anteriormente, quero que você faça o possível para que ele siga as regras do documento, alterando-o.
 - **Responsividade** Quero que você foque bastante na responsividade e funcionalidades do site para dispositivos móveis, de forma que funcione bem em celulares, que é o foco principal.
 - **Hurdle** Adicione common Hurdles que você encontrar durante o desenvolvimento, com as soluções para que você não cometa os mesmos erros novamente.
-- **Identidade Visual:** O site deve seguir uma estética "fofa" (Kawaii/Maid Café), com cores pastéis (rosa, creme, branco), tipografia cursiva decorativa **Sweet Apricot** exclusivamente em **títulos de páginas, nomes de categorias e títulos de itens** (via `var(--font-title)`), e fonte **Inter** (via `var(--font-main)`) para corpo de texto, navbar, botões e demais elementos de UI. Crucialmente, botões e elementos com cantos muito arredondados (`var(--radius-button)` para botões e `var(--radius-card)` para cards/modais).
+- **Identidade Visual:** O site deve seguir uma estética "fofa" (Kawaii/Maid Café), com cores pastéis (rosa, creme, branco), tipografia cursiva decorativa **Sweet Apricot** exclusivamente em **títulos de páginas, nomes de categorias, títulos de itens e Navbar** (via `var(--font-title)`), e fonte **Inter** (via `var(--font-main)`) para corpo de texto, descrições, preços, botões e demais elementos de UI. Crucialmente, botões e elementos com cantos muito arredondados (`var(--radius-button)` para botões e `var(--radius-card)` para cards/modais). O background da página principal é levemente rosado (`#FFF5F8`), mantendo o branco puro (`#FFFFFF`) apenas para elementos elevados em relevo, como os cards.
 
 ---
 
@@ -410,8 +410,9 @@ Todos os tokens de design estão centralizados em `frontend/src/index.css`:
 | --------- | ------------------ | ----------- | ------------------------------- | --------------------------------------- |
 | Principal | Rosa Fúcsia        | `#E84D8A`   | `--color-primary`               | Logo, botões principais e títulos       |
 | Principal | Rosa Fúcsia Escuro | `#C73872`   | `--color-primary-dark`          | Hover de botões principais              |
-| Base      | Branco Neve        | `#FFFFFF`   | `--color-white`, `--color-background` | Fundos e áreas de respiro         |
-| Base      | Rosa Algodão Doce  | `#FCE4EC`   | `--color-secondary-background`  | Fundos de seção e cards                 |
+| Base      | Rosa Claro         | `#FFF5F8`   | `--color-background`            | Fundo principal levemente rosado        |
+| Base      | Branco Neve        | `#FFFFFF`   | `--color-white`                 | Cards e áreas de relevo                 |
+| Base      | Rosa Algodão Doce  | `#FCE4EC`   | `--color-secondary-background`  | Fundos de seção e modais                |
 | Destaque  | Verde Menta        | `#A8E6CF`   | `--color-accent-mint`           | Botões de "Comprar" ou ícones, sucesso  |
 | Destaque  | Amarelo Estelar    | `#FFF3B0`   | `--color-star-active`, `--color-accent-star` | Ofertas, estrelas e novidades |
 | Apoio     | Lilás Místico      | `#D1C4E9`   | `--color-accent-lilac`          | Bordas e detalhes decorativos           |
@@ -426,10 +427,10 @@ Todos os tokens de design estão centralizados em `frontend/src/index.css`:
 --color-secondary-border: #F0A4C0; /* Borda rosa secundária */
 
 /* ═══ Cores Base ═══ */
---color-background: #FFFFFF;       /* Branco Neve */
+--color-background: #FFF5F8;       /* Rosa Claro — Fundo da página */
 --color-secondary-background: #FCE4EC; /* Rosa Algodão Doce */
 --color-tertiary-background: #FFF0F5;  /* Lavanda rosada */
---color-white: #FFFFFF;
+--color-white: #FFFFFF;            /* Branco Neve — Cards e relevos */
 
 /* ═══ Cores de Destaque ═══ */
 --color-accent-mint: #A8E6CF;      /* Verde Menta */

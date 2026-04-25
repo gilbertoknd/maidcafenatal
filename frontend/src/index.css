@@ -15,10 +15,10 @@
   --color-secondary-border: #F0A4C0; /* Borda rosa secundária */
 
   /* ═══ Cores Base ═══ */
-  --color-background: #FFFFFF;       /* Branco Neve — Fundo principal */
+  --color-background: #FFF5F8;       /* Fundo principal (rosa muito claro) */
   --color-secondary-background: #FCE4EC; /* Rosa Algodão Doce — Fundos de seção e cards */
   --color-tertiary-background: #FFF0F5;  /* Lavanda rosada — Fundo terciário suave */
-  --color-white: #FFFFFF;            /* Branco Neve */
+  --color-white: #FFFFFF;            /* Branco Neve — Cards e modais (relevo) */
 
   /* ═══ Cores de Destaque ═══ */
   --color-accent-mint: #A8E6CF;      /* Verde Menta — Botões de comprar/ícones */

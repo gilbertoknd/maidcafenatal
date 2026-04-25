@@ -1,11 +1,7 @@
 .section {
   padding: 3rem 0;
   overflow: hidden;
-  background: linear-gradient(
-    135deg,
-    var(--color-tertiary-background) 0%,
-    var(--color-secondary-background) 100%
-  );
+  background: transparent;
 }
 
 .sectionTitle {
