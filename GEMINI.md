@@ -406,49 +406,49 @@ Todos os tokens de design estão centralizados em `frontend/src/index.css`:
 
 ### Paleta de Cores
 
-| Estilo    | Nome da Cor        | Hexadecimal | Variável CSS                    | Uso Recomendado                         |
-| --------- | ------------------ | ----------- | ------------------------------- | --------------------------------------- |
-| Principal | Rosa Fúcsia        | `#E84D8A`   | `--color-primary`               | Logo, botões principais e títulos       |
-| Principal | Rosa Fúcsia Escuro | `#C73872`   | `--color-primary-dark`          | Hover de botões principais              |
-| Base      | Rosa Claro         | `#FFF5F8`   | `--color-background`            | Fundo principal levemente rosado        |
-| Base      | Branco Neve        | `#FFFFFF`   | `--color-white`                 | Cards e áreas de relevo                 |
-| Base      | Rosa Algodão Doce  | `#FCE4EC`   | `--color-secondary-background`  | Fundos de seção e modais                |
-| Destaque  | Verde Menta        | `#A8E6CF`   | `--color-accent-mint`           | Botões de "Comprar" ou ícones, sucesso  |
-| Destaque  | Amarelo Estelar    | `#FFF3B0`   | `--color-star-active`, `--color-accent-star` | Ofertas, estrelas e novidades |
-| Apoio     | Lilás Místico      | `#D1C4E9`   | `--color-accent-lilac`          | Bordas e detalhes decorativos           |
-| Contraste | Cinza Antracite    | `#37474F`   | `--color-text`                  | Textos longos e leitura principal       |
+| Estilo    | Nome da Cor        | Hexadecimal | Variável CSS                                 | Uso Recomendado                        |
+| --------- | ------------------ | ----------- | -------------------------------------------- | -------------------------------------- |
+| Principal | Rosa Fúcsia        | `#E84D8A`   | `--color-primary`                            | Logo, botões principais e títulos      |
+| Principal | Rosa Fúcsia Escuro | `#C73872`   | `--color-primary-dark`                       | Hover de botões principais             |
+| Base      | Rosa Claro         | `#FFFDFF`   | `--color-background`                         | Fundo principal levemente rosado       |
+| Base      | Branco Neve        | `#FFFFFF`   | `--color-white`                              | Cards e áreas de relevo                |
+| Base      | Rosa Algodão Doce  | `#FCE4EC`   | `--color-secondary-background`               | Fundos de seção e modais               |
+| Destaque  | Verde Menta        | `#A8E6CF`   | `--color-accent-mint`                        | Botões de "Comprar" ou ícones, sucesso |
+| Destaque  | Amarelo Estelar    | `#FFF3B0`   | `--color-star-active`, `--color-accent-star` | Ofertas, estrelas e novidades          |
+| Apoio     | Lilás Místico      | `#D1C4E9`   | `--color-accent-lilac`                       | Bordas e detalhes decorativos          |
+| Contraste | Cinza Antracite    | `#37474F`   | `--color-text`                               | Textos longos e leitura principal      |
 
 ```css
 /* ═══ Paleta Principal ═══ */
---color-primary: #E84D8A;          /* Rosa Fúcsia */
---color-primary-dark: #C73872;     /* Rosa Fúcsia escuro (hover) */
---color-primary-light: #FCE4EC;    /* Rosa Algodão Doce (claro) */
---color-primary-border: #F8BBD0;   /* Borda rosa derivada */
---color-secondary-border: #F0A4C0; /* Borda rosa secundária */
+--color-primary: #e84d8a; /* Rosa Fúcsia */
+--color-primary-dark: #c73872; /* Rosa Fúcsia escuro (hover) */
+--color-primary-light: #fce4ec; /* Rosa Algodão Doce (claro) */
+--color-primary-border: #f8bbd0; /* Borda rosa derivada */
+--color-secondary-border: #f0a4c0; /* Borda rosa secundária */
 
 /* ═══ Cores Base ═══ */
---color-background: #FFF5F8;       /* Rosa Claro — Fundo da página */
---color-secondary-background: #FCE4EC; /* Rosa Algodão Doce */
---color-tertiary-background: #FFF0F5;  /* Lavanda rosada */
---color-white: #FFFFFF;            /* Branco Neve — Cards e relevos */
+--color-background: #fff5f8; /* Rosa Claro — Fundo da página */
+--color-secondary-background: #fce4ec; /* Rosa Algodão Doce */
+--color-tertiary-background: #fff0f5; /* Lavanda rosada */
+--color-white: #ffffff; /* Branco Neve — Cards e relevos */
 
 /* ═══ Cores de Destaque ═══ */
---color-accent-mint: #A8E6CF;      /* Verde Menta */
---color-accent-mint-dark: #7DD3B0;
---color-accent-star: #FFF3B0;      /* Amarelo Estelar */
---color-accent-star-dark: #FFE57F;
+--color-accent-mint: #a8e6cf; /* Verde Menta */
+--color-accent-mint-dark: #7dd3b0;
+--color-accent-star: #fff3b0; /* Amarelo Estelar */
+--color-accent-star-dark: #ffe57f;
 
 /* ═══ Cor de Apoio ═══ */
---color-accent-lilac: #D1C4E9;     /* Lilás Místico */
---color-accent-lilac-dark: #B39DDB;
+--color-accent-lilac: #d1c4e9; /* Lilás Místico */
+--color-accent-lilac-dark: #b39ddb;
 
 /* ═══ Cor de Contraste ═══ */
---color-text: #37474F;             /* Cinza Antracite */
+--color-text: #37474f; /* Cinza Antracite */
 
 /* ═══ Brand Colors ═══ */
---color-star-active: #FFF3B0;      /* Amarelo Estelar */
---color-success: #A8E6CF;          /* Verde Menta */
---color-warning: #FFF3B0;          /* Amarelo Estelar */
+--color-star-active: #fff3b0; /* Amarelo Estelar */
+--color-success: #a8e6cf; /* Verde Menta */
+--color-warning: #fff3b0; /* Amarelo Estelar */
 --color-error: #ef4444;
 --color-info: #6366f1;
 ```
@@ -467,9 +467,10 @@ Todos os tokens de design estão centralizados em `frontend/src/index.css`:
 
 ```css
 /* Fonte do corpo/UI (navbar, botões, inputs, textos gerais) */
---font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+--font-main:
+  "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 /* Fonte decorativa (títulos de páginas, nomes de categorias, títulos de itens) */
---font-title: 'Sweet Apricot', cursive, sans-serif;
+--font-title: "Sweet Apricot", cursive, sans-serif;
 --font-size-sm: 0.9rem;
 --font-size-md: 1rem;
 --font-size-lg: 1.1rem;

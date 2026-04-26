@@ -1,42 +1,42 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 
 @font-face {
-  font-family: 'Sweet Apricot';
-  src: url('/fonts/sweet-apricot.woff2') format('woff2');
+  font-family: "Sweet Apricot";
+  src: url("/fonts/sweet-apricot.woff2") format("woff2");
   font-display: swap;
 }
 
 :root {
   /* ═══ Paleta Principal ═══ */
-  --color-primary: #E84D8A;          /* Rosa Fúcsia — Logo, botões e títulos */
-  --color-primary-dark: #C73872;     /* Rosa Fúcsia escuro (hover) */
-  --color-primary-light: #FCE4EC;    /* Rosa Algodão Doce (claro) */
-  --color-primary-border: #F8BBD0;   /* Borda rosa derivada da paleta */
-  --color-secondary-border: #F0A4C0; /* Borda rosa secundária */
+  --color-primary: #e84d8a; /* Rosa Fúcsia — Logo, botões e títulos */
+  --color-primary-dark: #c73872; /* Rosa Fúcsia escuro (hover) */
+  --color-primary-light: #fce4ec; /* Rosa Algodão Doce (claro) */
+  --color-primary-border: #f8bbd0; /* Borda rosa derivada da paleta */
+  --color-secondary-border: #f0a4c0; /* Borda rosa secundária */
 
   /* ═══ Cores Base ═══ */
-  --color-background: #FFF5F8;       /* Fundo principal (rosa muito claro) */
-  --color-secondary-background: #FCE4EC; /* Rosa Algodão Doce — Fundos de seção e cards */
-  --color-tertiary-background: #FFF0F5;  /* Lavanda rosada — Fundo terciário suave */
-  --color-white: #FFFFFF;            /* Branco Neve — Cards e modais (relevo) */
+  --color-background: #fffdff; /* Fundo principal (rosa muito claro) */
+  --color-secondary-background: #fce4ec; /* Rosa Algodão Doce — Fundos de seção e cards */
+  --color-tertiary-background: #fff0f5; /* Lavanda rosada — Fundo terciário suave */
+  --color-white: #ffffff; /* Branco Neve — Cards e modais (relevo) */
 
   /* ═══ Cores de Destaque ═══ */
-  --color-accent-mint: #A8E6CF;      /* Verde Menta — Botões de comprar/ícones */
-  --color-accent-mint-dark: #7DD3B0; /* Verde Menta escuro (hover) */
-  --color-accent-star: #FFF3B0;      /* Amarelo Estelar — Ofertas e novidades */
-  --color-accent-star-dark: #FFE57F; /* Amarelo Estelar escuro (hover) */
+  --color-accent-mint: #a8e6cf; /* Verde Menta — Botões de comprar/ícones */
+  --color-accent-mint-dark: #7dd3b0; /* Verde Menta escuro (hover) */
+  --color-accent-star: #fff3b0; /* Amarelo Estelar — Ofertas e novidades */
+  --color-accent-star-dark: #ffe57f; /* Amarelo Estelar escuro (hover) */
 
   /* ═══ Cor de Apoio ═══ */
-  --color-accent-lilac: #D1C4E9;     /* Lilás Místico — Bordas e detalhes decorativos */
-  --color-accent-lilac-dark: #B39DDB; /* Lilás Místico escuro (hover) */
+  --color-accent-lilac: #d1c4e9; /* Lilás Místico — Bordas e detalhes decorativos */
+  --color-accent-lilac-dark: #b39ddb; /* Lilás Místico escuro (hover) */
 
   /* ═══ Cor de Contraste ═══ */
-  --color-text: #37474F;             /* Cinza Antracite — Texto principal */
+  --color-text: #37474f; /* Cinza Antracite — Texto principal */
 
   /* ═══ Utilitários ═══ */
-  --color-shadow: rgba(232, 77, 138, 0.25);  /* Sombra derivada do Rosa Fúcsia */
+  --color-shadow: rgba(232, 77, 138, 0.25); /* Sombra derivada do Rosa Fúcsia */
   --color-modal-overlay: rgba(0, 0, 0, 0.5);
-  --color-border: #F8BBD0;           /* Borda padrão (rosa suave) */
+  --color-border: #f8bbd0; /* Borda padrão (rosa suave) */
   --color-error: #ef4444;
   --color-error-dark: #dc2626;
   --color-info: #6366f1;
@@ -73,16 +73,17 @@
 
   /* Brand Colors */
   --color-whatsapp: #25d366;
-  --color-star-active: #FFF3B0;        /* Amarelo Estelar — Estrelas e curtidas */
+  --color-star-active: #fff3b0; /* Amarelo Estelar — Estrelas e curtidas */
   --color-star-shadow: rgba(255, 243, 176, 0.5);
-  --color-success: #A8E6CF;            /* Verde Menta — Sucesso */
-  --color-success-dark: #7DD3B0;
-  --color-warning: #FFF3B0;            /* Amarelo Estelar — Avisos */
-  --color-warning-dark: #FFE57F;
+  --color-success: #a8e6cf; /* Verde Menta — Sucesso */
+  --color-success-dark: #7dd3b0;
+  --color-warning: #fff3b0; /* Amarelo Estelar — Avisos */
+  --color-warning-dark: #ffe57f;
 
   /* Typography */
-  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-title: 'Sweet Apricot', cursive, sans-serif;
+  --font-main:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-title: "Sweet Apricot", cursive, sans-serif;
   --font-size-sm: 0.9rem;
   --font-size-md: 1rem;
   --font-size-lg: 1.1rem;
