@@ -256,6 +256,23 @@ FRONTEND_URL=http://localhost:5174
 
 O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 
+### `configuracoes`
+
+| Coluna          | Tipo                 | Descrição                           |
+| --------------- | -------------------- | ----------------------------------- |
+| `chave`         | `VARCHAR(100) PK`    | Chave da configuração (ex: fonte)   |
+| `valor`         | `VARCHAR(255)`       | Valor associado à chave             |
+| `atualizado_em` | `TIMESTAMP`          | Data da última atualização          |
+
+### `fontes_customizadas`
+
+| Coluna        | Tipo                 | Descrição                                 |
+| ------------- | -------------------- | ----------------------------------------- |
+| `id`          | `SERIAL PK`          | ID auto-incremento                        |
+| `nome`        | `VARCHAR(100) UNIQUE`| Nome da fonte                             |
+| `arquivo_url` | `VARCHAR(255)`       | Caminho físico do arquivo (.woff2)        |
+| `criado_em`   | `TIMESTAMP`          | Data de criação                           |
+
 ### `produtos`
 
 | Coluna           | Tipo            | Descrição                                      |
@@ -338,6 +355,15 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 | ------ | -------- | ----- | -------------------------------------- |
 | `POST` | `/login` | ❌    | Login (nickname + senha) → retorna JWT |
 
+### Configurações (`/api/configuracoes`)
+
+| Método   | Rota               | Auth? | Descrição                                    |
+| -------- | ------------------ | ----- | -------------------------------------------- |
+| `GET`    | `/`                | ❌    | Retorna configurações globais e fontes ativas|
+| `PUT`    | `/`                | ✅    | Atualiza chaves de configuração em lote      |
+| `POST`   | `/fontes`          | ✅    | Upload de nova fonte customizada (.woff2)    |
+| `DELETE` | `/fontes/:id`      | ✅    | Exclui uma fonte e deleta o arquivo físico   |
+
 ### Banners (`/api/banners`)
 
 | Método | Rota       | Auth? | Descrição                                                   |
@@ -393,7 +419,7 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 
 ### Components & UI Adicionais (Admin Dashboard)
 
-- A aba `/admin` inclui sub-rotas/tabs renderizando os paineis `AdminProdutos`, `AdminLoja`, `AdminPedidos`, `AdminEventos` e `AdminBanners`.
+- A aba `/admin` inclui sub-rotas/tabs renderizando os paineis `AdminProdutos`, `AdminLoja`, `AdminPedidos`, `AdminEventos`, `AdminBanners` e `AdminFontes`.
 - **Admin Banners:** Adicionado suporte para mídias `.mp4` e `.webm` com limite estendido para 50MB e textos opcionais. A API de Banners reflete globalmente qual componente deve ser exibido por página.
 - **Formulários Dinâmicos:** O `ProdutoForm` e outros painéis contam com inputs fluídos que extraem "Categorias" e "Tags" já salvas em cache local (via TanStack Query) para preenchimento de Autocomplete Inteligente ilimitado, criando padronização nas listagens públicas.
 - Padrão **FormGrid**: Para manutenção da unidade visual, novos componentes adotam `.formContainer` em CSS grid respeitando padding e limitações `--container-max-width`.
@@ -798,6 +824,12 @@ Quando for realizar o deploy ou atualizar a aplicação em produção com novos 
 ### 22. Autocomplete Inteligente (Admin)
 
 - **Categorias e Tags:** O `ProdutoForm` realiza extração automática de todas as categorias e tags já existentes no banco de dados para sugerir ao administrador durante o cadastro.
+
+### 23. Gerenciamento Dinâmico de Fontes
+
+- **7 Categorias Parametrizáveis:** Permite configurar independentemente a tipografia de: Títulos do Site, Navbar, Categorias, Títulos de Itens, Descrições, Botões e Texto Geral.
+- **Hook Global:** O hook `useConfiguracoesGlobais()` chamado no `App.tsx` busca as configurações ativas, injeta `@font-face` dinâmico caso seja fonte customizada, e solicita Google Fonts automaticamente para fontes padrão built-in, além de injetar os tokens CSS globais.
+- **Segurança de Deleção:** Impede exclusão de arquivos de fontes em uso via Backend, varrendo todas as chaves da tabela de configurações para confirmar inexistência de dependência antes de deletar fisicamente da pasta `public/fonts/`.
 - **Scroll Infinito:** Dropdowns de sugestão não possuem limite de exibição e utilizam `max-height` com scroll interno para manter a usabilidade.
 
 ### 23. Padronização de Layout Admin (UI/UX)

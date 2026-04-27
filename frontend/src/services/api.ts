@@ -1,5 +1,6 @@
 import type { Produto } from "../types/Produto";
 import type { Evento } from "../types/Evento";
+import type { ConfiguracoesFontes, FonteCustomizada } from "../types/Configuracao";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -203,3 +204,49 @@ export async function atualizarBanner(pagina: string, data: FormData): Promise<B
   return response.json();
 }
 
+// --- CONFIGURAÇÕES DE FONTES ---
+export async function buscarConfiguracoes(): Promise<ConfiguracoesFontes> {
+  const response = await fetch(`${BASE_URL}/api/configuracoes`);
+  if (!response.ok) throw new Error("Erro ao buscar configurações");
+  return response.json();
+}
+
+export async function atualizarConfiguracoes(
+  dados: Record<string, string>
+): Promise<{ message: string; configuracoes: Record<string, string> }> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${BASE_URL}/api/configuracoes`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(dados)
+  });
+  
+  if (!response.ok) throw new Error("Erro ao atualizar configurações");
+  return response.json();
+}
+
+export async function uploadFonteCustomizada(data: FormData): Promise<FonteCustomizada> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${BASE_URL}/api/configuracoes/fontes`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: data
+  });
+  
+  if (!response.ok) throw new Error("Erro ao fazer upload da fonte");
+  return response.json();
+}
+
+export async function deletarFonteCustomizada(id: number): Promise<{ message: string }> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${BASE_URL}/api/configuracoes/fontes/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  
+  if (!response.ok) throw new Error("Erro ao deletar fonte");
+  return response.json();
+}

@@ -8,6 +8,7 @@ import { MenuContent } from "../MenuContent";
 import { AdminPedidos } from "../AdminPedidos";
 import { AdminEventos } from "../AdminEventos";
 import { AdminBanners } from "../AdminBanners";
+import AdminFontes from "../AdminFontes";
 // Hooks e Types
 import { useAutenticacao } from "../../hooks/useAutenticacao";
 import { useAdminProdutos } from "../../hooks/useAdminProdutos";
@@ -33,7 +34,7 @@ export default function AdminDashboard() {
 
   const [produtoEditando, setProdutoEditando] = useState<Produto | null>(null);
   const [activeTab, setActiveTab] = useState<
-    "produtos" | "loja" | "pedidos" | "eventos" | "banners"
+    "produtos" | "loja" | "pedidos" | "eventos" | "banners" | "fontes"
   >("pedidos");
 
   const { refresh: refreshMenu } = menuProductData;
@@ -139,6 +140,12 @@ export default function AdminDashboard() {
           >
             Eventos
           </button>
+          <button
+            className={`${styles.tabBtn} ${activeTab === "fontes" ? styles.activeTab : ""}`}
+            onClick={() => setActiveTab("fontes")}
+          >
+            Fontes
+          </button>
         </nav>
 
         <button onClick={logout} className={styles.logoutBtn}>
@@ -188,6 +195,7 @@ export default function AdminDashboard() {
           </MenuContent>
         )}
         {activeTab === "eventos" && <AdminEventos />}
+        {activeTab === "fontes" && <AdminFontes />}
       </main>
     </div>
   );

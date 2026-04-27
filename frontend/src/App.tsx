@@ -12,8 +12,11 @@ import "./App.css";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { CartButton } from "./components/CartButton";
 import { CartModal } from "./components/CartModal";
+import { useConfiguracoesGlobais } from "./hooks/useConfiguracoes";
 
 function App() {
+  useConfiguracoesGlobais();
+
   return (
     <BrowserRouter>
       <ScrollToTop />
