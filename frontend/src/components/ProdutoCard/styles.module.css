@@ -50,14 +50,14 @@
   font-weight: var(--font-weight-bold);
   margin: 0 0 0.25rem 0;
   color: var(--color-text);
-  font-family: var(--font-title);
+  font-family: var(--font-title-item);
   line-height: 1.2;
 }
 
 .description {
   font-size: var(--font-size-xs);
   color: var(--color-text);
-  font-family: var(--font-main);
+  font-family: var(--font-description);
   margin-bottom: 0.5rem;
   flex: 1;
   opacity: 0.8;
@@ -85,7 +85,7 @@
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   color: var(--color-primary);
-  font-family: var(--font-main);
+  font-family: var(--font-general);
 }
 
 .button {

@@ -72,7 +72,7 @@
 
 .title {
   font-size: var(--font-size-2xl-plus);
-  font-family: var(--font-title);
+  font-family: var(--font-title-item);
   color: var(--color-text);
   margin: 0;
   line-height: 1.2;

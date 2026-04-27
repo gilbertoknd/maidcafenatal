@@ -12,7 +12,7 @@
 .title {
   color: var(--color-primary);
   font-size: var(--font-size-5xl);
-  font-family: var(--font-title);
+  font-family: var(--font-title-site);
 }
 
 .loading {

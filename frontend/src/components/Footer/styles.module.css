@@ -40,7 +40,7 @@
   font-size: var(--font-size-3xl);
   font-weight: bold;
   margin: 0;
-  font-family: var(--font-title);
+  font-family: var(--font-title-site);
 }
 
 .phrase {

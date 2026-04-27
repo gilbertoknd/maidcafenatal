@@ -35,7 +35,7 @@
 }
 
 .overlayTitle {
-  font-family: var(--font-title);
+  font-family: var(--font-title-site);
   font-size: var(--font-size-4xl);
   line-height: 1.1;
   margin-bottom: 2rem;

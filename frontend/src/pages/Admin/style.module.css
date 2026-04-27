@@ -14,7 +14,7 @@
   font-size: var(--font-size-6xl);
   color: var(--color-primary);
   margin-bottom: 1rem;
-  font-family: var(--font-title);
+  font-family: var(--font-title-site);
 }
 
 .subtitle {

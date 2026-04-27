@@ -126,7 +126,7 @@
   --opacity-60: 0.6;
   --opacity-50: 0.5;
 
-  font-family: var(--font-main);
+  font-family: var(--font-general);
   line-height: 1.5;
   font-weight: var(--font-weight-regular);
 

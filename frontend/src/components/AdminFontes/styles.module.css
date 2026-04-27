@@ -21,7 +21,7 @@
   color: var(--color-primary-dark);
   margin-bottom: 1.5rem;
   font-size: var(--font-size-2xl);
-  font-family: var(--font-title);
+  font-family: var(--font-title-site);
   font-weight: var(--font-weight-bold);
 }
 

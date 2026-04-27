@@ -5,7 +5,7 @@
 }
 
 .sectionTitle {
-  font-family: var(--font-title);
+  font-family: var(--font-title-site);
   color: var(--color-primary);
   font-size: var(--font-size-5xl);
   text-align: center;
@@ -113,7 +113,7 @@
 }
 
 .maidName {
-  font-family: var(--font-title);
+  font-family: var(--font-title-site);
   font-size: var(--font-size-3xl);
   margin: 0 0 0.5rem 0;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
