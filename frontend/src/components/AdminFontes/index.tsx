@@ -126,13 +126,13 @@ export default function AdminFontes() {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>Configuração de Fontes</h2>
-      
       {errorMsg && <div className={styles.error}>{errorMsg}</div>}
 
-      <div className={styles.section}>
+      <div className={styles.formContainer}>
+        <h2 className={styles.formTitle}>Configuração de Fontes</h2>
+        
         <h3 className={styles.sectionTitle}>Fontes por Categoria</h3>
-        <div className={styles.grid}>
+        <div className={styles.formGrid}>
           {CATEGORIAS_FONTES.map(({ chave, label, preview }) => (
             <div key={chave} className={styles.formGroup}>
               <label className={styles.label}>{label}</label>
@@ -156,21 +156,24 @@ export default function AdminFontes() {
             </div>
           ))}
         </div>
-        <button
-          className={styles.saveButton}
-          onClick={handleSalvar}
-          disabled={mutationSalvar.isPending}
-        >
-          <Save size={18} style={{ display: "inline", marginRight: 8, verticalAlign: "text-bottom" }} />
-          {mutationSalvar.isPending ? "Salvando..." : "Salvar Configurações"}
-        </button>
+        
+        <div className={styles.actions}>
+          <button
+            className={`${styles.btn} ${styles.saveButton}`}
+            onClick={handleSalvar}
+            disabled={mutationSalvar.isPending}
+          >
+            <Save size={20} />
+            {mutationSalvar.isPending ? "Salvando..." : "Salvar Configurações"}
+          </button>
+        </div>
       </div>
 
-      <div className={styles.section}>
-        <h3 className={styles.sectionTitle}>Upload de Fonte Customizada (.woff2)</h3>
+      <div className={styles.formContainer}>
+        <h2 className={styles.formTitle}>Upload de Fonte Customizada (.woff2)</h2>
         <div className={styles.uploadContainer}>
           <div className={styles.uploadRow}>
-            <div className={styles.formGroup} style={{ flex: 1 }}>
+            <div className={styles.formGroup}>
               <label className={styles.label}>Nome da Fonte</label>
               <input
                 type="text"
@@ -180,13 +183,13 @@ export default function AdminFontes() {
                 onChange={(e) => setUploadNome(e.target.value)}
               />
             </div>
-            <div className={styles.formGroup} style={{ flex: 1 }}>
+            <div className={styles.formGroup}>
               <label className={styles.label}>Arquivo (.woff2)</label>
               <input
                 id="font-upload"
                 type="file"
                 accept=".woff2"
-                className={styles.input}
+                className={styles.fileInput}
                 onChange={(e) => {
                   if (e.target.files && e.target.files[0]) {
                     setUploadFile(e.target.files[0]);
@@ -195,18 +198,18 @@ export default function AdminFontes() {
               />
             </div>
             <button
-              className={styles.uploadButton}
+              className={`${styles.btn} ${styles.create}`}
               onClick={handleUpload}
               disabled={mutationUpload.isPending}
             >
-              <UploadCloud size={18} style={{ display: "inline", marginRight: 8, verticalAlign: "text-bottom" }} />
+              <UploadCloud size={20} />
               {mutationUpload.isPending ? "Enviando..." : "Fazer Upload"}
             </button>
           </div>
 
           {data?.fontes_customizadas && data.fontes_customizadas.length > 0 && (
             <div className={styles.fontsList}>
-              <h4 className={styles.label} style={{ marginTop: 16 }}>Fontes Enviadas</h4>
+              <h4 className={styles.sectionTitle} style={{ marginTop: 16 }}>Fontes Enviadas</h4>
               {data.fontes_customizadas.map((fonte) => (
                 <div key={fonte.id} className={styles.fontItem}>
                   <div className={styles.fontInfo}>
@@ -218,7 +221,7 @@ export default function AdminFontes() {
                     onClick={() => handleDeletar(fonte.id, fonte.nome)}
                     disabled={mutationDeletar.isPending}
                   >
-                    <Trash2 size={16} />
+                    <Trash2 size={16} /> Excluir
                   </button>
                 </div>
               ))}

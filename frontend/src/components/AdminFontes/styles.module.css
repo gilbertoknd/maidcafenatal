@@ -1,26 +1,28 @@
 .container {
-  background-color: var(--color-white);
-  border-radius: var(--radius-card);
-  padding: 24px;
-  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1rem;
   max-width: var(--container-max-width);
   margin: 0 auto;
 }
 
-.title {
-  font-family: var(--font-title);
-  color: var(--color-primary);
-  font-size: var(--font-size-2xl);
-  margin-bottom: 24px;
-  text-align: center;
+.formContainer {
+  background-color: var(--color-tertiary-background);
+  padding: 2rem;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  margin-bottom: 2rem;
+  border: 1px solid var(--color-secondary-border);
 }
 
-.section {
-  margin-bottom: 32px;
-  padding: 20px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-card);
-  background-color: var(--color-background);
+.formTitle {
+  margin-top: 0;
+  color: var(--color-primary-dark);
+  margin-bottom: 1.5rem;
+  font-size: var(--font-size-2xl);
+  font-family: var(--font-title);
+  font-weight: var(--font-weight-bold);
 }
 
 .sectionTitle {
@@ -33,10 +35,16 @@
   padding-bottom: 8px;
 }
 
-.grid {
+.formGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .formGroup {
@@ -46,57 +54,79 @@
 }
 
 .label {
-  font-weight: var(--font-weight-medium);
-  color: var(--color-gray-dark-secondary);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-md);
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
 }
 
 .select, .input {
-  padding: 10px 14px;
-  border: 1px solid var(--color-gray-300);
-  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--color-secondary-border);
+  border-radius: 10px;
   font-family: var(--font-main);
   font-size: var(--font-size-md);
   transition: var(--transition-default);
-  background-color: var(--color-white);
+  background-color: #ffffff;
+  color: #000000;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .select:focus, .input:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-light);
+  box-shadow: 0 0 0 3px var(--color-shadow);
 }
 
 .preview {
   margin-top: 4px;
-  padding: 8px 12px;
-  background-color: var(--color-gray-50);
-  border-radius: 6px;
+  padding: 12px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-secondary-border);
+  border-radius: 10px;
   color: var(--color-text);
-  font-size: 14px;
+  font-size: 16px;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  justify-content: center;
+}
+
+.btn {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: var(--radius-button);
+  cursor: pointer;
+  font-weight: var(--font-weight-bold);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-white);
+  font-size: var(--font-size-md);
+  transition: var(--transition-default);
+  box-shadow: var(--shadow-card);
+}
+
+.btn:hover:not(:disabled) {
+  transform: scale(1.02);
+}
+
+.btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.create {
+  background-color: var(--color-success);
 }
 
 .saveButton {
   background-color: var(--color-primary);
-  color: var(--color-white);
-  border: none;
-  padding: 12px 24px;
-  border-radius: var(--radius-button);
-  font-weight: var(--font-weight-bold);
-  cursor: pointer;
-  transition: var(--transition-default);
-  display: block;
-  margin: 24px auto 0;
-  min-width: 200px;
-}
-
-.saveButton:hover:not(:disabled) {
-  background-color: var(--color-primary-dark);
-}
-
-.saveButton:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
 }
 
 /* Upload Section */
@@ -107,30 +137,30 @@
 }
 
 .uploadRow {
-  display: flex;
-  gap: 16px;
-  align-items: flex-end;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 1.5rem;
+  align-items: end;
 }
 
-.uploadButton {
-  background-color: var(--color-accent-mint-dark);
-  color: var(--color-white);
-  border: none;
-  padding: 10px 20px;
-  border-radius: var(--radius-button);
-  font-weight: var(--font-weight-bold);
-  cursor: pointer;
-  height: 42px;
-  transition: var(--transition-default);
+@media (max-width: 768px) {
+  .uploadRow {
+    grid-template-columns: 1fr;
+  }
 }
 
-.uploadButton:hover:not(:disabled) {
-  background-color: var(--color-success-dark);
+.fileInput {
+  color: var(--color-text);
+  width: fit-content;
+  display: inline-block;
+  background-color: var(--color-white);
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--color-secondary-border);
+  border-radius: 10px;
 }
 
 .fontsList {
-  margin-top: 16px;
+  margin-top: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -140,10 +170,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
+  padding: 1rem;
   background-color: var(--color-white);
-  border: 1px solid var(--color-gray-200);
-  border-radius: 8px;
+  border: 1px solid var(--color-secondary-border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-sm);
 }
 
 .fontInfo {
@@ -166,11 +197,14 @@
   background-color: var(--color-white);
   color: var(--color-error);
   border: 1px solid var(--color-error);
-  padding: 6px 12px;
+  padding: 8px 16px;
   border-radius: var(--radius-button);
   cursor: pointer;
-  font-size: 12px;
+  font-size: 14px;
   transition: var(--transition-default);
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .deleteButton:hover {
@@ -182,7 +216,8 @@
   color: var(--color-error);
   background-color: #fee2e2;
   padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 16px;
+  border-radius: 10px;
+  margin-bottom: 1rem;
   font-size: 14px;
+  border: 1px solid #fca5a5;
 }
