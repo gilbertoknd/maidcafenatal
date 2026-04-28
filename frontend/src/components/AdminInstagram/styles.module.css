@@ -1,0 +1,219 @@
+.container {
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.title {
+  font-family: var(--font-title-site);
+  color: var(--color-primary);
+  font-size: var(--font-size-2xl-plus);
+  margin: 0;
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--color-primary);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius-button);
+  font-family: var(--font-button);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  transition: var(--transition-default);
+}
+
+.addButton:hover {
+  background-color: var(--color-primary-dark);
+  transform: translateY(-2px);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: var(--color-white);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition: var(--transition-default);
+}
+
+.cardImage {
+  position: relative;
+  aspect-ratio: 1/1;
+  overflow: hidden;
+}
+
+.cardImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cardOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cardImage:hover .cardOverlay {
+  opacity: 1;
+}
+
+.actionBtn {
+  background: white;
+  color: var(--color-text);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-default);
+}
+
+.actionBtn:hover {
+  background: var(--color-primary);
+  color: white;
+  transform: scale(1.1);
+}
+
+.deleteBtn:hover {
+  background: var(--color-error);
+}
+
+.cardInfo {
+  padding: 12px;
+}
+
+.cardLink {
+  font-size: 0.85rem;
+  color: var(--color-gray-600);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cardOrdem {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--color-primary);
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+/* Modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  padding: 30px;
+  border-radius: var(--radius-card);
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.modal h3 {
+  font-family: var(--font-title-site);
+  color: var(--color-primary);
+  margin-top: 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputGroup label {
+  font-weight: bold;
+  color: var(--color-gray-700);
+}
+
+.inputGroup input {
+  padding: 10px;
+  border: 1px solid var(--color-gray-300);
+  border-radius: 8px;
+  font-family: var(--font-main);
+}
+
+.currentFile {
+  font-size: 0.8rem;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.cancelBtn {
+  background: none;
+  border: none;
+  color: var(--color-gray-600);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.saveBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: var(--radius-button);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.saveBtn:hover {
+  background: var(--color-primary-dark);
+}

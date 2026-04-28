@@ -9,6 +9,7 @@ import { AdminPedidos } from "../AdminPedidos";
 import { AdminEventos } from "../AdminEventos";
 import { AdminBanners } from "../AdminBanners";
 import AdminFontes from "../AdminFontes";
+import { AdminInstagram } from "../AdminInstagram";
 // Hooks e Types
 import { useAutenticacao } from "../../hooks/useAutenticacao";
 import { useAdminProdutos } from "../../hooks/useAdminProdutos";
@@ -34,7 +35,7 @@ export default function AdminDashboard() {
 
   const [produtoEditando, setProdutoEditando] = useState<Produto | null>(null);
   const [activeTab, setActiveTab] = useState<
-    "produtos" | "loja" | "pedidos" | "eventos" | "banners" | "fontes"
+    "produtos" | "loja" | "pedidos" | "eventos" | "banners" | "fontes" | "instagram"
   >("pedidos");
 
   const { refresh: refreshMenu } = menuProductData;
@@ -146,6 +147,12 @@ export default function AdminDashboard() {
           >
             Fontes
           </button>
+          <button
+            className={`${styles.tabBtn} ${activeTab === "instagram" ? styles.activeTab : ""}`}
+            onClick={() => setActiveTab("instagram")}
+          >
+            Instagram
+          </button>
         </nav>
 
         <button onClick={logout} className={styles.logoutBtn}>
@@ -196,6 +203,7 @@ export default function AdminDashboard() {
         )}
         {activeTab === "eventos" && <AdminEventos />}
         {activeTab === "fontes" && <AdminFontes />}
+        {activeTab === "instagram" && <AdminInstagram />}
       </main>
     </div>
   );

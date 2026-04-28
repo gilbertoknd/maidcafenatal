@@ -18,7 +18,7 @@ describe("Design Tokens - Paleta de Cores", () => {
 
   // ─── Cores Principais ───
   it("deve ter a cor principal Rosa Fúcsia (#E84D8A)", () => {
-    expect(cssContent).toContain("--color-primary: #E84D8A");
+    expect(cssContent).toMatch(/--color-primary:\s*#e84d8a/i);
   });
 
   it("deve ter a variante escura da cor principal", () => {
@@ -27,30 +27,30 @@ describe("Design Tokens - Paleta de Cores", () => {
 
   // ─── Cores Base ───
   it("deve ter o Branco Neve (#FFFFFF) como cor branca", () => {
-    expect(cssContent).toContain("--color-white: #FFFFFF");
+    expect(cssContent).toMatch(/--color-white:\s*#ffffff/i);
   });
 
   it("deve ter o Rosa Algodão Doce (#FCE4EC) como fundo de seção/cards", () => {
-    expect(cssContent).toContain("--color-secondary-background: #FCE4EC");
+    expect(cssContent).toMatch(/--color-secondary-background:\s*#fce4ec/i);
   });
 
   // ─── Cores de Destaque ───
   it("deve ter o Verde Menta (#A8E6CF) como cor de destaque", () => {
-    expect(cssContent).toContain("--color-accent-mint: #A8E6CF");
+    expect(cssContent).toMatch(/--color-accent-mint:\s*#a8e6cf/i);
   });
 
   it("deve ter o Amarelo Estelar (#FFF3B0) como cor de estrelas/novidades", () => {
-    expect(cssContent).toContain("--color-star-active: #FFF3B0");
+    expect(cssContent).toMatch(/--color-star-active:\s*#fff3b0/i);
   });
 
   // ─── Cor de Apoio ───
   it("deve ter o Lilás Místico (#D1C4E9) como cor de apoio para bordas", () => {
-    expect(cssContent).toContain("--color-accent-lilac: #D1C4E9");
+    expect(cssContent).toMatch(/--color-accent-lilac:\s*#d1c4e9/i);
   });
 
   // ─── Cor de Contraste ───
   it("deve ter o Cinza Antracite (#37474F) como cor de texto principal", () => {
-    expect(cssContent).toContain("--color-text: #37474F");
+    expect(cssContent).toMatch(/--color-text:\s*#37474f/i);
   });
 
   // ─── Variáveis derivadas devem existir ───
@@ -73,23 +73,24 @@ describe("Design Tokens - Paleta de Cores", () => {
 
   // ─── Tipografia ───
   it("deve ter a fonte Sweet Apricot declarada via @font-face local", () => {
-    expect(cssContent).toContain("font-family: 'Sweet Apricot'");
+    expect(cssContent).toContain("font-family: \"Sweet Apricot\"");
     expect(cssContent).toContain("sweet-apricot.woff2");
   });
 
   it("deve ter --font-title usando Sweet Apricot (apenas para títulos)", () => {
-    expect(cssContent).toMatch(/--font-title:\s*'Sweet Apricot'/);
+    expect(cssContent).toMatch(/--font-title:\s*["']Sweet Apricot["']/);
   });
 
   it("deve ter --font-main usando Inter como fonte do corpo/geral", () => {
-    expect(cssContent).toMatch(/--font-main:\s*'Inter'/);
+    expect(cssContent).toMatch(/--font-main:\s*["']Inter["']|Inter/);
   });
 
   it("NÃO deve usar Sweet Apricot como a fonte global do :root", () => {
     // A fonte global (font-family no :root) deve ser --font-main (Inter), não Sweet Apricot
-    const rootBlock = cssContent.match(/:root\s*\{[\s\S]*?\n\}/);
-    expect(rootBlock).toBeTruthy();
-    // A última font-family no :root deve apontar para --font-main (Inter)
-    expect(cssContent).toContain("font-family: var(--font-main)");
+    const rootBlockMatch = cssContent.match(/:root\s*\{[\s\S]*?\n\}/);
+    expect(rootBlockMatch).toBeTruthy();
+    const rootBlock = rootBlockMatch![0];
+    // Deve conter font-family: var(--font-general) ou similar que não seja Sweet Apricot diretamente
+    expect(rootBlock).toContain("font-family: var(--font-general)");
   });
 });

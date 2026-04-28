@@ -250,3 +250,53 @@ export async function deletarFonteCustomizada(id: number): Promise<{ message: st
   if (!response.ok) throw new Error("Erro ao deletar fonte");
   return response.json();
 }
+
+// --- INSTAGRAM ---
+import type { InstagramPost } from "../types/Instagram";
+
+export async function buscarInstagramPosts(): Promise<InstagramPost[]> {
+  const response = await fetch(`${BASE_URL}/api/instagram`);
+  if (!response.ok) throw new Error("Erro ao buscar posts do Instagram");
+  return response.json();
+}
+
+export async function buscarInstagramPostsAdmin(): Promise<InstagramPost[]> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${BASE_URL}/api/instagram/admin`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  if (!response.ok) throw new Error("Erro ao buscar posts do Instagram (Admin)");
+  return response.json();
+}
+
+export async function criarInstagramPost(data: FormData): Promise<InstagramPost> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${BASE_URL}/api/instagram`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: data
+  });
+  if (!response.ok) throw new Error("Erro ao criar post do Instagram");
+  return response.json();
+}
+
+export async function atualizarInstagramPost(id: number, data: FormData): Promise<InstagramPost> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${BASE_URL}/api/instagram/${id}`, {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${token}` },
+    body: data
+  });
+  if (!response.ok) throw new Error("Erro ao atualizar post do Instagram");
+  return response.json();
+}
+
+export async function deletarInstagramPost(id: number): Promise<{ message: string }> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${BASE_URL}/api/instagram/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  if (!response.ok) throw new Error("Erro ao deletar post do Instagram");
+  return response.json();
+}

@@ -40,6 +40,16 @@ CREATE TABLE IF NOT EXISTS banners (
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Criando tabela de posts do Instagram
+CREATE TABLE IF NOT EXISTS instagram_posts (
+    id SERIAL PRIMARY KEY,
+    imagem_url VARCHAR(255) NOT NULL,
+    link_url VARCHAR(255) NOT NULL,
+    visivel BOOLEAN DEFAULT TRUE,
+    ordem INTEGER DEFAULT 0,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Criando tabela users
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,

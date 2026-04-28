@@ -345,6 +345,17 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 | `quantidade`     | `INTEGER`           | Quantidade                     |
 | `preco_unitario` | `DECIMAL(10,2)`     | Preço no momento do pedido     |
 
+### `instagram_posts`
+
+| Coluna       | Tipo            | Descrição                          |
+| ------------ | --------------- | ---------------------------------- |
+| `id`         | `SERIAL PK`     | ID auto-incremento                 |
+| `imagem_url` | `VARCHAR(255)`  | Caminho da imagem no disco         |
+| `link_url`   | `VARCHAR(255)`  | Link para o post no Instagram      |
+| `visivel`    | `BOOLEAN`       | Visível na homepage? (Default: T)  |
+| `ordem`      | `INTEGER`       | Ordem de exibição (Default: 0)     |
+| `criado_em`  | `TIMESTAMP`     | Data de criação                    |
+
 ---
 
 ## 6. Rotas da API
@@ -405,6 +416,16 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 | `DELETE` | `/:id`              | ✅    | Deleta evento                      |
 | `PATCH`  | `/:id/visibilidade` | ✅    | Alterna visibilidade               |
 
+### Instagram (`/api/instagram`)
+
+| Método   | Rota                | Auth? | Descrição                          |
+| -------- | ------------------- | ----- | ---------------------------------- |
+| `GET`    | `/`                 | ❌    | Lista posts visíveis               |
+| `GET`    | `/admin`            | ✅    | Lista todos os posts (admin)       |
+| `POST`   | `/`                 | ✅    | Cria post (com upload de imagem)   |
+| `PUT`    | `/:id`              | ✅    | Atualiza post                      |
+| `DELETE` | `/:id`              | ✅    | Deleta post e remove imagem        |
+
 ## 7. Rotas do Frontend (React Router)
 
 | Path                | Página                | Descrição                                          |
@@ -419,7 +440,7 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 
 ### Components & UI Adicionais (Admin Dashboard)
 
-- A aba `/admin` inclui sub-rotas/tabs renderizando os paineis `AdminProdutos`, `AdminLoja`, `AdminPedidos`, `AdminEventos`, `AdminBanners` e `AdminFontes`.
+- A aba `/admin` inclui sub-rotas/tabs renderizando os paineis `AdminProdutos`, `AdminLoja`, `AdminPedidos`, `AdminEventos`, `AdminBanners`, `AdminFontes` e `AdminInstagram`.
 - **Admin Banners:** Adicionado suporte para mídias `.mp4` e `.webm` com limite estendido para 50MB e textos opcionais. A API de Banners reflete globalmente qual componente deve ser exibido por página.
 - **Formulários Dinâmicos:** O `ProdutoForm` e outros painéis contam com inputs fluídos que extraem "Categorias" e "Tags" já salvas em cache local (via TanStack Query) para preenchimento de Autocomplete Inteligente ilimitado, criando padronização nas listagens públicas.
 - Padrão **FormGrid**: Para manutenção da unidade visual, novos componentes adotam `.formContainer` em CSS grid respeitando padding e limitações `--container-max-width`.
@@ -705,6 +726,7 @@ O projeto mantém testes unitários e de integração em ambos os lados:
 - `produtos.test.ts` — CRUD de produtos
 - `pedidos.test.ts` — CRUD de pedidos
 - `EventoRoutes.test.ts` — CRUD de eventos
+- `instagram.test.ts` — CRUD de posts do Instagram
 - `formatters.test.ts` — Funções utilitárias
 
 ### Frontend (`frontend/src/tests/`)

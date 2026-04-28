@@ -42,10 +42,10 @@ describe("AdminFontes", () => {
 
     // Aguarda carregar dados
     expect(
-      await screen.findByText("Configuração de Fontes"),
+      await screen.findByText(/Configuração de Fontes/i),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Upload de Fonte Customizada (.woff2)"),
+      screen.getByText(/Upload de Fonte Customizada/i),
     ).toBeInTheDocument();
   });
 
@@ -58,7 +58,9 @@ describe("AdminFontes", () => {
 
     // O select de 'fonte_titulo_site' (Títulos do Site)
     const selectTituloSite = selects[0];
-    expect(selectTituloSite).toHaveTextContent("MinhaFonte");
+    await waitFor(() => {
+      expect(selectTituloSite).toHaveTextContent("MinhaFonte");
+    });
   });
 
   it("deve permitir alterar uma fonte e chamar a api de salvar", async () => {
@@ -73,7 +75,7 @@ describe("AdminFontes", () => {
     fireEvent.change(selectNavbar, { target: { value: "Pacifico" } });
     expect(selectNavbar).toHaveValue("Pacifico");
 
-    const btnSalvar = screen.getByText("Salvar Configurações");
+    const btnSalvar = screen.getByText(/Salvar Configurações/i);
     fireEvent.click(btnSalvar);
 
     await waitFor(() => {
@@ -94,12 +96,9 @@ describe("AdminFontes", () => {
 
     renderWithClient(<AdminFontes />);
 
-    // Encontrar os inputs da seção de upload
-    const inputNome = await screen.findByPlaceholderText("Ex: Another Shabby");
-    // O input do tipo file pode não ter placeholder, usamos o data-testid ou procuramos por type file
-    const inputFile = document.querySelector(
-      'input[type="file"]',
-    ) as HTMLInputElement;
+    // Encontrar os inputs da seção de upload usando testid
+    const inputNome = await screen.findByTestId("upload-nome");
+    const inputFile = screen.getByTestId("upload-file");
 
     // Simular upload
     fireEvent.change(inputNome, { target: { value: "Nova Fonte" } });
@@ -109,13 +108,11 @@ describe("AdminFontes", () => {
     });
     fireEvent.change(inputFile, { target: { files: [file] } });
 
-    const btnUpload = screen.getByText("Fazer Upload");
+    const btnUpload = screen.getByText(/Fazer Upload/i);
     fireEvent.click(btnUpload);
 
     await waitFor(() => {
       expect(api.uploadFonteCustomizada).toHaveBeenCalled();
-      // O FormData enviado não é facilmente checado no JSDOM com RTL,
-      // mas garantimos que a função foi chamada
     });
   });
 });

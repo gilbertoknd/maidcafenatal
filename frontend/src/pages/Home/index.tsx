@@ -5,6 +5,7 @@ import { Banner } from "../../components/Banner";
 import { PopularSection } from "../../components/PopularSection";
 import { NewArrivalsSection } from "../../components/NewArrivalsSection";
 import { AboutSection } from "../../components/AboutSection";
+import { InstagramSection } from "../../components/InstagramSection";
 import { MaidCarousel } from "../../components/MaidCarousel";
 
 export function Home() {
@@ -16,6 +17,7 @@ export function Home() {
         <MaidCarousel />
         <PopularSection />
         <NewArrivalsSection />
+        <InstagramSection />
         <AboutSection />
       </main>
       <Footer />

@@ -181,6 +181,7 @@ export default function AdminFontes() {
                 placeholder="Ex: Another Shabby"
                 value={uploadNome}
                 onChange={(e) => setUploadNome(e.target.value)}
+                data-testid="upload-nome"
               />
             </div>
             <div className={styles.formGroup}>
@@ -195,6 +196,7 @@ export default function AdminFontes() {
                     setUploadFile(e.target.files[0]);
                   }
                 }}
+                data-testid="upload-file"
               />
             </div>
             <button
