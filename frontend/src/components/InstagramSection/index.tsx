@@ -44,16 +44,16 @@ export function InstagramSection() {
         <header className={styles.header}>
           <div className={styles.titleWrapper}>
             <Instagram size={32} className={styles.icon} />
-            <h2 className={styles.title}>Siga-nos no Instagram</h2>
+            <h2 className={styles.title}>Confira nosso Instagram</h2>
           </div>
           <p className={styles.subtitle}>
             Acompanhe nosso dia a dia, novidades e momentos mágicos no
-            @mewmewcafenatal
+            @mewmewnatal
           </p>
         </header>
 
         <div className={styles.grid}>
-          {posts.map((post) => (
+          {posts.slice(0, 5).map((post) => (
             <a
               key={post.id}
               href={post.link_url}
@@ -74,16 +74,16 @@ export function InstagramSection() {
               </div>
             </a>
           ))}
-        </div>
 
-        <div className={styles.footer}>
           <a
-            href="https://www.instagram.com/mewmewcafenatal/"
+            href="https://www.instagram.com/mewmewnatal/"
             target="_blank"
             rel="noopener noreferrer"
-            className={styles.profileButton}
+            className={`${styles.postCard} ${styles.redirectCard}`}
           >
-            <span>Ver perfil completo</span>
+            <Instagram size={48} />
+            <h3 className={styles.redirectText}>Ver perfil completo</h3>
+            <span className={styles.redirectHandle}>@mewmewnatal</span>
           </a>
         </div>
       </div>

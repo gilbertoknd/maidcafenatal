@@ -25,7 +25,12 @@ export function AdminInstagram() {
   }, [buscarPosts]);
 
   const handleEdit = (post: InstagramPost | null) => {
-    setEditingPost(post || { link_url: "", ordem: 0 });
+    setEditingPost(post);
+    setArquivo(null);
+  };
+
+  const handleNovoPost = () => {
+    setEditingPost({ link_url: "", ordem: 0 });
     setArquivo(null);
   };
 
@@ -56,15 +61,19 @@ export function AdminInstagram() {
     <div className={styles.container}>
       <header className={styles.header}>
         <h2 className={styles.title}>Gerenciar Feed do Instagram</h2>
-        <button className={styles.addButton} onClick={() => handleEdit(null)}>
+        <button className={styles.addButton} onClick={handleNovoPost}>
           <Plus size={20} />
           Novo Post
         </button>
       </header>
 
       {editingPost && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modal}>
+        <div
+          className={styles.modalOverlay}
+          onClick={() => handleEdit(null)}
+          data-testid="modal-overlay"
+        >
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
             <h3>{editingPost.id ? "Editar Post" : "Novo Post"}</h3>
             <form onSubmit={handleSubmit} className={styles.form}>
               <div className={styles.inputGroup}>

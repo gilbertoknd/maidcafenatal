@@ -426,6 +426,12 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 | `PUT`    | `/:id`              | ✅    | Atualiza post                      |
 | `DELETE` | `/:id`              | ✅    | Deleta post e remove imagem        |
 
+### Regras de Exibição (Homepage)
+
+- A seção do Instagram na Home exibe um grid de 6 cards.
+- Os 5 primeiros cards são posts dinâmicos vindos da API (ordenados por `ordem`).
+- O 6º card é estático e redireciona para o perfil oficial `@mewmewnatal`.
+
 ## 7. Rotas do Frontend (React Router)
 
 | Path                | Página                | Descrição                                          |

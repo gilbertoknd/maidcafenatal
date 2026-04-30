@@ -103,6 +103,37 @@
   opacity: 1;
 }
 
+.redirectCard {
+  background-color: var(--color-primary-light);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  gap: 15px;
+  color: var(--color-primary);
+  border: 2px dashed var(--color-primary);
+}
+
+.redirectCard:hover {
+  background-color: var(--color-white);
+  border-style: solid;
+}
+
+.redirectText {
+  font-family: var(--font-title-site);
+  font-size: var(--font-size-2xl);
+  margin: 0;
+}
+
+.redirectHandle {
+  font-family: var(--font-main);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-lg);
+  opacity: 0.8;
+}
+
 .footer {
   display: flex;
   justify-content: center;
