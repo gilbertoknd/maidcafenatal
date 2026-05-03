@@ -19,6 +19,7 @@ const mockProducts: Produto[] = [
     promocao: true,
     curtidas: 5,
     is_loja: false,
+    is_manga: false,
     visivel: true,
   },
   {
@@ -31,6 +32,7 @@ const mockProducts: Produto[] = [
     promocao: false,
     curtidas: 10,
     is_loja: false,
+    is_manga: false,
     visivel: true,
   },
   {
@@ -43,6 +45,7 @@ const mockProducts: Produto[] = [
     promocao: false,
     curtidas: 8,
     is_loja: false,
+    is_manga: false,
     visivel: true,
   },
 ];

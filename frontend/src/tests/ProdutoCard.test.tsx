@@ -27,6 +27,7 @@ const mockProduct: Produto = {
   promocao: false,
   curtidas: 10,
   is_loja: false,
+  is_manga: false,
   visivel: true,
 };
 

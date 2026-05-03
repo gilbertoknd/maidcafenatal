@@ -13,6 +13,7 @@ const mockProduto: Produto = {
   promocao: false,
   curtidas: 0,
   is_loja: false,
+  is_manga: false,
 };
 
 describe("hook useCarrinho", () => {
