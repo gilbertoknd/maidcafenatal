@@ -28,8 +28,8 @@ export const ProdutoModel = {
 
   criar: async (data: Partial<Produto>) => {
     const query = `
-      INSERT INTO produtos (nome, descricao, preco, categoria, imagem_url, promocao, tags, is_loja, preco_original, visivel)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+      INSERT INTO produtos (nome, descricao, preco, categoria, imagem_url, promocao, tags, is_loja, is_manga, preco_original, visivel)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
       RETURNING *;
     `;
 
@@ -42,6 +42,7 @@ export const ProdutoModel = {
       data.promocao,
       data.tags || null,
       data.is_loja || false,
+      data.is_manga || false,
       data.preco_original || null,
       data.visivel ?? true,
     ];
@@ -61,9 +62,10 @@ export const ProdutoModel = {
           promocao = $6,
           tags = $7,
           is_loja = $8,
-          preco_original = $9,
-          visivel = COALESCE($10, visivel)
-      WHERE id = $11
+          is_manga = $9,
+          preco_original = $10,
+          visivel = COALESCE($11, visivel)
+      WHERE id = $12
       RETURNING *;
     `;
 
@@ -76,6 +78,7 @@ export const ProdutoModel = {
       data.promocao,
       data.tags || null,
       data.is_loja || false,
+      data.is_manga || false,
       data.preco_original || null,
       data.visivel,
       id,

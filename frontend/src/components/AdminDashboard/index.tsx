@@ -32,14 +32,16 @@ export default function AdminDashboard() {
   // 3. Hook de Produtos (Lista/Filtros) - Fonte da verdade visual
   const menuProductData = useProdutos("menu", true);
   const storeProductData = useProdutos("store", true);
+  const mangasProductData = useProdutos("mangas", true);
 
   const [produtoEditando, setProdutoEditando] = useState<Produto | null>(null);
   const [activeTab, setActiveTab] = useState<
-    "produtos" | "loja" | "pedidos" | "eventos" | "banners" | "fontes" | "instagram"
+    "produtos" | "loja" | "mangas" | "pedidos" | "eventos" | "banners" | "fontes" | "instagram"
   >("pedidos");
 
   const { refresh: refreshMenu } = menuProductData;
   const { refresh: refreshStore } = storeProductData;
+  const { refresh: refreshMangas } = mangasProductData;
 
   // Limpa o form de edição ao trocar de aba
   useEffect(() => {
@@ -51,8 +53,9 @@ export default function AdminDashboard() {
     if (isAuthenticated) {
       refreshMenu();
       refreshStore();
+      refreshMangas();
     }
-  }, [isAuthenticated, refreshMenu, refreshStore]);
+  }, [isAuthenticated, refreshMenu, refreshStore, refreshMangas]);
 
   // Função wrapper para salvar
   async function handleSaveWrapper(formData: FormData) {
@@ -65,6 +68,7 @@ export default function AdminDashboard() {
       setProdutoEditando(null); // Fecha o form se deu certo
       menuProductData.refresh(); // Atualiza a lista menu
       storeProductData.refresh(); // Atualiza a lista loja
+      mangasProductData.refresh(); // Atualiza a lista mangas
     }
   }
 
@@ -75,6 +79,7 @@ export default function AdminDashboard() {
     if (success) {
       menuProductData.refresh();
       storeProductData.refresh();
+      mangasProductData.refresh();
     }
   }
 
@@ -84,6 +89,7 @@ export default function AdminDashboard() {
     if (success) {
       menuProductData.refresh();
       storeProductData.refresh();
+      mangasProductData.refresh();
     }
   }
 
@@ -136,6 +142,12 @@ export default function AdminDashboard() {
             Loja
           </button>
           <button
+            className={`${styles.tabBtn} ${activeTab === "mangas" ? styles.activeTab : ""}`}
+            onClick={() => setActiveTab("mangas")}
+          >
+            Mangás
+          </button>
+          <button
             className={`${styles.tabBtn} ${activeTab === "eventos" ? styles.activeTab : ""}`}
             onClick={() => setActiveTab("eventos")}
           >
@@ -178,7 +190,7 @@ export default function AdminDashboard() {
               produtoEditando={produtoEditando}
               onSave={handleSaveWrapper}
               onCancel={() => setProdutoEditando(null)}
-              isStoreTab={false}
+              productType="menu"
             />
           </MenuContent>
         )}
@@ -197,7 +209,26 @@ export default function AdminDashboard() {
               produtoEditando={produtoEditando}
               onSave={handleSaveWrapper}
               onCancel={() => setProdutoEditando(null)}
-              isStoreTab={true}
+              productType="store"
+            />
+          </MenuContent>
+        )}
+        {activeTab === "mangas" && (
+          <MenuContent
+            {...mangasProductData}
+            title=""
+            onEdit={(produto) => {
+              setProdutoEditando(produto);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            onDelete={handleDeleteWrapper}
+            onToggleVisibility={handleToggleVisibilityWrapper}
+          >
+            <ProdutoForm
+              produtoEditando={produtoEditando}
+              onSave={handleSaveWrapper}
+              onCancel={() => setProdutoEditando(null)}
+              productType="mangas"
             />
           </MenuContent>
         )}

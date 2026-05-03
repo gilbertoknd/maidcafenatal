@@ -9,14 +9,14 @@ interface ProdutoFormProps {
   produtoEditando: Produto | null;
   onCancel: () => void;
   onSave: (formData: FormData) => Promise<void>;
-  isStoreTab: boolean;
+  productType: "menu" | "store" | "mangas";
 }
 
 export function ProdutoForm({
   produtoEditando,
   onCancel,
   onSave,
-  isStoreTab,
+  productType,
 }: ProdutoFormProps) {
   // Estados locais (agora só existem aqui dentro!)
   const [nome, setNome] = useState("");
@@ -30,7 +30,7 @@ export function ProdutoForm({
   const [imagem, setImagem] = useState<File | null>(null);
 
   // --- LÓGICA DE AUTOCOMPLETE ---
-  const productData = useProdutos(isStoreTab ? "store" : "menu", true);
+  const productData = useProdutos(productType, true);
   const existingProducts = productData.produtos || [];
 
   const [showCatDropdown, setShowCatDropdown] = useState(false);
@@ -135,7 +135,8 @@ export function ProdutoForm({
     formData.append("tags", tags);
     formData.append("promocao", String(promocao));
     formData.append("visivel", String(visivel));
-    formData.append("is_loja", String(isStoreTab));
+    formData.append("is_loja", String(productType === "store"));
+    formData.append("is_manga", String(productType === "mangas"));
     if (imagem) formData.append("imagem", imagem);
 
     await onSave(formData);
@@ -147,9 +148,11 @@ export function ProdutoForm({
       <h2 className={styles.formTitle}>
         {produtoEditando
           ? `Editando: ${nome}`
-          : isStoreTab
+          : productType === "store"
             ? "Adicionar Novo Item a Loja 🛍️"
-            : "Adicionar Novo Item ao Cardápio 🍰"}
+            : productType === "mangas"
+              ? "Adicionar Novo Mangá 📚"
+              : "Adicionar Novo Item ao Cardápio 🍰"}
       </h2>
 
       {/* Hardcoded placeholder style as requested */}

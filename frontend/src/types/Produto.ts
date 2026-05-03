@@ -9,6 +9,7 @@ export interface Produto {
   curtidas: number;
   tags?: string;
   is_loja: boolean;
+  is_manga: boolean;
   preco_original?: string;
   visivel?: boolean;
 }

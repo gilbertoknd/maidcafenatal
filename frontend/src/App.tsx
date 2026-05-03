@@ -3,6 +3,7 @@ import { MenuPage } from "./pages/Menu";
 import { Home } from "./pages/Home";
 import { Admin } from "./pages/Admin";
 import { LojaOnline } from "./pages/LojaOnline";
+import { Mangas } from "./pages/Mangas";
 import { ProdutoDetalhesLoja } from "./pages/ProdutoDetalhesLoja";
 import { EventosPage } from "./pages/Eventos";
 import { EventoDetalhes } from "./pages/EventoDetalhes";
@@ -27,6 +28,7 @@ function App() {
         <Route path="/home" element={<Navigate to="/" replace />} />
         <Route path="/cardapio" element={<MenuPage />} />
         <Route path="/loja" element={<LojaOnline />} />
+        <Route path="/mangas" element={<Mangas />} />
         <Route path="/loja/produto/:id" element={<ProdutoDetalhesLoja />} />
         <Route path="/eventos" element={<EventosPage />} />
         <Route path="/eventos/:id" element={<EventoDetalhes />} />

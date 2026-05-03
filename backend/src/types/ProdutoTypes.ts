@@ -8,6 +8,7 @@ export interface Produto {
   promocao: boolean;
   tags?: string | null;
   is_loja: boolean;
+  is_manga: boolean;
   preco_original?: number | null;
   visivel: boolean;
   curtidas: number;

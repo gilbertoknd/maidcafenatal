@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS produtos (
     curtidas INTEGER DEFAULT 0,
     tags VARCHAR(255),
     is_loja BOOLEAN DEFAULT FALSE,
+    is_manga BOOLEAN DEFAULT FALSE,
     preco_original DECIMAL(10, 2),
     visivel BOOLEAN DEFAULT TRUE,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP

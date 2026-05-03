@@ -15,6 +15,7 @@
 - **Melhorias** Quando estiver trabalhando em um código que não siga as regras do documento, mesmo sendo um código mais antigo, feito anteriormente, quero que você faça o possível para que ele siga as regras do documento, alterando-o.
 - **Responsividade** Quero que você foque bastante na responsividade e funcionalidades do site para dispositivos móveis, de forma que funcione bem em celulares, que é o foco principal.
 - **Hurdle** Adicione common Hurdles que você encontrar durante o desenvolvimento, com as soluções para que você não cometa os mesmos erros novamente.
+- **Ambiente de Trabalho**: Sempre que abrir o projeto, execute `pnpm install` nas pastas `frontend` e `backend` para garantir que todas as dependências e tipagens (`@types/*`) estejam sincronizadas com o código mais recente.
 - **Identidade Visual:** O site deve seguir uma estética "fofa" (Kawaii/Maid Café), com cores pastéis (rosa, creme, branco), tipografia cursiva decorativa **Sweet Apricot** exclusivamente em **títulos de páginas, nomes de categorias, títulos de itens e Navbar** (via `var(--font-title)`), e fonte **Inter** (via `var(--font-main)`) para corpo de texto, descrições, preços, botões e demais elementos de UI. Crucialmente, botões e elementos com cantos muito arredondados (`var(--radius-button)` para botões e `var(--radius-card)` para cards/modais). O background da página principal é levemente rosado (`#FFF5F8`), mantendo o branco puro (`#FFFFFF`) apenas para elementos elevados em relevo, como os cards.
 
 ---
@@ -287,6 +288,7 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 | `curtidas`       | `INTEGER`       | Contador de curtidas                           |
 | `tags`           | `VARCHAR(255)`  | Tags opcionais                                 |
 | `is_loja`        | `BOOLEAN`       | Produto da loja online (vs. cardápio)          |
+| `is_manga`       | `BOOLEAN`       | Produto da seção de mangás                     |
 | `preco_original` | `DECIMAL(10,2)` | Preço antes da promoção                        |
 | `visivel`        | `BOOLEAN`       | Visível para usuários? (ocultar sem deletar)   |
 | `criado_em`      | `TIMESTAMP`     | Data de criação                                |
@@ -439,6 +441,7 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 | `/`                 | `Home`                | Landing page (banner, populares, novidades, sobre) |
 | `/cardapio`         | `MenuPage`            | Cardápio completo com filtros e busca              |
 | `/loja`             | `OnlineStore`         | Loja de produtos importados/artesanais             |
+| `/mangas`           | `Mangas`              | Venda de mangás (colecionáveis)                    |
 | `/loja/produto/:id` | `StoreProductDetails` | Detalhes de produto da loja                        |
 | `/eventos`          | `EventsPage`          | Calendário de eventos                              |
 | `/maids/:id`        | `MaidDetalhes`        | Perfil detalhado das maids                         |
@@ -601,6 +604,7 @@ As categorias atuais do cardápio e loja são:
 | Novidades          | Cardápio                |
 | Encomendas         | Cardápio                |
 | Black Friday       | Cardápio                |
+| Mangás             | Mangas (`is_manga = TRUE`) |
 | Nossa Lojinha      | Loja (`is_loja = TRUE`) |
 
 ---

@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { buscarProdutos, buscarProdutosAdmin } from "../services/api";
 import type { Produto } from "../types/Produto";
 
-export const useProdutos = (type: "menu" | "store" | "admin" = "menu", isAdminScope: boolean = false) => {
+export const useProdutos = (type: "menu" | "store" | "mangas" | "admin" = "menu", isAdminScope: boolean = false) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Todos");
 
@@ -16,8 +16,9 @@ export const useProdutos = (type: "menu" | "store" | "admin" = "menu", isAdminSc
       const data = await fetchFn();
       
       return data.filter((item: Produto) => {
-        if (type === "menu") return !item.is_loja;
+        if (type === "menu") return !item.is_loja && !item.is_manga;
         if (type === "store") return item.is_loja;
+        if (type === "mangas") return item.is_manga;
         return true; // admin shows all
       });
     },

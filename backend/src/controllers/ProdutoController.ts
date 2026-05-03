@@ -50,6 +50,7 @@ export const ProdutoController = {
       const preco = parseFloat(req.body.preco);
       const promocao = req.body.promocao === "true";
       const is_loja = req.body.is_loja === "true";
+      const is_manga = req.body.is_manga === "true";
       const visivel = req.body.visivel === "false" ? false : true;
 
       if (!nome || isNaN(preco) || !categoria) {
@@ -72,6 +73,7 @@ export const ProdutoController = {
         promocao,
         tags: tags || null,
         is_loja,
+        is_manga,
         visivel,
       });
 
@@ -94,6 +96,7 @@ export const ProdutoController = {
       const preco = req.body.preco ? parseFloat(req.body.preco) : undefined;
       const promocao = req.body.promocao === "true";
       const is_loja = req.body.is_loja === "true";
+      const is_manga = req.body.is_manga === "true";
       const visivel = req.body.visivel !== undefined ? req.body.visivel === "true" : undefined;
 
       const produto = await ProdutoModel.atualizar(id, {
@@ -105,6 +108,7 @@ export const ProdutoController = {
         promocao,
         tags: tags || null,
         is_loja,
+        is_manga,
         visivel,
       });
 

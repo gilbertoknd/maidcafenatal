@@ -61,6 +61,15 @@ export function Header() {
             Loja Online
           </Link>
           <Link
+            to="/mangas"
+            onClick={closeMenu}
+            className={`${styles.navLink} ${
+              location.pathname === "/mangas" ? styles.active : ""
+            }`}
+          >
+            Mangás
+          </Link>
+          <Link
             to="/eventos"
             onClick={closeMenu}
             className={`${styles.navLink} ${
