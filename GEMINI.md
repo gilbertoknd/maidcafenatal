@@ -637,6 +637,7 @@ docker compose down -v
 cd backend
 pnpm install
 pnpm dev         # tsx watch src/server.ts
+pnpm db:migrate  # Executa as migrations pendentes
 pnpm test        # vitest watch
 pnpm test:ci     # vitest run (uma vez)
 pnpm build       # tsc produção
