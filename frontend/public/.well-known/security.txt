@@ -1,0 +1,5 @@
+Contact: mailto:Jcafenatal@gmail.com
+Preferred-Languages: pt-BR, en
+Canonical: https://mewworld.space/.well-known/security.txt
+
+# Agradecemos a pesquisadores de segurança que reportam vulnerabilidades de forma responsável.
