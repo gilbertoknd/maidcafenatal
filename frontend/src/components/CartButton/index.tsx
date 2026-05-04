@@ -2,6 +2,7 @@ import { ShoppingCart } from "lucide-react";
 import { useCarrinho } from "../../hooks/useCarrinho";
 import { useEffect, useState } from "react";
 import styles from "./styles.module.css";
+import { trackEvent } from "../../utils/analytics";
 
 export function CartButton() {
   const { contagemItens, setEstaAberto } = useCarrinho();
@@ -21,7 +22,10 @@ export function CartButton() {
   return (
     <button 
       className={`${styles.cartButton} ${isBumping ? styles.bump : ""}`} 
-      onClick={() => setEstaAberto(true)}
+      onClick={() => {
+        trackEvent("view_cart");
+        setEstaAberto(true);
+      }}
     >
       <div className={styles.iconContainer}>
         <ShoppingCart size={24} />

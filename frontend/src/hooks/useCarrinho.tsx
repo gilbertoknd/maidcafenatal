@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 import type { Produto } from "../types/Produto";
+import { trackEvent } from "../utils/analytics";
 
 export interface CarrinhoItem extends Produto {
   quantidade: number;
@@ -35,6 +36,20 @@ export const CarrinhoProvider: React.FC<{ children: ReactNode }> = ({
   }, [itens]);
 
   const adicionarProduto = (produto: Produto) => {
+    trackEvent("add_to_cart", {
+      currency: "BRL",
+      value: Number(produto.preco),
+      items: [
+        {
+          item_id: produto.id,
+          item_name: produto.nome,
+          item_category: produto.categoria,
+          price: Number(produto.preco),
+          quantity: 1,
+        },
+      ],
+    });
+
     setItens((prev) => {
       const existe = prev.find((item) => item.id === produto.id);
       if (existe) {

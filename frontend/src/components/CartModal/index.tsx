@@ -6,6 +6,7 @@ import styles from "./styles.module.css";
 import { enviarPedido } from "../../services/api"; 
 import { AddressMapModal } from "../AddressMapModal";
 import type { AddressData } from "../AddressMapModal";
+import { trackEvent } from "../../utils/analytics";
 
 export function CartModal() {
   const {
@@ -60,6 +61,19 @@ export function CartModal() {
         cliente_nome: nome,
         cliente_endereco: addressData.address + (numeroComplemento ? `, ${numeroComplemento}` : ""),
         itens: backendItens,
+      });
+
+      trackEvent("purchase", {
+        currency: "BRL",
+        value: Number(response.total),
+        transaction_id: response.pedido_id,
+        items: itens.map(item => ({
+          item_id: item.id,
+          item_name: item.nome,
+          item_category: item.categoria,
+          price: Number(item.preco),
+          quantity: item.quantidade
+        }))
       });
 
       //Format WhatsApp string

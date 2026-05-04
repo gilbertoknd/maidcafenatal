@@ -1,5 +1,6 @@
 import { useRef, useState, type MouseEvent } from "react";
 import styles from "./styles.module.css";
+import { trackEvent } from "../../utils/analytics";
 
 interface CategoryFilterProps {
   categories: string[];
@@ -63,7 +64,13 @@ export function CategoryFilter({
             key={category}
             // Adicionei uma verificação para evitar clique acidental enquanto arrasta
             onClick={() => {
-              if (!isDragging) onSelectCategory(category);
+              if (!isDragging) {
+                trackEvent("select_content", {
+                  content_type: "category_tab",
+                  item_id: category,
+                });
+                onSelectCategory(category);
+              }
             }}
             className={`${styles.button} ${
               selectedCategory === category ? styles.active : ""
@@ -80,7 +87,13 @@ export function CategoryFilter({
       {/* LADO DIREITO: Botão Todos (Fixo) */}
       <div className={styles.fixedArea}>
         <button
-          onClick={() => onSelectCategory("Todos")}
+          onClick={() => {
+            trackEvent("select_content", {
+              content_type: "category_tab",
+              item_id: "Todos",
+            });
+            onSelectCategory("Todos");
+          }}
           className={`${styles.button} ${styles.todosBtn} ${
             selectedCategory === "Todos" ? styles.active : ""
           }`}
