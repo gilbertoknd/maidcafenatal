@@ -259,20 +259,20 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 
 ### `configuracoes`
 
-| Coluna          | Tipo                 | Descrição                           |
-| --------------- | -------------------- | ----------------------------------- |
-| `chave`         | `VARCHAR(100) PK`    | Chave da configuração (ex: fonte)   |
-| `valor`         | `VARCHAR(255)`       | Valor associado à chave             |
-| `atualizado_em` | `TIMESTAMP`          | Data da última atualização          |
+| Coluna          | Tipo              | Descrição                         |
+| --------------- | ----------------- | --------------------------------- |
+| `chave`         | `VARCHAR(100) PK` | Chave da configuração (ex: fonte) |
+| `valor`         | `VARCHAR(255)`    | Valor associado à chave           |
+| `atualizado_em` | `TIMESTAMP`       | Data da última atualização        |
 
 ### `fontes_customizadas`
 
-| Coluna        | Tipo                 | Descrição                                 |
-| ------------- | -------------------- | ----------------------------------------- |
-| `id`          | `SERIAL PK`          | ID auto-incremento                        |
-| `nome`        | `VARCHAR(100) UNIQUE`| Nome da fonte                             |
-| `arquivo_url` | `VARCHAR(255)`       | Caminho físico do arquivo (.woff2)        |
-| `criado_em`   | `TIMESTAMP`          | Data de criação                           |
+| Coluna        | Tipo                  | Descrição                          |
+| ------------- | --------------------- | ---------------------------------- |
+| `id`          | `SERIAL PK`           | ID auto-incremento                 |
+| `nome`        | `VARCHAR(100) UNIQUE` | Nome da fonte                      |
+| `arquivo_url` | `VARCHAR(255)`        | Caminho físico do arquivo (.woff2) |
+| `criado_em`   | `TIMESTAMP`           | Data de criação                    |
 
 ### `produtos`
 
@@ -349,14 +349,14 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 
 ### `instagram_posts`
 
-| Coluna       | Tipo            | Descrição                          |
-| ------------ | --------------- | ---------------------------------- |
-| `id`         | `SERIAL PK`     | ID auto-incremento                 |
-| `imagem_url` | `VARCHAR(255)`  | Caminho da imagem no disco         |
-| `link_url`   | `VARCHAR(255)`  | Link para o post no Instagram      |
-| `visivel`    | `BOOLEAN`       | Visível na homepage? (Default: T)  |
-| `ordem`      | `INTEGER`       | Ordem de exibição (Default: 0)     |
-| `criado_em`  | `TIMESTAMP`     | Data de criação                    |
+| Coluna       | Tipo           | Descrição                         |
+| ------------ | -------------- | --------------------------------- |
+| `id`         | `SERIAL PK`    | ID auto-incremento                |
+| `imagem_url` | `VARCHAR(255)` | Caminho da imagem no disco        |
+| `link_url`   | `VARCHAR(255)` | Link para o post no Instagram     |
+| `visivel`    | `BOOLEAN`      | Visível na homepage? (Default: T) |
+| `ordem`      | `INTEGER`      | Ordem de exibição (Default: 0)    |
+| `criado_em`  | `TIMESTAMP`    | Data de criação                   |
 
 ---
 
@@ -370,12 +370,12 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 
 ### Configurações (`/api/configuracoes`)
 
-| Método   | Rota               | Auth? | Descrição                                    |
-| -------- | ------------------ | ----- | -------------------------------------------- |
-| `GET`    | `/`                | ❌    | Retorna configurações globais e fontes ativas|
-| `PUT`    | `/`                | ✅    | Atualiza chaves de configuração em lote      |
-| `POST`   | `/fontes`          | ✅    | Upload de nova fonte customizada (.woff2)    |
-| `DELETE` | `/fontes/:id`      | ✅    | Exclui uma fonte e deleta o arquivo físico   |
+| Método   | Rota          | Auth? | Descrição                                     |
+| -------- | ------------- | ----- | --------------------------------------------- |
+| `GET`    | `/`           | ❌    | Retorna configurações globais e fontes ativas |
+| `PUT`    | `/`           | ✅    | Atualiza chaves de configuração em lote       |
+| `POST`   | `/fontes`     | ✅    | Upload de nova fonte customizada (.woff2)     |
+| `DELETE` | `/fontes/:id` | ✅    | Exclui uma fonte e deleta o arquivo físico    |
 
 ### Banners (`/api/banners`)
 
@@ -420,13 +420,13 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 
 ### Instagram (`/api/instagram`)
 
-| Método   | Rota                | Auth? | Descrição                          |
-| -------- | ------------------- | ----- | ---------------------------------- |
-| `GET`    | `/`                 | ❌    | Lista posts visíveis               |
-| `GET`    | `/admin`            | ✅    | Lista todos os posts (admin)       |
-| `POST`   | `/`                 | ✅    | Cria post (com upload de imagem)   |
-| `PUT`    | `/:id`              | ✅    | Atualiza post                      |
-| `DELETE` | `/:id`              | ✅    | Deleta post e remove imagem        |
+| Método   | Rota     | Auth? | Descrição                        |
+| -------- | -------- | ----- | -------------------------------- |
+| `GET`    | `/`      | ❌    | Lista posts visíveis             |
+| `GET`    | `/admin` | ✅    | Lista todos os posts (admin)     |
+| `POST`   | `/`      | ✅    | Cria post (com upload de imagem) |
+| `PUT`    | `/:id`   | ✅    | Atualiza post                    |
+| `DELETE` | `/:id`   | ✅    | Deleta post e remove imagem      |
 
 ### Regras de Exibição (Homepage)
 
@@ -585,27 +585,27 @@ Produtos e eventos possuem o campo `visivel` (BOOLEAN, default TRUE). O sistema 
 
 As categorias atuais do cardápio e loja são:
 
-| Categoria          | Tipo                    |
-| ------------------ | ----------------------- |
-| Happy Hour         | Cardápio                |
-| Refeições          | Cardápio                |
-| 抹茶 - Matcha      | Cardápio                |
-| Doces Japoneses    | Cardápio                |
-| Croissants         | Cardápio                |
-| Sanduíches         | Cardápio                |
-| Doces e Sobremesas | Cardápio                |
-| Salgados           | Cardápio                |
-| Cafés              | Cardápio                |
-| Milkshakes         | Cardápio                |
-| Bebidas Mágicas    | Cardápio                |
-| Bebidas            | Cardápio                |
-| Bebidas Alcoólicas | Cardápio                |
-| Promoções          | Cardápio                |
-| Novidades          | Cardápio                |
-| Encomendas         | Cardápio                |
-| Black Friday       | Cardápio                |
+| Categoria          | Tipo                       |
+| ------------------ | -------------------------- |
+| Happy Hour         | Cardápio                   |
+| Refeições          | Cardápio                   |
+| 抹茶 - Matcha      | Cardápio                   |
+| Doces Japoneses    | Cardápio                   |
+| Croissants         | Cardápio                   |
+| Sanduíches         | Cardápio                   |
+| Doces e Sobremesas | Cardápio                   |
+| Salgados           | Cardápio                   |
+| Cafés              | Cardápio                   |
+| Milkshakes         | Cardápio                   |
+| Bebidas Mágicas    | Cardápio                   |
+| Bebidas            | Cardápio                   |
+| Bebidas Alcoólicas | Cardápio                   |
+| Promoções          | Cardápio                   |
+| Novidades          | Cardápio                   |
+| Encomendas         | Cardápio                   |
+| Black Friday       | Cardápio                   |
 | Mangás             | Mangas (`is_manga = TRUE`) |
-| Nossa Lojinha      | Loja (`is_loja = TRUE`) |
+| Nossa Lojinha      | Loja (`is_loja = TRUE`)    |
 
 ---
 
@@ -870,5 +870,26 @@ Quando for realizar o deploy ou atualizar a aplicação em produção com novos 
 - **Max-Width:** Todas as abas administrativas (`/admin/*`) devem respeitar o `max-width: var(--container-max-width)` e estarem centralizadas (`margin: 0 auto`).
 - **Padding Superior:** O distanciamento padrão do topo para o primeiro elemento das abas (geralmente o formulário de cadastro) é de `1rem`.
 - **Identidade Visual:** Botões de ação seguem `--color-success` (verde/salvar) e `--color-warning` (amarelo/editar) para rápida identificação funcional.
+
+### 24. Backup e Manutenção (Mini PC)
+
+Para garantir a integridade dos dados do Mew Mew Café, existe um sistema de backup automatizado configurado para o ambiente de produção.
+
+- **Localização do Script:** `scripts/backup.sh` (na raiz do projeto).
+- **Conteúdo do Backup:**
+  - Dump completo do banco de dados PostgreSQL (`maid_postgres`).
+  - Pasta de imagens de produtos e eventos (`backend/public/images`).
+  - Pasta de fontes customizadas (`backend/public/fonts`).
+  - Arquivos `.env` (Raiz, Backend e Frontend) para referência de configurações.
+- **Destino:** Cloudflare R2 via `rclone`.
+- **Requisitos:**
+  - `rclone` instalado e configurado com um remoto chamado `cloudflare_r2`.
+  - Permissões de execução: `chmod +x scripts/backup.sh`.
+- **Agendamento Recomendado (Cron):**
+  Para rodar todos os dias às 03:00 AM, adicione ao `crontab -e`:
+  ```bash
+  0 3 * * * /caminho/para/projeto/scripts/backup.sh >> /caminho/para/projeto/backup.log 2>&1
+  ```
+- **Retenção:** Recomenda-se configurar uma regra de Lifecycle no bucket da Cloudflare para deletar arquivos com mais de 30 dias.
 
 ---
