@@ -98,3 +98,4 @@ frontend/test_results.txt
 
 .agents
 coverage*.txt
+backup_log.txt
