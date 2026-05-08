@@ -873,9 +873,9 @@ Quando for realizar o deploy ou atualizar a aplicação em produção com novos 
 
 ### 24. Backup e Manutenção (Mini PC)
 
-Para garantir a integridade dos dados do Mew Mew Café, existe um sistema de backup automatizado configurado para o ambiente de produção.
+Para garantir a integridade dos dados do Mew Mew Café, existe um sistema de backup automatizado configurado para o ambiente de produção rodando nativamente no host Windows.
 
-- **Localização do Script:** `scripts/backup.sh` (na raiz do projeto).
+- **Localização do Script:** `scripts/backup.ps1` (na raiz do projeto).
 - **Conteúdo do Backup:**
   - Dump completo do banco de dados PostgreSQL (`maid_postgres`).
   - Pasta de imagens de produtos e eventos (`backend/public/images`).
@@ -883,13 +883,11 @@ Para garantir a integridade dos dados do Mew Mew Café, existe um sistema de bac
   - Arquivos `.env` (Raiz, Backend e Frontend) para referência de configurações.
 - **Destino:** Cloudflare R2 via `rclone`.
 - **Requisitos:**
-  - `rclone` instalado e configurado com um remoto chamado `cloudflare_r2`.
-  - Permissões de execução: `chmod +x scripts/backup.sh`.
-- **Agendamento Recomendado (Cron):**
-  Para rodar todos os dias às 03:00 AM, adicione ao `crontab -e`:
-  ```bash
-  0 3 * * * /caminho/para/projeto/scripts/backup.sh >> /caminho/para/projeto/backup.log 2>&1
-  ```
-- **Retenção:** Recomenda-se configurar uma regra de Lifecycle no bucket da Cloudflare para deletar arquivos com mais de 30 dias.
+  - `rclone` instalado no Windows (`winget install Rclone.Rclone`).
+  - Remoto configurado (`rclone config`) com o nome exato de `cloudflare_r2` apontando para o bucket `mewmew-backups`.
+- **Agendamento (Agendador de Tarefas do Windows):**
+  Para rodar de forma invisível e com privilégios elevados todos os dias às 03:00 AM, o agendamento deve ser criado no PowerShell (executar como administrador):
+  ```powershell
+  schtasks /create /tn "MewMew_Daily_Backup" /tr "powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File C:\Users\pdvme\Documents\GitHub\maidcafenatal\scripts\backup.ps1" /sc daily /st 03:00 /ru COZINHA\pdvme /rl highest
 
 ---
