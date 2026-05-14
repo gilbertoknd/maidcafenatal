@@ -27,6 +27,10 @@ describe("Componente Header", () => {
     );
     expect(screen.getByText("Início")).toBeInTheDocument();
     expect(screen.getByText("Cardápio")).toBeInTheDocument();
+    expect(screen.getByText("Loja Online")).toBeInTheDocument();
+    expect(screen.getByText("Mangás")).toBeInTheDocument();
+    expect(screen.getByText("Eventos")).toBeInTheDocument();
+    expect(screen.getByText("Cupons")).toBeInTheDocument();
   });
 
   it("deve destacar o link ativo", () => {
@@ -39,5 +43,17 @@ describe("Componente Header", () => {
     );
     const menuLinks = screen.getAllByText("Cardápio");
     expect(menuLinks[0]).toBeInTheDocument();
+  });
+
+  it("deve ter o link de Cupons apontando para /cupons", () => {
+    render(
+      <BrowserRouter>
+        <CarrinhoProvider>
+          <Header />
+        </CarrinhoProvider>
+      </BrowserRouter>
+    );
+    const cuponsLink = screen.getByText("Cupons");
+    expect(cuponsLink.closest("a")).toHaveAttribute("href", "/cupons");
   });
 });

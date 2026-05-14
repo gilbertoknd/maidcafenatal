@@ -10,6 +10,7 @@ import { AdminEventos } from "../AdminEventos";
 import { AdminBanners } from "../AdminBanners";
 import AdminFontes from "../AdminFontes";
 import { AdminInstagram } from "../AdminInstagram";
+import { AdminCupons } from "../AdminCupons";
 // Hooks e Types
 import { useAutenticacao } from "../../hooks/useAutenticacao";
 import { useAdminProdutos } from "../../hooks/useAdminProdutos";
@@ -36,7 +37,7 @@ export default function AdminDashboard() {
 
   const [produtoEditando, setProdutoEditando] = useState<Produto | null>(null);
   const [activeTab, setActiveTab] = useState<
-    "produtos" | "loja" | "mangas" | "pedidos" | "eventos" | "banners" | "fontes" | "instagram"
+    "produtos" | "loja" | "mangas" | "pedidos" | "eventos" | "banners" | "fontes" | "instagram" | "cupons"
   >("pedidos");
 
   const { refresh: refreshMenu } = menuProductData;
@@ -165,6 +166,12 @@ export default function AdminDashboard() {
           >
             Instagram
           </button>
+          <button
+            className={`${styles.tabBtn} ${activeTab === "cupons" ? styles.activeTab : ""}`}
+            onClick={() => setActiveTab("cupons")}
+          >
+            Cupons
+          </button>
         </nav>
 
         <button onClick={logout} className={styles.logoutBtn}>
@@ -235,6 +242,7 @@ export default function AdminDashboard() {
         {activeTab === "eventos" && <AdminEventos />}
         {activeTab === "fontes" && <AdminFontes />}
         {activeTab === "instagram" && <AdminInstagram />}
+        {activeTab === "cupons" && <AdminCupons />}
       </main>
     </div>
   );

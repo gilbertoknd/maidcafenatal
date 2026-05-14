@@ -1,0 +1,297 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1rem;
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+}
+
+/* Formulário de nova campanha */
+.formContainer {
+  background-color: var(--color-tertiary-background);
+  padding: 2rem;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  margin-bottom: 2rem;
+  border: 1px solid var(--color-secondary-border);
+}
+
+.formTitle {
+  margin-top: 0;
+  color: var(--color-primary-dark);
+  margin-bottom: 1.5rem;
+  font-size: var(--font-size-2xl);
+  font-family: var(--font-title-site);
+  font-weight: var(--font-weight-bold);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.input {
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--color-secondary-border);
+  border-radius: 10px;
+  font-size: var(--font-size-md);
+  width: 100%;
+  box-sizing: border-box;
+  color: #000000;
+  background-color: #ffffff;
+  -webkit-text-fill-color: #000000;
+}
+
+.input::placeholder {
+  color: var(--color-gray-400) !important;
+  -webkit-text-fill-color: var(--color-gray-400) !important;
+  opacity: 1;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-shadow);
+}
+
+.select {
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--color-secondary-border);
+  border-radius: 10px;
+  font-size: var(--font-size-md);
+  width: 100%;
+  box-sizing: border-box;
+  color: #000000;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+
+.textarea {
+  grid-column: span 2;
+  min-height: 80px;
+  resize: vertical;
+}
+
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--color-white);
+  padding: 0 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--color-secondary-border);
+  height: 45px;
+}
+
+.checkboxLabel {
+  cursor: pointer;
+  flex: 1;
+  font-size: var(--font-size-md);
+  color: var(--color-text);
+}
+
+/* Botões */
+.actions {
+  grid-column: span 2;
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.btn {
+  padding: 1rem;
+  border: none;
+  border-radius: var(--radius-button);
+  cursor: pointer;
+  font-weight: var(--font-weight-bold);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-white);
+  font-size: var(--font-size-md);
+  transition: var(--transition-default);
+  box-shadow: var(--shadow-card);
+}
+
+.btn:hover {
+  transform: scale(1.02);
+}
+
+.btnSubmit {
+  flex: 1;
+  background-color: var(--color-success);
+}
+
+/* Listagem de campanhas */
+.listPanel {
+  background: var(--color-white);
+  padding: 1.5rem;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-gray-200);
+}
+
+.listPanel h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: var(--color-primary-dark);
+  font-family: var(--font-title-site);
+}
+
+.campanhaCard {
+  background: var(--color-tertiary-background);
+  border: 1px solid var(--color-secondary-border);
+  border-radius: var(--radius-card);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  transition: var(--transition-default);
+}
+
+.campanhaHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.campanhaHeader h3 {
+  margin: 0;
+  color: var(--color-primary-dark);
+  font-family: var(--font-title-site);
+  font-size: var(--font-size-lg);
+}
+
+.badge {
+  background: var(--color-primary);
+  color: var(--color-white);
+  padding: 4px 12px;
+  border-radius: var(--radius-button);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+.badgeInativa {
+  background: var(--color-gray-400);
+}
+
+.campanhaInfo {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.75rem;
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-600);
+  flex-wrap: wrap;
+}
+
+.campanhaActions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.btnSmall {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: var(--radius-button);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: var(--transition-default);
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.btnSmall:hover {
+  transform: scale(1.03);
+  filter: brightness(1.1);
+}
+
+/* Tabela de cupons expandida */
+.cuponsTable {
+  margin-top: 1rem;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.cuponsTable th,
+.cuponsTable td {
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-secondary-border);
+}
+
+.cuponsTable th {
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-weight: var(--font-weight-bold);
+}
+
+.cuponsTable tr:hover {
+  background: var(--color-primary-light);
+}
+
+.statusUsado {
+  color: var(--color-success);
+  font-weight: var(--font-weight-bold);
+}
+
+.statusPendente {
+  color: var(--color-warning);
+  font-weight: var(--font-weight-bold);
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: var(--color-gray-400);
+  font-size: var(--font-size-lg);
+}
+
+.empty {
+  text-align: center;
+  padding: 2rem;
+  color: var(--color-gray-400);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .textarea,
+  .actions {
+    grid-column: span 1;
+  }
+
+  .container {
+    padding: 0.5rem;
+  }
+
+  .campanhaHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .campanhaInfo {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .cuponsTable {
+    font-size: var(--font-size-xs);
+  }
+
+  .cuponsTable th,
+  .cuponsTable td {
+    padding: 0.4rem;
+  }
+}

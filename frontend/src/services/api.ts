@@ -343,3 +343,37 @@ export async function validarCupom(codigo: string): Promise<CupomValido> {
   }
   return response.json();
 }
+
+// --- CUPONS ADMIN ---
+export async function buscarCampanhasAdmin(): Promise<CampanhaCupom[]> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${BASE_URL}/api/cupons/admin/campanhas`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  if (!response.ok) throw new Error("Erro ao buscar campanhas (Admin)");
+  return response.json();
+}
+
+export async function criarCampanhaAdmin(data: Record<string, unknown>): Promise<CampanhaCupom> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${BASE_URL}/api/cupons/admin/campanhas`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(data)
+  });
+  if (!response.ok) throw new Error("Erro ao criar campanha");
+  return response.json();
+}
+
+export async function buscarCuponsAdmin(campanhaId?: number): Promise<CupomResgatado[]> {
+  const token = localStorage.getItem("token");
+  const query = campanhaId ? `?campanha_id=${campanhaId}` : "";
+  const response = await fetch(`${BASE_URL}/api/cupons/admin/cupons${query}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  if (!response.ok) throw new Error("Erro ao buscar cupons (Admin)");
+  return response.json();
+}

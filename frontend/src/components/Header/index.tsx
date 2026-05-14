@@ -78,6 +78,15 @@ export function Header() {
           >
             Eventos
           </Link>
+          <Link
+            to="/cupons"
+            onClick={closeMenu}
+            className={`${styles.navLink} ${
+              location.pathname === "/cupons" ? styles.active : ""
+            }`}
+          >
+            Cupons
+          </Link>
         </nav>
       </div>
     </header>
