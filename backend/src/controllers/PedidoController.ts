@@ -5,7 +5,7 @@ import { AppError } from "../errors/AppError.js";
 export const PedidoController = {
   criar: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const { cliente_nome, cliente_endereco, itens } = req.body;
+      const { cliente_nome, cliente_endereco, itens, codigo_cupom } = req.body;
 
       if (!cliente_nome || !cliente_endereco || !itens || !itens.length) {
         throw new AppError("Dados inválidos: Nome, endereço e itens são obrigatórios.", 400);
@@ -15,6 +15,7 @@ export const PedidoController = {
         cliente_nome,
         cliente_endereco,
         itens,
+        codigo_cupom
       );
 
       res.status(201).json({

@@ -9,6 +9,7 @@ import eventoRoutes from "./routes/EventoRoutes.js";
 import bannerRoutes from "./routes/BannerRoutes.js";
 import configuracaoRoutes from "./routes/ConfiguracaoRoutes.js";
 import instagramRoutes from "./routes/InstagramRoutes.js";
+import cupomRoutes from "./routes/CupomRoutes.js";
 import corsOptions from "./config/corsOptions.js";
 
 const app = express();
@@ -29,6 +30,7 @@ app.use("/api/eventos", eventoRoutes);
 app.use("/api/banners", bannerRoutes);
 app.use("/api/configuracoes", configuracaoRoutes);
 app.use("/api/instagram", instagramRoutes);
+app.use("/api/cupons", cupomRoutes);
 
 //Error Handler deve SEMPRE vir DEPOIS das rotas
 app.use(gerenciadorErros);

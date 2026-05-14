@@ -7,7 +7,8 @@ import { enviarPedido } from "../../services/api";
 import { AddressMapModal } from "../AddressMapModal";
 import type { AddressData } from "../AddressMapModal";
 import { trackEvent } from "../../utils/analytics";
-
+import { useValidarCupom } from "../../hooks/useCupons";
+import type { CupomValido } from "../../types/Cupom";
 export function CartModal() {
   const {
     itens,
@@ -27,6 +28,12 @@ export function CartModal() {
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [addressData, setAddressData] = useState<AddressData | null>(null);
   const [numeroComplemento, setNumeroComplemento] = useState("");
+
+  // Coupon State
+  const [codigoCupom, setCodigoCupom] = useState("");
+  const [cupomAplicado, setCupomAplicado] = useState<CupomValido | null>(null);
+  const [mensagemCupom, setMensagemCupom] = useState("");
+  const validarCupomMutation = useValidarCupom();
 
   if (!estaAberto) return null;
 
@@ -61,6 +68,7 @@ export function CartModal() {
         cliente_nome: nome,
         cliente_endereco: addressData.address + (numeroComplemento ? `, ${numeroComplemento}` : ""),
         itens: backendItens,
+        codigo_cupom: cupomAplicado ? cupomAplicado.codigo : undefined,
       });
 
       trackEvent("purchase", {
@@ -82,6 +90,9 @@ export function CartModal() {
         message += `${item.quantidade}x ${item.nome} (${formatCurrency(item.preco)})\n`;
       });
       message += `\n*Total:* ${formatCurrency(response.total)}\n`;
+      if (cupomAplicado) {
+        message += `*Cupom Aplicado:* ${cupomAplicado.codigo} (-${cupomAplicado.tipo_desconto === "percentual" ? cupomAplicado.valor_desconto + "%" : formatCurrency(cupomAplicado.valor_desconto)})\n`;
+      }
       message += `\n*Nome:* ${nome}`;
       message += `\n*Endereço:* ${addressData.address}`;
       if (numeroComplemento.trim()) {
@@ -110,6 +121,38 @@ export function CartModal() {
   };
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
+
+  const handleAplicarCupom = () => {
+    if (!codigoCupom.trim()) return;
+    setMensagemCupom("");
+    validarCupomMutation.mutate(codigoCupom, {
+      onSuccess: (data) => {
+        setCupomAplicado(data);
+        setMensagemCupom("Cupom aplicado com sucesso!");
+      },
+      onError: (error: any) => {
+        setCupomAplicado(null);
+        setMensagemCupom(error.message || "Cupom inválido");
+      }
+    });
+  };
+
+  const removerCupom = () => {
+    setCupomAplicado(null);
+    setCodigoCupom("");
+    setMensagemCupom("");
+  };
+
+  let totalFinal = total;
+  if (cupomAplicado) {
+    const valorDesc = parseFloat(cupomAplicado.valor_desconto);
+    if (cupomAplicado.tipo_desconto === "percentual") {
+      totalFinal = total - (total * (valorDesc / 100));
+    } else {
+      totalFinal = total - valorDesc;
+    }
+    if (totalFinal < 0) totalFinal = 0;
+  }
 
   return (
     <>
@@ -178,11 +221,63 @@ export function CartModal() {
 
             <div className={styles.checkoutSection}>
               <div className={styles.totalRow}>
-                <span>Total:</span>
+                <span>Subtotal:</span>
                 <strong>{formatCurrency(total)}</strong>
               </div>
+              
+              {cupomAplicado && (
+                <div className={styles.totalRow} style={{ color: "var(--color-primary)" }}>
+                  <span>Desconto ({cupomAplicado.codigo}):</span>
+                  <strong>
+                    -{cupomAplicado.tipo_desconto === "percentual" 
+                      ? `${cupomAplicado.valor_desconto}%` 
+                      : formatCurrency(cupomAplicado.valor_desconto)}
+                  </strong>
+                </div>
+              )}
 
-              <form onSubmit={handleCheckout} className={styles.checkoutForm}>
+              <div className={styles.totalRow} style={{ fontSize: "1.2rem", marginTop: "8px" }}>
+                <span>Total Final:</span>
+                <strong>{formatCurrency(totalFinal)}</strong>
+              </div>
+
+              <div className={styles.couponSection}>
+                {!cupomAplicado ? (
+                  <div style={{ display: "flex", gap: "8px", marginTop: "16px" }}>
+                    <input
+                      type="text"
+                      placeholder="Cupom de desconto"
+                      value={codigoCupom}
+                      onChange={(e) => setCodigoCupom(e.target.value.toUpperCase())}
+                      className={styles.input}
+                      style={{ margin: 0 }}
+                    />
+                    <button 
+                      type="button" 
+                      onClick={handleAplicarCupom}
+                      className={styles.finishBtn}
+                      style={{ width: "auto", padding: "0 16px", margin: 0, backgroundColor: "#475569" }}
+                      disabled={validarCupomMutation.isPending}
+                    >
+                      {validarCupomMutation.isPending ? "..." : "Aplicar"}
+                    </button>
+                  </div>
+                ) : (
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", backgroundColor: "#f0fdf4", padding: "8px 12px", borderRadius: "8px", marginTop: "16px", border: "1px solid #bbf7d0" }}>
+                    <span style={{ color: "#166534", fontWeight: 600, fontSize: "0.9rem" }}>
+                      Cupom {cupomAplicado.codigo} aplicado!
+                    </span>
+                    <button type="button" onClick={removerCupom} style={{ background: "transparent", border: "none", color: "#dc2626", cursor: "pointer", display: "flex", alignItems: "center" }}>
+                      <X size={16} />
+                    </button>
+                  </div>
+                )}
+                {mensagemCupom && !cupomAplicado && (
+                  <p style={{ color: "#dc2626", fontSize: "0.8rem", marginTop: "4px" }}>{mensagemCupom}</p>
+                )}
+              </div>
+
+              <form onSubmit={handleCheckout} className={styles.checkoutForm} style={{ marginTop: "16px" }}>
                 <input
                   type="text"
                   placeholder="Seu Nome Completo"

@@ -78,6 +78,36 @@ CREATE TABLE IF NOT EXISTS itens_pedido (
     preco_unitario DECIMAL(10, 2) NOT NULL
 );
 
+-- Criando tabela de campanhas_cupom
+CREATE TABLE IF NOT EXISTS campanhas_cupom (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    descricao TEXT,
+    prefixo VARCHAR(10) NOT NULL,
+    tipo_desconto VARCHAR(20) NOT NULL,
+    valor_desconto DECIMAL(10,2) NOT NULL,
+    limite_total INTEGER,
+    ativa BOOLEAN DEFAULT true,
+    validade TIMESTAMP,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Criando tabela de cupons
+CREATE TABLE IF NOT EXISTS cupons (
+    id SERIAL PRIMARY KEY,
+    campanha_id INTEGER REFERENCES campanhas_cupom(id) ON DELETE CASCADE,
+    codigo VARCHAR(20) UNIQUE NOT NULL,
+    cliente_nome VARCHAR(100) NOT NULL,
+    cliente_whatsapp VARCHAR(20) NOT NULL,
+    fingerprint_token VARCHAR(100) NOT NULL,
+    ip_cliente VARCHAR(45),
+    usado BOOLEAN DEFAULT false,
+    usado_em TIMESTAMP,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_whatsapp_campanha UNIQUE (campanha_id, cliente_whatsapp),
+    CONSTRAINT unique_fingerprint_campanha UNIQUE (campanha_id, fingerprint_token)
+);
+
 -- Adicionar índices para performance de busca e ordenação
 CREATE INDEX IF NOT EXISTS idx_produtos_visivel_categoria ON produtos(visivel, categoria);
 CREATE INDEX IF NOT EXISTS idx_produtos_curtidas ON produtos(curtidas DESC) WHERE visivel = true;
@@ -126,6 +156,10 @@ INSERT INTO configuracoes (chave, valor) VALUES
 ('fonte_botoes', 'Inter'),
 ('fonte_geral', 'Inter')
 ON CONFLICT (chave) DO NOTHING;
+
+-- Seed da campanha de cupom inicial
+INSERT INTO campanhas_cupom (nome, descricao, prefixo, tipo_desconto, valor_desconto, ativa) VALUES
+('Bem-vindo Mew Mew', 'Cupom de 10% de desconto na sua primeira compra!', 'MEW', 'percentual', 10.00, true);
 
 INSERT INTO produtos (nome, descricao, preco, categoria, imagem_url, promocao) VALUES
 -- Happy Hour

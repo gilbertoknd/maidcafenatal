@@ -79,5 +79,50 @@ describe("Pedido Routes", () => {
       expect(response.status).toBe(201);
       expect(response.body.pedido_id).toBe(1);
     });
+
+    it("POST /api/pedidos - should create order with coupon successfully", async () => {
+      // Mock db returns
+      mQuery.mockResolvedValueOnce({}); // BEGIN
+      mQuery.mockResolvedValueOnce({ rows: [{ preco: "10.00" }] }); // SELECT preco (item 1)
+      // Check coupon
+      mQuery.mockResolvedValueOnce({ rows: [{ 
+        cupom_id: 1, codigo: "MEW-123", usado: false, ativa: true, 
+        validade: null, tipo_desconto: "percentual", valor_desconto: "10.00" 
+      }]}); 
+      mQuery.mockResolvedValueOnce({ rows: [{ id: 1, total: "18.00" }] }); // INSERT pedido (20 - 10%)
+      mQuery.mockResolvedValueOnce({}); // INSERT itens
+      mQuery.mockResolvedValueOnce({}); // UPDATE cupom usado
+      mQuery.mockResolvedValueOnce({}); // COMMIT
+
+      const response = await request(app)
+        .post("/api/pedidos")
+        .send({
+          cliente_nome: "Joao",
+          cliente_endereco: "Rua X",
+          itens: [{ produto_id: 1, quantidade: 2 }],
+          codigo_cupom: "MEW-123"
+        });
+
+      expect(response.status).toBe(201);
+    });
+
+    it("POST /api/pedidos - should fail with invalid coupon", async () => {
+      mQuery.mockResolvedValueOnce({}); // BEGIN
+      mQuery.mockResolvedValueOnce({ rows: [{ preco: "10.00" }] }); // SELECT preco (item 1)
+      // Check coupon (not found)
+      mQuery.mockResolvedValueOnce({ rows: [] }); 
+      mQuery.mockResolvedValueOnce({}); // ROLLBACK
+
+      const response = await request(app)
+        .post("/api/pedidos")
+        .send({
+          cliente_nome: "Joao",
+          cliente_endereco: "Rua X",
+          itens: [{ produto_id: 1, quantidade: 2 }],
+          codigo_cupom: "INVALIDO"
+        });
+
+      expect(response.status).toBe(400); // 400 or 404 depending on how we handle it
+    });
   });
 });

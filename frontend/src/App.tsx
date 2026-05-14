@@ -8,6 +8,7 @@ import { ProdutoDetalhesLoja } from "./pages/ProdutoDetalhesLoja";
 import { EventosPage } from "./pages/Eventos";
 import { EventoDetalhes } from "./pages/EventoDetalhes";
 import { MaidDetalhes } from "./pages/MaidDetalhes";
+import { CuponsPage } from "./pages/Cupons";
 import "./App.css";
 
 import { ScrollToTop } from "./components/ScrollToTop";
@@ -34,6 +35,7 @@ function App() {
         <Route path="/eventos/:id" element={<EventoDetalhes />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/maids/:id" element={<MaidDetalhes />} />
+        <Route path="/cupons" element={<CuponsPage />} />
       </Routes>
     </BrowserRouter>
   );

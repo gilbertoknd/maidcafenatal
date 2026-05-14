@@ -61,6 +61,7 @@ export async function enviarPedido(orderData: {
   cliente_nome: string;
   cliente_endereco: string;
   itens: { produto_id: number; quantidade: number }[];
+  codigo_cupom?: string;
 }): Promise<{ message: string; pedido_id: number; total: number }> {
   const response = await fetch(`${BASE_URL}/api/pedidos`, {
     method: "POST",
@@ -298,5 +299,47 @@ export async function deletarInstagramPost(id: number): Promise<{ message: strin
     headers: { Authorization: `Bearer ${token}` }
   });
   if (!response.ok) throw new Error("Erro ao deletar post do Instagram");
+  return response.json();
+}
+
+// --- CUPONS ---
+import type { CampanhaCupom, CupomResgatado, CupomValido } from "../types/Cupom";
+
+export async function buscarCampanhasAtivas(): Promise<CampanhaCupom[]> {
+  const response = await fetch(`${BASE_URL}/api/cupons/campanhas-ativas`);
+  if (!response.ok) throw new Error("Erro ao buscar campanhas de cupons");
+  return response.json();
+}
+
+export async function resgatarCupom(data: {
+  campanha_id: number;
+  cliente_nome: string;
+  cliente_whatsapp: string;
+  fingerprint_token: string;
+}): Promise<CupomResgatado> {
+  const response = await fetch(`${BASE_URL}/api/cupons/resgatar`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+  
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.error || "Erro ao resgatar cupom");
+  }
+  return response.json();
+}
+
+export async function validarCupom(codigo: string): Promise<CupomValido> {
+  const response = await fetch(`${BASE_URL}/api/cupons/validar`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ codigo })
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.error || "Erro ao validar cupom");
+  }
   return response.json();
 }

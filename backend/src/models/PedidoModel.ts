@@ -1,4 +1,5 @@
 import { pool } from "../config/db.js";
+import { AppError } from "../errors/AppError.js";
 
 export interface ItemPedido {
   produto_id: number;
@@ -21,6 +22,7 @@ export const PedidoModel = {
     cliente_nome: string,
     cliente_endereco: string,
     itens: ItemPedido[],
+    codigo_cupom?: string
   ): Promise<Pedido> => {
     const client = await pool.connect();
     try {
@@ -50,6 +52,39 @@ export const PedidoModel = {
         });
       }
 
+      // Check and apply coupon if provided
+      let cupom_id = null;
+      if (codigo_cupom) {
+        const resCupom = await client.query(
+          `SELECT c.id as cupom_id, c.codigo, c.usado, cam.tipo_desconto, cam.valor_desconto, cam.ativa, cam.validade
+           FROM cupons c
+           JOIN campanhas_cupom cam ON c.campanha_id = cam.id
+           WHERE c.codigo = $1`,
+          [codigo_cupom]
+        );
+
+        if (resCupom.rows.length === 0) {
+          throw new AppError("Cupom não encontrado", 400);
+        }
+
+        const cupom = resCupom.rows[0];
+
+        if (cupom.usado) throw new AppError("Este cupom já foi utilizado", 400);
+        if (!cupom.ativa) throw new AppError("A campanha deste cupom foi inativada", 400);
+        if (cupom.validade && new Date(cupom.validade) < new Date()) throw new AppError("Este cupom já expirou", 400);
+
+        cupom_id = cupom.cupom_id;
+        const valor_desconto = parseFloat(cupom.valor_desconto);
+
+        if (cupom.tipo_desconto === "percentual") {
+          total = total - (total * (valor_desconto / 100));
+        } else if (cupom.tipo_desconto === "fixo") {
+          total = total - valor_desconto;
+        }
+
+        if (total < 0) total = 0;
+      }
+
       // Insere o pedido
       const orderResult = await client.query(
         "INSERT INTO pedidos (cliente_nome, cliente_endereco, total) VALUES ($1, $2, $3) RETURNING *",
@@ -62,6 +97,14 @@ export const PedidoModel = {
         await client.query(
           "INSERT INTO itens_pedido (pedido_id, produto_id, quantidade, preco_unitario) VALUES ($1, $2, $3, $4)",
           [newOrder.id, item.produto_id, item.quantidade, item.preco_unitario],
+        );
+      }
+
+      // Atualiza o status do cupom para usado
+      if (cupom_id) {
+        await client.query(
+          "UPDATE cupons SET usado = true, usado_em = CURRENT_TIMESTAMP WHERE id = $1",
+          [cupom_id]
         );
       }
 
