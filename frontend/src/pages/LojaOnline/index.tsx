@@ -13,7 +13,7 @@ export function LojaOnline() {
     <>
       <Banner pagina="loja" />
       <Header />
-      <MenuContent {...dadosProdutos} title="Loja Online 🛍️" />
+      <MenuContent {...dadosProdutos} title="Loja Online 🛍️" emptyMessage="nenhum item encontrado :(" />
       <Footer />
     </>
   );

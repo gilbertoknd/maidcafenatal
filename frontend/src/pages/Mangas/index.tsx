@@ -13,7 +13,7 @@ export function Mangas() {
     <>
       <Banner pagina="loja" /> {/* Reutilizando o banner da loja ou criando um especifico no admin */}
       <Header />
-      <MenuContent {...dadosProdutos} title="Mangás 📚" />
+      <MenuContent {...dadosProdutos} title="Mangás 📚" emptyMessage="Nenhum mangá encontrado :(" />
       <Footer />
     </>
   );

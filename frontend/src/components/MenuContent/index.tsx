@@ -21,6 +21,7 @@ interface MenuContentProps {
   title?: string;
   headerActions?: React.ReactNode;
   children?: React.ReactNode;
+  emptyMessage?: string;
 }
 
 export function MenuContent({
@@ -38,6 +39,7 @@ export function MenuContent({
   title = "🌸 Cardápio Mew Mew 🌸",
   headerActions,
   children,
+  emptyMessage = "Nenhuma delícia encontrada :(",
 }: MenuContentProps) {
   const groupedProducts = useMemo(() => {
     return filteredProducts.reduce(
@@ -111,7 +113,7 @@ export function MenuContent({
               </section>
             ))
           ) : (
-            <p className={styles.loading}>Nenhuma delícia encontrada :(</p>
+            <p className={styles.loading}>{emptyMessage}</p>
           )}
         </div>
       )}

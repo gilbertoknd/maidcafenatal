@@ -211,6 +211,7 @@ export default function AdminDashboard() {
             }}
             onDelete={handleDeleteWrapper}
             onToggleVisibility={handleToggleVisibilityWrapper}
+            emptyMessage="nenhum item encontrado :("
           >
             <ProdutoForm
               produtoEditando={produtoEditando}
@@ -230,6 +231,7 @@ export default function AdminDashboard() {
             }}
             onDelete={handleDeleteWrapper}
             onToggleVisibility={handleToggleVisibilityWrapper}
+            emptyMessage="Nenhum mangá encontrado :("
           >
             <ProdutoForm
               produtoEditando={produtoEditando}
