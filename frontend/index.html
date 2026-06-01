@@ -1,18 +1,163 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/Logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MewMewNatal</title>
+
+    <!-- ====== Título e Meta Descrição ====== -->
+    <title>Mew Mew Maid Café Natal | Maid Café em Natal/RN</title>
+    <meta
+      name="description"
+      content="O Mew Mew Maid Café é o primeiro maid café de Natal/RN! Experimente nosso cardápio temático, drinks exclusivos, eventos geek e uma experiência kawaii única."
+    />
+    <meta
+      name="keywords"
+      content="mew mew, mew mew cafe, mew mew café, maid cafe, maid café, maid cafe natal, cafe tematico natal, café temático natal, anime cafe, cafe geek natal, café geek natal, mew mew natal, mewmew, maid café natal rn, cafe kawaii, café kawaii, cardapio maid cafe, loja anime natal, eventos geek natal, mew world"
+    />
+
+    <!-- ====== Canonical URL ====== -->
+    <link rel="canonical" href="https://mewworld.space/" />
+
+    <!-- ====== Favicon & App Icons ====== -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+
+    <!-- ====== Web App Manifest ====== -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#FFB6C1" />
+
+    <!-- ====== Open Graph (Facebook, WhatsApp, etc.) ====== -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mewworld.space/" />
+    <meta
+      property="og:title"
+      content="Mew Mew Maid Café | O Maid Café de Natal/RN ☕🌸"
+    />
+    <meta
+      property="og:description"
+      content="A experiência mais mágica da cidade! Cardápio temático, drinks exclusivos, eventos geek e experiência única em Natal. ✨💖"
+    />
+    <meta property="og:image" content="https://mewworld.space/Logo.svg" />
+    <meta property="og:image:alt" content="Logo do Mew Mew Maid Café Natal" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="Mew Mew Maid Café" />
+
+    <!-- ====== Twitter Card ====== -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Mew Mew Maid Café | O Maid Café de Natal/RN ☕🌸"
+    />
+    <meta
+      name="twitter:description"
+      content="A experiência mais mágica da cidade! Cardápio temático, drinks exclusivos, eventos geek e experiência única em Natal. ✨💖"
+    />
+    <meta name="twitter:image" content="https://mewworld.space/Logo.svg" />
+
+    <!-- ====== SEO extras ====== -->
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Mew Mew Maid Café" />
+    <meta name="geo.region" content="BR-RN" />
+    <meta name="geo.placename" content="Natal" />
+    <!-- <meta name="geo.position" content="-5.7945;-35.2110" /> -->
+    <!-- <meta name="ICBM" content="-5.7945, -35.2110" /> -->
+
+    <!-- ====== Structured Data (JSON-LD) — Google Rich Results ====== -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "CafeOrCoffeeShop",
+        "name": "Mew Mew Maid Café",
+        "alternateName": [
+          "Mew Mew Café",
+          "Mew Mew",
+          "Maid Café Natal",
+          "MewMew Natal",
+          "Mew World"
+        ],
+        "description": "O primeiro Maid Café de Natal/RN. Cardápio temático kawaii, drinks exclusivos, eventos geek, loja de mangás e produtos importados. Uma experiência mágica no coração do Tirol.",
+        "url": "https://mewworld.space",
+        "logo": "https://mewworld.space/Logo.svg",
+        "image": "https://mewworld.space/Logo.svg",
+        "telephone": "+55-84-98664-3897",
+        "email": "",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Rua Camilo de Paula, 2",
+          "addressLocality": "Natal",
+          "addressRegion": "RN",
+          "postalCode": "59020-400",
+          "addressCountry": "BR",
+          "neighborhood": "Tirol"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": -5.7945,
+          "longitude": -35.211
+        },
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Wednesday", "Thursday"],
+            "opens": "14:00",
+            "closes": "21:00"
+          },
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Friday", "Saturday", "Sunday"],
+            "opens": "14:00",
+            "closes": "22:00"
+          }
+        ],
+        "servesCuisine": ["Temática", "Kawaii", "Café", "Drinks"],
+        "priceRange": "$$",
+        "currenciesAccepted": "BRL",
+        "paymentAccepted": "Dinheiro, Cartão de Crédito, Cartão de Débito, Pix",
+        "sameAs": [
+          "https://www.instagram.com/maidcafenatal/",
+          "https://wa.me/558486643897"
+        ],
+        "hasMenu": {
+          "@type": "Menu",
+          "url": "https://mewworld.space/cardapio",
+          "name": "Cardápio Mew Mew"
+        },
+        "potentialAction": {
+          "@type": "OrderAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://mewworld.space/loja",
+            "actionPlatform": "https://schema.org/DesktopWebPlatform"
+          },
+          "deliveryMethod": "http://purl.org/goodrelations/v1#DeliveryModeOwnFleet"
+        }
+      }
+    </script>
+
+    <!-- ====== WebSite SearchAction (Sitelinks Search Box) ====== -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Mew Mew Maid Café",
+        "alternateName": "Mew Mew Café Natal",
+        "url": "https://mewworld.space"
+      }
+    </script>
+
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-98HBQPKN7F"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-98HBQPKN7F"
+    ></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-      gtag('config', 'G-98HBQPKN7F');
+      gtag("config", "G-98HBQPKN7F");
     </script>
   </head>
   <body>

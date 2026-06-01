@@ -1,0 +1,12 @@
+# Mew Mew Maid Café Natal - robots.txt
+# https://mewworld.space
+
+User-agent: *
+Allow: /
+
+# Bloquear páginas administrativas e rotas internas
+Disallow: /admin
+Disallow: /cupons
+
+# Sitemap
+Sitemap: https://mewworld.space/sitemap.xml

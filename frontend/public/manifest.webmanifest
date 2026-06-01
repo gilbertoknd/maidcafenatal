@@ -1,0 +1,19 @@
+{
+  "name": "Mew Mew Maid Café",
+  "short_name": "Mew Mew",
+  "description": "O primeiro Maid Café de Natal/RN. Cardápio temático, drinks exclusivos, eventos geek e uma experiência única.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFF5F8",
+  "theme_color": "#FFB6C1",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["food", "entertainment", "lifestyle"]
+}
