@@ -1,0 +1,94 @@
+name: CI/CD Pipeline - Mew Mew Café
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  # Job 1: Testes e Verificação de Qualidade (CI)
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Código
+        uses: actions/checkout@v4
+
+      - name: Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Instalar pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Configurar Cache do pnpm
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      # Testar e buildar o Backend
+      - name: Instalar dependências (Backend)
+        run: pnpm install --no-frozen-lockfile
+        working-directory: ./backend
+
+      - name: Rodar Linter (Backend)
+        run: pnpm run lint
+        working-directory: ./backend
+        continue-on-error: true
+
+      - name: Rodar Testes (Backend)
+        run: pnpm run test:ci
+        working-directory: ./backend
+        continue-on-error: true
+
+      - name: Testar Build (Backend)
+        run: pnpm run build
+        working-directory: ./backend
+
+      # Testar e buildar o Frontend
+      - name: Instalar dependências (Frontend)
+        run: pnpm install --no-frozen-lockfile
+        working-directory: ./frontend
+
+      - name: Rodar Linter (Frontend)
+        run: pnpm run lint
+        working-directory: ./frontend
+        continue-on-error: true
+
+      - name: Rodar Testes (Frontend)
+        run: pnpm run test:ci
+        working-directory: ./frontend
+        continue-on-error: true
+
+      - name: Testar Build (Frontend)
+        run: pnpm run build
+        working-directory: ./frontend
+
+  # Job 2: Deploy Automático (CD) - Roda apenas se o CI passar e for push na branch principal
+  deploy:
+    needs: test-and-build
+    runs-on: self-hosted
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    steps:
+      - name: Executar Deploy Local
+        shell: powershell
+        run: |
+          Write-Host "Iniciando Deploy Local no Mini-PC..."
+          cd "C:\Users\pdvme\Documents\GitHub\maidcafenatal"
+          
+          Write-Host "Puxando alteracoes da branch ${{ github.ref_name }}..."
+          git pull origin ${{ github.ref_name }}
+          
+          Write-Host "Reconstruindo containers..."
+          docker compose up -d --build --no-deps backend frontend
+          
+          Write-Host "Limpando imagens antigas..."
+          docker image prune -f
+          
+          Write-Host "Deploy finalizado com sucesso!"

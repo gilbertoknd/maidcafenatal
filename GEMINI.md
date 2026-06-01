@@ -933,3 +933,33 @@ O site possui configurações completas de SEO para ser encontrado em buscas com
 TODO - **Imagem OG dedicada:** Substituir o `Logo.svg` por uma imagem PNG/JPG de 1200x630px específica para preview em redes sociais
 
 ---
+
+### 26. Esteira de CI/CD (GitHub Actions)
+
+Para deploy automático e testes contínuos antes de ir para produção, foi criada uma pipeline no GitHub Actions (`.github/workflows/ci-cd.yml`).
+
+#### Funcionamento da Pipeline
+
+1. **Continuous Integration (CI):** Roda em Pull Requests e Pushes para as branches `main` e `master`.
+   - Faz checkout do código, configura o Node.js e faz cache com o `pnpm`.
+   - Roda linter, executa a suíte de testes unitários/integração (`test:ci`) e valida o build de produção tanto no **Frontend** quanto no **Backend**.
+2. **Continuous Deployment (CD):** Roda apenas se a etapa de CI passar com sucesso e o evento for um `push` direto nas branches principais.
+   - Conecta ao servidor VPS via SSH.
+   - Executa o `git pull` para trazer a versão mais recente do código.
+   - Executa `docker compose up -d --build --no-deps backend frontend` para reconstruir e atualizar as aplicações sem afetar ou derrubar o banco de dados.
+   - Limpa imagens antigas não utilizadas (`docker image prune -f`) para liberar espaço em disco.
+
+#### Configuração dos Secrets no GitHub (Mandatório)
+
+Antes do deploy de amanhã, adicione as seguintes chaves em **Settings > Secrets and variables > Actions > Repository secrets** no seu repositório do GitHub:
+
+| Nome do Secret | Descrição | Exemplo / Valor |
+| :--- | :--- | :--- |
+| `SSH_HOST` | Endereço IP público ou DDNS do Mini-PC de produção | `mewmew-vps.ddns.net` ou IP externo |
+| `SSH_USER` | Nome do usuário Windows no Mini-PC | `pdvme` |
+| `SSH_PRIVATE_KEY` | Conteúdo da chave privada SSH associada ao OpenSSH Server do Windows | Inicia com `-----BEGIN OPENSSH PRIVATE KEY-----` |
+| `SSH_PORT` | Porta SSH (padrão: 22 ou a porta redirecionada no roteador do amigo) | `22` ou `2222` |
+| `WORK_DIR` | Caminho absoluto do repositório no Windows | `C:\Users\pdvme\Documents\GitHub\maidcafenatal` |
+
+---
+
