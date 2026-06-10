@@ -1,5 +1,17 @@
 import { useState, useEffect } from "react";
-import { LogOut } from "lucide-react";
+import {
+  LogOut,
+  ClipboardList,
+  TicketPercent,
+  UtensilsCrossed,
+  ShoppingBag,
+  BookOpenText,
+  CalendarDays,
+  Image,
+  Instagram,
+  Type,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import styles from "./styles.module.css";
 //Componentes
 import LoginModal from "../LoginModal";
@@ -16,6 +28,59 @@ import { useAutenticacao } from "../../hooks/useAutenticacao";
 import { useAdminProdutos } from "../../hooks/useAdminProdutos";
 import { useProdutos } from "../../hooks/useProdutos";
 import type { Produto } from "../../types/Produto";
+
+type AdminTab =
+  | "produtos"
+  | "loja"
+  | "mangas"
+  | "pedidos"
+  | "eventos"
+  | "banners"
+  | "fontes"
+  | "instagram"
+  | "cupons";
+
+interface TabItem {
+  id: AdminTab;
+  label: string;
+  icone: LucideIcon;
+}
+
+interface TabGroup {
+  titulo: string;
+  itens: TabItem[];
+}
+
+/** Abas do painel agrupadas por área de trabalho. */
+const gruposDeTabs: TabGroup[] = [
+  {
+    titulo: "Operação",
+    itens: [
+      { id: "pedidos", label: "Pedidos", icone: ClipboardList },
+      { id: "cupons", label: "Cupons", icone: TicketPercent },
+    ],
+  },
+  {
+    titulo: "Catálogo",
+    itens: [
+      { id: "produtos", label: "Cardápio", icone: UtensilsCrossed },
+      { id: "loja", label: "Loja", icone: ShoppingBag },
+      { id: "mangas", label: "Mangás", icone: BookOpenText },
+    ],
+  },
+  {
+    titulo: "Conteúdo",
+    itens: [
+      { id: "eventos", label: "Eventos", icone: CalendarDays },
+      { id: "banners", label: "Banners", icone: Image },
+      { id: "instagram", label: "Instagram", icone: Instagram },
+    ],
+  },
+  {
+    titulo: "Aparência",
+    itens: [{ id: "fontes", label: "Fontes", icone: Type }],
+  },
+];
 
 export default function AdminDashboard() {
   // 1. Hook de Auth
@@ -36,18 +101,17 @@ export default function AdminDashboard() {
   const mangasProductData = useProdutos("mangas", true);
 
   const [produtoEditando, setProdutoEditando] = useState<Produto | null>(null);
-  const [activeTab, setActiveTab] = useState<
-    "produtos" | "loja" | "mangas" | "pedidos" | "eventos" | "banners" | "fontes" | "instagram" | "cupons"
-  >("pedidos");
+  const [activeTab, setActiveTab] = useState<AdminTab>("pedidos");
 
   const { refresh: refreshMenu } = menuProductData;
   const { refresh: refreshStore } = storeProductData;
   const { refresh: refreshMangas } = mangasProductData;
 
-  // Limpa o form de edição ao trocar de aba
-  useEffect(() => {
+  // Troca de aba limpando o form de edição (event-driven, sem setState em effect)
+  function handleTabChange(tab: AdminTab) {
     setProdutoEditando(null);
-  }, [activeTab]);
+    setActiveTab(tab);
+  }
 
   // Busca produtos ao logar
   useEffect(() => {
@@ -105,81 +169,41 @@ export default function AdminDashboard() {
   return (
     <div className={styles.adminLayout}>
       <header className={styles.adminHeader}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            color: "var(--color-primary-dark)",
-            fontWeight: "bold",
-          }}
-        >
-          <img src={"/Logo.svg"} alt="Logo" style={{ height: "40px" }} />
-          <span>Admin</span>
+        <div className={styles.brand}>
+          <img
+            src="/wordmark-cardinal.png"
+            alt="Mew Mew Café"
+            className={styles.brandLogo}
+          />
+          <span className={styles.brandLabel}>Painel Admin</span>
         </div>
-        <nav className={styles.tabsContainer}>
-          <button
-            className={`${styles.tabBtn} ${activeTab === "banners" ? styles.activeTab : ""}`}
-            onClick={() => setActiveTab("banners")}
-          >
-            Banners
-          </button>
-          <button
-            className={`${styles.tabBtn} ${activeTab === "pedidos" ? styles.activeTab : ""}`}
-            onClick={() => setActiveTab("pedidos")}
-          >
-            Pedidos
-          </button>
-          <button
-            className={`${styles.tabBtn} ${activeTab === "produtos" ? styles.activeTab : ""}`}
-            onClick={() => setActiveTab("produtos")}
-          >
-            Cardápio
-          </button>
-          <button
-            className={`${styles.tabBtn} ${activeTab === "loja" ? styles.activeTab : ""}`}
-            onClick={() => setActiveTab("loja")}
-          >
-            Loja
-          </button>
-          <button
-            className={`${styles.tabBtn} ${activeTab === "mangas" ? styles.activeTab : ""}`}
-            onClick={() => setActiveTab("mangas")}
-          >
-            Mangás
-          </button>
-          <button
-            className={`${styles.tabBtn} ${activeTab === "eventos" ? styles.activeTab : ""}`}
-            onClick={() => setActiveTab("eventos")}
-          >
-            Eventos
-          </button>
-          <button
-            className={`${styles.tabBtn} ${activeTab === "fontes" ? styles.activeTab : ""}`}
-            onClick={() => setActiveTab("fontes")}
-          >
-            Fontes
-          </button>
-          <button
-            className={`${styles.tabBtn} ${activeTab === "instagram" ? styles.activeTab : ""}`}
-            onClick={() => setActiveTab("instagram")}
-          >
-            Instagram
-          </button>
-          <button
-            className={`${styles.tabBtn} ${activeTab === "cupons" ? styles.activeTab : ""}`}
-            onClick={() => setActiveTab("cupons")}
-          >
-            Cupons
-          </button>
-        </nav>
 
         <button onClick={logout} className={styles.logoutBtn}>
           <LogOut size={18} /> Sair
         </button>
       </header>
 
-      <main className={styles.adminMain}>
+      <div className={styles.adminBody}>
+        <aside className={styles.sidebar}>
+          {gruposDeTabs.map((grupo) => (
+            <nav className={styles.tabGroup} key={grupo.titulo}>
+              <span className={styles.tabGroupTitle}>{grupo.titulo}</span>
+              {grupo.itens.map(({ id, label, icone: Icone }) => (
+                <button
+                  key={id}
+                  className={`${styles.tabBtn} ${
+                    activeTab === id ? styles.activeTab : ""
+                  }`}
+                  onClick={() => handleTabChange(id)}
+                >
+                  <Icone size={17} /> {label}
+                </button>
+              ))}
+            </nav>
+          ))}
+        </aside>
+
+        <main className={styles.adminMain}>
         {activeTab === "pedidos" && <AdminPedidos />}
         {activeTab === "banners" && <AdminBanners />}
         {activeTab === "produtos" && (
@@ -245,7 +269,8 @@ export default function AdminDashboard() {
         {activeTab === "fontes" && <AdminFontes />}
         {activeTab === "instagram" && <AdminInstagram />}
         {activeTab === "cupons" && <AdminCupons />}
-      </main>
+        </main>
+      </div>
     </div>
   );
 }

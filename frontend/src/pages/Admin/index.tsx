@@ -17,9 +17,5 @@ export function Admin() {
   }
 
   //Se estiver logado: Mostra o Painel Completo (Dashboard)
-  return (
-    <div style={{ padding: 20 }}>
-      <AdminDashboard />
-    </div>
-  );
+  return <AdminDashboard />;
 }

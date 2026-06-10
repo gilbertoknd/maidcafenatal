@@ -1,4 +1,5 @@
 import { useState } from "react";
+import styles from "./styles.module.css";
 
 interface LoginModalProps {
   onSuccess: () => void;
@@ -35,49 +36,17 @@ export default function LoginModal({ onSuccess }: LoginModalProps) {
     }
   }
 
-  // Estilos "Inline" para não precisar de arquivo CSS separado agora
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: "rgba(0,0,0,0.8)", //Fundo escuro
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 9999,
-      }}
-    >
-      <div
-        style={{
-          background: "white",
-          padding: "30px",
-          borderRadius: "8px",
-          width: "300px",
-          boxShadow: "0 4px 15px rgba(0,0,0,0.5)",
-          textAlign: "center",
-        }}
-      >
-        <h2 style={{ marginBottom: "20px", color: "#333" }}>
-          Painel do Administrador
-        </h2>
+    <div className={styles.overlay}>
+      <div className={styles.modal}>
+        <h2 className={styles.title}>Painel do Administrador</h2>
 
-        <form
-          onSubmit={handleLogin}
-          style={{ display: "flex", flexDirection: "column", gap: "10px" }}
-        >
+        <form onSubmit={handleLogin} className={styles.form}>
           <input
             placeholder="Usuário"
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
-            style={{
-              padding: "8px",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-            }}
+            className={styles.input}
             autoFocus
           />
           <input
@@ -85,27 +54,12 @@ export default function LoginModal({ onSuccess }: LoginModalProps) {
             placeholder="Senha"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
-            style={{
-              padding: "8px",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-            }}
+            className={styles.input}
           />
 
-          {erro && <p style={{ color: "red", fontSize: "14px" }}>{erro}</p>}
+          {erro && <p className={styles.error}>{erro}</p>}
 
-          <button
-            type="submit"
-            style={{
-              padding: "10px",
-              background: "#007bff",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-              fontWeight: "bold",
-            }}
-          >
+          <button type="submit" className={styles.submit}>
             Acessar Painel
           </button>
         </form>

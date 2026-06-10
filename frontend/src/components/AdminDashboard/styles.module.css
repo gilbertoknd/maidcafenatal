@@ -1,119 +1,192 @@
-.container {
-  max-width: var(--container-max-width);
-  margin: 0 auto;
-  padding: var(--padding-container, 20px);
-
-}
-
 .loading {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--color-gray-50);
-  color: var(--color-gray-600);
+  background-color: var(--color-cream);
+  color: var(--color-wine);
   font-size: var(--font-size-lg);
-}
-
-.logoutBtn {
-  background-color: var(--color-text);
-  color: var(--color-white);
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-button);
-  cursor: pointer;
-  display: flex;
-  gap: 5px;
-  align-items: center;
-
-  transition: var(--transition-default);
-}
-
-.logoutBtn:hover {
-  background-color: var(--color-gray-700);
-  opacity: var(--opacity-80, 0.8);
 }
 
 .adminLayout {
   min-height: 100vh;
-  background-color: var(--color-tertiary-background);
+  background-color: var(--color-cream);
 }
 
+/* ─── Header ─── */
 .adminHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
-  background-color: var(--color-secondary-background);
-  box-shadow: 0 4px 6px var(--color-shadow);
+  padding: 0.8rem 1.5rem;
+  background-color: var(--color-parchment);
+  border-bottom: 3px solid var(--color-wine);
   position: sticky;
   top: 0;
   z-index: 100;
 }
 
-.tabsContainer {
+.brand {
   display: flex;
-  gap: 1rem;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.brandLogo {
+  height: 40px;
+  width: auto;
+}
+
+.brandLabel {
+  background-color: var(--color-wine);
+  color: var(--color-ivory);
+  border-radius: var(--radius-button);
+  padding: 0.3rem 0.85rem;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.logoutBtn {
+  background-color: var(--color-wine);
+  color: var(--color-ivory);
+  border: 2px solid var(--color-wine-deep);
+  padding: 0.5rem 1.1rem;
+  border-radius: var(--radius-button);
+  cursor: pointer;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-weight: var(--font-weight-bold);
+  box-shadow: var(--shadow-sticker-sm);
+  transition: var(--transition-default);
+}
+
+.logoutBtn:hover {
+  background-color: var(--color-wine-dark);
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-sticker);
+}
+
+/* ─── Corpo: sidebar + conteúdo ─── */
+.adminBody {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  align-items: start;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  background-color: var(--color-white);
+  border: 2px solid var(--color-wine);
+  border-radius: var(--radius-card);
+  padding: 1.1rem;
+  box-shadow: var(--shadow-sticker-sm);
+  position: sticky;
+  top: 86px;
+}
+
+.tabGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.tabGroupTitle {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-wine);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0 0.4rem 0.2rem;
 }
 
 .tabBtn {
   display: flex;
   align-items: center;
-
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-primary-dark);
-  text-decoration: none;
-  padding: 8px 16px;
-  border-radius: var(--radius-button);
+  gap: 0.55rem;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+  text-align: left;
+  padding: 0.55rem 0.8rem;
+  border-radius: 10px;
   transition: var(--transition-default);
   background: transparent;
-  border: none;
+  border: 2px solid transparent;
   cursor: pointer;
 }
 
 .tabBtn:hover {
-  background-color: var(--color-white);
+  background-color: var(--color-rose-light);
+  color: var(--color-wine);
 }
 
 .activeTab {
-  background-color: var(--color-white);
+  background-color: var(--color-wine);
+  color: var(--color-ivory);
+  border-color: var(--color-wine-deep);
+  font-weight: var(--font-weight-bold);
+}
+
+.activeTab:hover {
+  background-color: var(--color-wine-dark);
+  color: var(--color-ivory);
 }
 
 .adminMain {
-  padding: 2rem 0;
+  min-width: 0;
+  background-color: var(--color-white);
+  border: 2px solid var(--color-wine);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-sticker-sm);
+  padding: 1.5rem;
 }
 
+/* ─── Responsivo ─── */
 @media (max-width: 900px) {
-  .adminHeader {
-    flex-direction: column;
-    padding: 1.5rem;
-    gap: 1.5rem;
-    text-align: center;
+  .adminBody {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+    gap: 1rem;
   }
 
-  .tabsContainer {
+  .sidebar {
+    position: static;
+    flex-direction: row;
     flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.5rem;
+    gap: 1rem;
   }
 
-  .tabBtn {
-    padding: 6px 12px;
-    font-size: var(--font-size-sm);
+  .tabGroup {
+    flex: 1 1 40%;
+    min-width: 150px;
   }
 }
 
 @media (max-width: 480px) {
-  .tabsContainer {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+  .adminHeader {
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    justify-content: center;
   }
 
-  .tabBtn {
-    width: 100%;
-    justify-content: center;
+  .sidebar {
+    flex-direction: column;
+  }
+
+  .tabGroup {
+    flex: 1 1 100%;
+  }
+
+  .adminMain {
+    padding: 1rem;
   }
 }

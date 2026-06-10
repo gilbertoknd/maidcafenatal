@@ -883,6 +883,8 @@ Quando for realizar o deploy ou atualizar a aplicação em produção com novos 
 
 ### 21. Gerenciamento Dinâmico de Banners
 
+> ⚠️ **Status pós-redesign 2026:** o componente `Banner` foi **removido de todas as páginas públicas** (Home, Cardápio, Loja, Mangás, Eventos). A API, a tabela `banners` e a aba Admin → Banners seguem funcionais, mas sem consumo no site público.
+
 - **Chave de Página:** Os banners são atrelados a uma `pagina` (ex: 'home', 'cardapio', 'eventos', 'loja').
 - **Fallback Automático:** Caso uma página não tenha banner definido, o sistema busca obrigatoriamente a entrada com `pagina = 'padrao'`.
 - **Mídia Suportada:** Imagens (JPEG, PNG, WEBP) e Vídeos (MP4, WEBM) até 50MB.
@@ -900,9 +902,11 @@ Quando for realizar o deploy ou atualizar a aplicação em produção com novos 
 
 ### 23. Padronização de Layout Admin (UI/UX)
 
-- **Max-Width:** Todas as abas administrativas (`/admin/*`) devem respeitar o `max-width: var(--container-max-width)` e estarem centralizadas (`margin: 0 auto`).
-- **Padding Superior:** O distanciamento padrão do topo para o primeiro elemento das abas (geralmente o formulário de cadastro) é de `1rem`.
-- **Identidade Visual:** Botões de ação seguem `--color-success` (verde/salvar) e `--color-warning` (amarelo/editar) para rápida identificação funcional.
+- **Estrutura (redesign 2026):** O `AdminDashboard` usa layout de **sidebar + conteúdo**: header sticky parchment com wordmark + selo "Painel Admin" + botão Sair (cardinal), e à esquerda uma sidebar card (sticker) com as abas **agrupadas por área**: _Operação_ (Pedidos, Cupons), _Catálogo_ (Cardápio, Loja, Mangás), _Conteúdo_ (Eventos, Banners, Instagram) e _Aparência_ (Fontes). Os grupos são definidos no array `gruposDeTabs` em `AdminDashboard/index.tsx` — novas abas devem ser adicionadas lá (id + label + ícone lucide). Em mobile (≤900px) a sidebar vira blocos empilhados acima do conteúdo.
+- **Troca de aba:** usar `handleTabChange()` (limpa o form de edição de forma event-driven). NÃO reintroduzir `useEffect` com `setState` síncrono para isso (regra do linter React 19).
+- **Conteúdo:** O painel ativo renderiza dentro de `.adminMain` (card branco com borda cardinal). Abas internas devem respeitar o `max-width: var(--container-max-width)` e padding superior de `1rem`.
+- **Identidade Visual:** Botões de ação seguem `--color-success` (verde/salvar) e `--color-warning` (amarelo/editar) para rápida identificação funcional; ações primárias do shell admin (Sair, login) seguem o padrão cardinal/sticker do redesign.
+- **LoginModal:** convertido de inline styles para CSS Module (`LoginModal/styles.module.css`) no padrão sticker.
 
 ### 24. Backup e Manutenção (Mini PC)
 
@@ -971,9 +975,9 @@ TODO - **Imagem OG dedicada:** Substituir o `Logo.svg` por uma imagem PNG/JPG de
 
 #### Ordenação de Seções nas Páginas Públicas
 
-As páginas públicas (Cardápio, Loja, Eventos, etc.) seguem a estrutura: `Banner` (acima do Header, fullscreen hero) → `Header` (sticky) → `main` → `Footer`. O Banner deve sempre ser declarado **antes** do Header no JSX para efeito visual correto.
+Desde o redesign 2026, **nenhuma página pública usa o componente `Banner` dinâmico**. A estrutura padrão é: `Header` (sticky, no topo) → `main` → `Footer`. Na Home, o `main` contém `HeroSection` (boas-vindas), `HighlightsSection`, `MaidCarousel`, `HowItWorksSection` e `AboutSection`; nas demais páginas, o conteúdo abre direto abaixo do Header. Ver seção 28.
 
-> **Exceção — Home (redesign 2026):** A landing page NÃO usa mais o `Banner` dinâmico. Sua estrutura é `Header` (sticky, no topo) → `main` (com `HeroSection` de boas-vindas, `HighlightsSection`, `MaidCarousel`, `HowItWorksSection`, `AboutSection`) → `Footer`. O `Banner` continua disponível para as demais páginas. Ver seção 28.
+> **Nota:** O componente `Banner`, a tabela `banners` e a aba Admin → Banners continuam existindo no código/banco, mas não são mais renderizados nas páginas públicas. Avaliar remoção completa numa limpeza futura.
 
 #### Padrão CSS Module
 

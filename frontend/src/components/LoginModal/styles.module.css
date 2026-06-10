@@ -1,0 +1,72 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--color-overlay-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(2px);
+}
+
+.modal {
+  background: var(--color-white);
+  border: 3px solid var(--color-wine);
+  padding: 2rem;
+  border-radius: var(--radius-card);
+  width: 320px;
+  box-shadow: var(--shadow-sticker-dark);
+  text-align: center;
+}
+
+.title {
+  margin: 0 0 1.4rem;
+  color: var(--color-wine);
+  font-family: var(--font-display);
+  font-size: var(--font-size-2xl);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.input {
+  padding: 0.65rem 0.9rem;
+  border: 2px solid var(--color-rose-soft);
+  border-radius: 10px;
+  font-size: var(--font-size-md);
+  color: var(--color-text);
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.input:focus {
+  border-color: var(--color-wine);
+}
+
+.error {
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+.submit {
+  padding: 0.75rem;
+  background-color: var(--color-wine);
+  color: var(--color-ivory);
+  border: 2px solid var(--color-wine-deep);
+  border-radius: var(--radius-button);
+  cursor: pointer;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-md);
+  box-shadow: var(--shadow-sticker-sm);
+  transition: var(--transition-default);
+}
+
+.submit:hover {
+  background-color: var(--color-wine-dark);
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-sticker);
+}
