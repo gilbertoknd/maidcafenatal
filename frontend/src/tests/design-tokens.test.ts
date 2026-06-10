@@ -6,9 +6,10 @@ import path from "path";
 
 /**
  * Teste TDD para validar os design tokens (variáveis CSS) do index.css.
- * Garante que a nova paleta de cores esteja corretamente definida.
+ * Garante que a paleta de cores 2026 (Parchment · Cardinal · Blush Mochi · Charcoal)
+ * esteja corretamente definida.
  */
-describe("Design Tokens - Paleta de Cores", () => {
+describe("Design Tokens - Paleta de Cores 2026", () => {
   let cssContent: string;
 
   beforeAll(() => {
@@ -16,13 +17,21 @@ describe("Design Tokens - Paleta de Cores", () => {
     cssContent = fs.readFileSync(cssPath, "utf-8");
   });
 
-  // ─── Cores Principais ───
-  it("deve ter a cor principal Rosa Fúcsia (#E84D8A)", () => {
-    expect(cssContent).toMatch(/--color-primary:\s*#e84d8a/i);
+  // ─── Nova Paleta Principal ───
+  it("deve ter --color-primary mapeado para Cardinal Red (#A91D22)", () => {
+    expect(cssContent).toMatch(/--color-primary:\s*#a91d22/i);
   });
 
-  it("deve ter a variante escura da cor principal", () => {
+  it("deve ter a variante escura da cor principal (--color-primary-dark)", () => {
     expect(cssContent).toMatch(/--color-primary-dark:\s*#[0-9a-fA-F]{6}/);
+  });
+
+  it("deve ter --color-background como Parchment (#F4EBE1)", () => {
+    expect(cssContent).toMatch(/--color-background:\s*#f4ebe1/i);
+  });
+
+  it("deve ter --color-text como Sacristy Charcoal (#242121)", () => {
+    expect(cssContent).toMatch(/--color-text:\s*#242121/i);
   });
 
   // ─── Cores Base ───
@@ -30,8 +39,26 @@ describe("Design Tokens - Paleta de Cores", () => {
     expect(cssContent).toMatch(/--color-white:\s*#ffffff/i);
   });
 
-  it("deve ter o Rosa Algodão Doce (#FCE4EC) como fundo de seção/cards", () => {
-    expect(cssContent).toMatch(/--color-secondary-background:\s*#fce4ec/i);
+  it("deve ter --color-secondary-background derivado da nova paleta", () => {
+    expect(cssContent).toMatch(/--color-secondary-background:\s*#[0-9a-fA-F]{6}/i);
+  });
+
+  // ─── Blush Mochi (Kawaii Softener) ───
+  it("deve ter --color-rose como Blush Mochi (#E8C3BA)", () => {
+    expect(cssContent).toMatch(/--color-rose:\s*#e8c3ba/i);
+  });
+
+  // ─── Cores Redesign 2026 ───
+  it("deve ter --color-wine mapeado para Cardinal Red (#A91D22)", () => {
+    expect(cssContent).toMatch(/--color-wine:\s*#a91d22/i);
+  });
+
+  it("deve ter --color-cream como Parchment (#F4EBE1)", () => {
+    expect(cssContent).toMatch(/--color-cream:\s*#f4ebe1/i);
+  });
+
+  it("deve ter --color-ink como Sacristy Charcoal (#242121)", () => {
+    expect(cssContent).toMatch(/--color-ink:\s*#242121/i);
   });
 
   // ─── Cores de Destaque ───
@@ -46,11 +73,6 @@ describe("Design Tokens - Paleta de Cores", () => {
   // ─── Cor de Apoio ───
   it("deve ter o Lilás Místico (#D1C4E9) como cor de apoio para bordas", () => {
     expect(cssContent).toMatch(/--color-accent-lilac:\s*#d1c4e9/i);
-  });
-
-  // ─── Cor de Contraste ───
-  it("deve ter o Cinza Antracite (#37474F) como cor de texto principal", () => {
-    expect(cssContent).toMatch(/--color-text:\s*#37474f/i);
   });
 
   // ─── Variáveis derivadas devem existir ───
@@ -86,7 +108,7 @@ describe("Design Tokens - Paleta de Cores", () => {
   });
 
   it("NÃO deve usar Sweet Apricot como a fonte global do :root", () => {
-    // A fonte global (font-family no :root) deve ser --font-main (Inter), não Sweet Apricot
+    // A fonte global (font-family no :root) deve ser --font-main (Inter), não Sweet Apricot diretamente
     const rootBlockMatch = cssContent.match(/:root\s*\{[\s\S]*?\n\}/);
     expect(rootBlockMatch).toBeTruthy();
     const rootBlock = rootBlockMatch![0];

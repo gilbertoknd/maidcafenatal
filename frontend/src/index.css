@@ -8,17 +8,25 @@
 }
 
 :root {
+  /* ═══════════════════════════════════════════════════════════════════
+     PALETA 2026 — "Parchment · Cardinal · Blush Mochi · Charcoal"
+     Background: #F4EBE1 (Parchment)
+     Primary:    #A91D22 (Cardinal Red)
+     Softener:   #E8C3BA (Blush Mochi)
+     Text:       #242121 (Sacristy Charcoal)
+     ═══════════════════════════════════════════════════════════════════ */
+
   /* ═══ Paleta Principal ═══ */
-  --color-primary: #e84d8a; /* Rosa Fúcsia — Logo, botões e títulos */
-  --color-primary-dark: #c73872; /* Rosa Fúcsia escuro (hover) */
-  --color-primary-light: #fce4ec; /* Rosa Algodão Doce (claro) */
-  --color-primary-border: #f8bbd0; /* Borda rosa derivada da paleta */
-  --color-secondary-border: #f0a4c0; /* Borda rosa secundária */
+  --color-primary: #a91d22; /* Cardinal Red — Logo, botões e títulos */
+  --color-primary-dark: #8a171c; /* Cardinal escuro (hover) */
+  --color-primary-light: #f4ebe1; /* Parchment claro (fundos suaves) */
+  --color-primary-border: #d4a59e; /* Borda blush derivada da paleta */
+  --color-secondary-border: #c49088; /* Borda blush secundária */
 
   /* ═══ Cores Base ═══ */
-  --color-background: #fffdff; /* Fundo principal (rosa muito claro) */
-  --color-secondary-background: #fce4ec; /* Rosa Algodão Doce — Fundos de seção e cards */
-  --color-tertiary-background: #fff0f5; /* Lavanda rosada — Fundo terciário suave */
+  --color-background: #f4ebe1; /* Parchment — Fundo principal */
+  --color-secondary-background: #ede2d6; /* Parchment médio — Fundos de seção e cards */
+  --color-tertiary-background: #f9f3ec; /* Parchment claro — Fundo terciário suave */
   --color-white: #ffffff; /* Branco Neve — Cards e modais (relevo) */
 
   /* ═══ Cores de Destaque ═══ */
@@ -32,45 +40,44 @@
   --color-accent-lilac-dark: #b39ddb; /* Lilás Místico escuro (hover) */
 
   /* ═══ Cor de Contraste ═══ */
-  --color-text: #37474f; /* Cinza Antracite — Texto principal */
+  --color-text: #242121; /* Sacristy Charcoal — Texto principal */
 
   /* ════════════════════════════════════════════════════════════════════
-     PALETA REDESIGN 2026 — "Vinho · Bege · Rosa" (Landing/Home)
-     Introduzida na remodelagem da landing page. Convive com a paleta
-     rosa pastel legada (acima) durante o rollout progressivo das páginas.
+     PALETA REDESIGN 2026 — Tokens semânticos (unificados)
+     Agora alinhados à paleta Parchment · Cardinal · Blush Mochi
      ════════════════════════════════════════════════════════════════════ */
 
-  /* ── Vinho / Cardinal (cor de marca do redesign) ── */
-  --color-wine: #9e1b32; /* Vinho cardinal — heros, footer, bordas de card */
-  --color-wine-dark: #7d1426; /* Vinho escuro — hover e sombras projetadas */
-  --color-wine-deep: #5e0f1c; /* Vinho profundo — contornos e detalhes */
-  --color-wine-soft: rgba(158, 27, 50, 0.08); /* Véu de vinho sobre bege */
+  /* ── Cardinal Red (cor de marca) ── */
+  --color-wine: #a91d22; /* Cardinal Red — heros, footer, bordas de card */
+  --color-wine-dark: #8a171c; /* Cardinal escuro — hover e sombras projetadas */
+  --color-wine-deep: #6b1115; /* Cardinal profundo — contornos e detalhes */
+  --color-wine-soft: rgba(169, 29, 34, 0.08); /* Véu cardinal sobre parchment */
 
-  /* ── Bege / Pergaminho (superfícies claras) ── */
-  --color-cream: #f5ecd9; /* Bege pergaminho — fundo de seções claras */
-  --color-cream-dark: #ece0c8; /* Bege médio — faixas alternadas */
-  --color-parchment: #faf3e6; /* Pergaminho claro — cards e relevos */
-  --color-ivory: #fdf8ef; /* Marfim — texto sobre vinho, cards */
+  /* ── Parchment (superfícies claras) ── */
+  --color-cream: #f4ebe1; /* Parchment — fundo de seções claras */
+  --color-cream-dark: #e8ddd1; /* Parchment médio — faixas alternadas */
+  --color-parchment: #f9f3ec; /* Parchment claro — cards e relevos */
+  --color-ivory: #fdf8f3; /* Marfim quente — texto sobre cardinal, cards */
 
-  /* ── Rosa (destaques e marcações) ── */
-  --color-rose: #f4a9b8; /* Rosa — marcador de texto e detalhes */
-  --color-rose-light: #fbd9e0; /* Rosa claro — fundos suaves */
-  --color-rose-soft: #f8c6d0; /* Rosa médio — chips e bordas */
+  /* ── Blush Mochi (Kawaii Softener) ── */
+  --color-rose: #e8c3ba; /* Blush Mochi — marcador de texto e detalhes */
+  --color-rose-light: #f2ddd7; /* Blush Mochi claro — fundos suaves */
+  --color-rose-soft: #ecd0c8; /* Blush Mochi médio — chips e bordas */
 
   /* ── Apoio ── */
-  --color-mint-pill: #b8e6c8; /* Verde menta — pills de status (reference) */
+  --color-mint-pill: #b8e6c8; /* Verde menta — pills de status */
   --color-mint-pill-border: #7fcf9c; /* Borda das pills menta */
-  --color-ink: #2a1a1d; /* Tinta quente — títulos display sobre bege */
+  --color-ink: #242121; /* Sacristy Charcoal — títulos display sobre parchment */
 
-  /* ── Sombra "sticker" (offset duro, estética kawaii do reference) ── */
+  /* ── Sombra "sticker" (offset duro, estética kawaii) ── */
   --shadow-sticker: 4px 4px 0 var(--color-wine);
   --shadow-sticker-sm: 3px 3px 0 var(--color-wine);
   --shadow-sticker-dark: 5px 5px 0 var(--color-wine-deep);
 
   /* ═══ Utilitários ═══ */
-  --color-shadow: rgba(232, 77, 138, 0.25); /* Sombra derivada do Rosa Fúcsia */
+  --color-shadow: rgba(169, 29, 34, 0.2); /* Sombra derivada do Cardinal Red */
   --color-modal-overlay: rgba(0, 0, 0, 0.5);
-  --color-border: #f8bbd0; /* Borda padrão (rosa suave) */
+  --color-border: #d4a59e; /* Borda padrão (blush mochi suave) */
   --color-error: #ef4444;
   --color-error-dark: #dc2626;
   --color-info: #6366f1;
