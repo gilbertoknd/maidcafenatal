@@ -10,19 +10,19 @@
   max-width: 500px;
   padding: 1rem 1.5rem;
   border-radius: var(--radius-button);
-  border: 2px solid var(--color-background);
+  border: 2px solid var(--color-wine);
   background-color: var(--color-white);
   font-size: var(--font-size-lg);
   color: var(--color-text);
 
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-sticker-sm);
   transition: var(--transition-default);
   outline: none;
 }
 
 .input:focus {
-  border-color: var(--color-primary);
-  box-shadow: var(--shadow-card-hover);
+  border-color: var(--color-wine-dark);
+  box-shadow: var(--shadow-sticker);
   transform: translateY(-2px);
 }
 

@@ -2,19 +2,21 @@
   display: flex;
   flex-direction: row;
   background: var(--color-white);
+  border: 2px solid var(--color-wine);
   border-radius: 12px;
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-sticker-sm);
   gap: 16px;
   align-items: stretch;
   position: relative;
-  transition: transform 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
   min-height: 80px;
-  border-left: 5px solid var(--color-primary);
+  border-left: 5px solid var(--color-wine);
   overflow: hidden;
 }
 
 .card:hover {
-  transform: translateX(4px);
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-sticker);
 }
 
 .clickable {

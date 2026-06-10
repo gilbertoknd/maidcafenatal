@@ -14,9 +14,9 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--color-white);
-  color: var(--color-primary);
-  border: 2px solid var(--color-primary-border);
+  background: var(--color-ivory);
+  color: var(--color-wine);
+  border: 2px solid var(--color-wine);
   padding: 0.6rem 1.2rem;
   border-radius: var(--radius-button);
   cursor: pointer;
@@ -35,9 +35,10 @@
   grid-template-columns: 1fr;
   gap: 2rem;
   background: var(--color-white);
+  border: 3px solid var(--color-wine);
   padding: 2rem;
   border-radius: var(--radius-card);
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-sticker-dark);
 }
 
 @media (min-width: 768px) {
@@ -70,7 +71,7 @@
 .title {
   font-family: var(--font-title-site);
   font-size: var(--font-size-4xl);
-  color: var(--color-primary);
+  color: var(--color-wine);
   margin: 0;
 }
 

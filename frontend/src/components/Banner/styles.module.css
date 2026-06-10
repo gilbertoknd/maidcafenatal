@@ -7,6 +7,7 @@
   align-items: center;
   background-color: var(--color-background);
   position: relative;
+  border-bottom: 3px solid var(--color-wine);
 }
 
 .videoMode {
@@ -44,9 +45,9 @@
 }
 
 .scrollButton {
-  background-color: var(--color-primary);
-  color: var(--color-white);
-  border: none;
+  background-color: var(--color-wine);
+  color: var(--color-ivory);
+  border: 2px solid var(--color-wine-deep);
   padding: 1rem 2.5rem;
   font-size: var(--font-size-xl);
   border-radius: var(--radius-button);
@@ -54,7 +55,7 @@
 
   font-weight: var(--font-weight-bold);
   transition: all 0.3s ease;
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-sticker-sm);
   display: flex;
   align-items: center;
   gap: 0.5rem;

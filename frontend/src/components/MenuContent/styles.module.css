@@ -10,7 +10,7 @@
 }
 
 .title {
-  color: var(--color-primary);
+  color: var(--color-wine);
   font-size: var(--font-size-5xl);
   font-family: var(--font-category);
 }
@@ -26,7 +26,7 @@
 }
 
 .categorySubtitle {
-  color: var(--color-gray-600);
+  color: var(--color-wine-dark);
   font-family: var(--font-category);
   font-size: var(--font-size-2xl-plus);
   margin-bottom: 1.5rem;

@@ -1,9 +1,10 @@
 .card {
   background: var(--color-white);
+  border: 2px solid var(--color-wine);
   border-radius: var(--radius-card); /* 20px */
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-sticker-sm);
   overflow: hidden;
-  transition: transform 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
   width: 100%;
   max-width: 100%;
   /* CRUCIAL: min-width: 0 permite que o card encolha abaixo do tamanho do conteúdo interno */
@@ -13,7 +14,8 @@
 }
 
 .card:hover {
-  transform: translateY(-5px);
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-sticker);
 }
 
 .imageContainer {

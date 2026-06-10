@@ -2,9 +2,9 @@
   position: fixed;
   bottom: 2rem;
   right: 2rem;
-  background-color: var(--color-primary); /* Maid Cafe pink */
-  color: var(--color-white);
-  border: none;
+  background-color: var(--color-wine);
+  color: var(--color-ivory);
+  border: 2px solid var(--color-wine-deep);
   border-radius: 50%;
   width: 60px;
   height: 60px;

@@ -1,6 +1,6 @@
 .container {
   min-height: calc(100vh - 80px); /* Discounting header/footer approx */
-  background-color: var(--color-bg);
+  background-color: var(--color-cream);
   padding: 40px 20px;
 }
 
@@ -10,13 +10,14 @@
 }
 
 .title {
-  color: var(--color-primary);
+  color: var(--color-wine);
   font-size: 2.5rem;
   margin-bottom: 10px;
 }
 
 .subtitle {
-  color: #666;
+  color: var(--color-text);
+  opacity: var(--opacity-80);
   font-size: 1.1rem;
 }
 
@@ -30,9 +31,10 @@
 
 .sectionTitle {
   font-size: 1.8rem;
-  color: var(--color-text);
+  color: var(--color-ink);
+  font-family: var(--font-display);
   margin-bottom: 20px;
-  border-bottom: 2px solid var(--color-primary-light);
+  border-bottom: 3px solid var(--color-wine);
   padding-bottom: 10px;
   display: inline-block;
 }
@@ -77,9 +79,9 @@
   font-size: 0.9rem;
   padding: 6px 12px;
   cursor: pointer;
-  background-color: var(--color-primary);
-  color: white;
-  border: none;
+  background-color: var(--color-wine);
+  color: var(--color-ivory);
+  border: 2px solid var(--color-wine-deep);
   border-radius: 20px;
   transition:
     background-color 0.2s,

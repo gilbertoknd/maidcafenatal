@@ -1036,25 +1036,34 @@ Antes do deploy de amanhã, adicione as seguintes chaves em **Settings > Secrets
 
 ---
 
-## 28. Redesign do Frontend 2026 (Landing / Home — "Vinho · Bege · Rosa")
+## 28. Redesign do Frontend 2026 ("Parchment · Cardinal · Blush Mochi")
 
-Remodelagem progressiva do frontend iniciada pela **Home**, seguindo a referência visual `frontend/public/claude.jpg`. A estética é a de um maid & mangá café aconchegante: **vinho/cardinal**, **bege/pergaminho** e **rosa**, com cards brancos de borda vinho e "sombra sticker" (offset duro), pills verde-menta e títulos chunky na fonte **Fredoka**.
+Remodelagem do frontend iniciada pela **Home** e **estendida a todas as páginas públicas**, seguindo a referência visual `frontend/public/claude.jpg`. A estética é a de um maid & mangá café aconchegante: **cardinal red**, **parchment/bege** e **blush mochi (rosa)**, com cards brancos de borda cardinal e "sombra sticker" (offset duro), pills verde-menta e títulos chunky na fonte **Fredoka**.
 
-### 28.1. Tokens adicionados ao `index.css`
+### 28.1. Tokens no `index.css` (paleta unificada)
 
-A nova paleta **coexiste** com a paleta rosa pastel legada (rollout progressivo). **Nunca remova** os tokens legados — `design-tokens.test.ts` valida `--color-primary: #e84d8a`, `--color-secondary-background: #fce4ec`, `--color-accent-mint`, `--color-star-active`, `--color-accent-lilac`, `--color-text`, `--font-title: "Sweet Apricot"`, etc.
+A paleta legada rosa pastel foi **unificada** com a do redesign: os tokens legados (`--color-primary`, `--color-background`, etc.) agora apontam para os valores Cardinal/Parchment, e os tokens semânticos do redesign (`--color-wine`, `--color-cream`, etc.) usam os mesmos valores. `design-tokens.test.ts` valida a paleta vigente — mantenha o teste e o `:root` sempre em sincronia.
 
 | Token | Valor | Uso |
 | --- | --- | --- |
-| `--color-wine` | `#9e1b32` | Vinho cardinal — heros, footer, bordas de card, CTAs |
-| `--color-wine-dark` / `--color-wine-deep` | `#7d1426` / `#5e0f1c` | Hover, contornos e sombras projetadas |
-| `--color-cream` / `--color-cream-dark` | `#f5ecd9` / `#ece0c8` | Bege pergaminho — fundo de seções claras |
-| `--color-parchment` / `--color-ivory` | `#faf3e6` / `#fdf8ef` | Cards/relevos claros e texto sobre vinho |
-| `--color-rose` / `--color-rose-light` / `--color-rose-soft` | `#f4a9b8` / `#fbd9e0` / `#f8c6d0` | Marcador de texto, chips e fundos suaves |
+| `--color-wine` (= `--color-primary`) | `#a91d22` | Cardinal Red — heros, footer, bordas de card, CTAs |
+| `--color-wine-dark` / `--color-wine-deep` | `#8a171c` / `#6b1115` | Hover, contornos e sombras projetadas |
+| `--color-cream` (= `--color-background`) | `#f4ebe1` | Parchment — fundo de seções claras |
+| `--color-parchment` / `--color-ivory` | `#f9f3ec` / `#fdf8f3` | Cards/relevos claros e texto sobre cardinal |
+| `--color-rose` / `--color-rose-light` / `--color-rose-soft` | `#e8c3ba` / `#f2ddd7` / `#ecd0c8` | Blush Mochi — marcador de texto, chips e fundos suaves |
 | `--color-mint-pill` (+`-border`) | `#b8e6c8` / `#7fcf9c` | Pills de status (estilo da referência) |
-| `--color-ink` | `#2a1a1d` | Tinta quente para títulos display sobre bege |
-| `--shadow-sticker` (+`-sm`, `-dark`) | offset duro vinho | Sombra "adesivo" dos cards/botões |
+| `--color-ink` (= `--color-text`) | `#242121` | Sacristy Charcoal — títulos display sobre parchment |
+| `--shadow-sticker` (+`-sm`, `-dark`) | offset duro cardinal | Sombra "adesivo" dos cards/botões |
 | `--font-display` | `"Fredoka", "Inter", sans-serif` | Títulos chunky arredondados (import do Google Fonts no topo do `index.css`) |
+
+### 28.1b. Aplicação nas demais páginas públicas
+
+O padrão visual foi propagado para **Cardápio, Loja Online, Mangás, Eventos, EventoDetalhes, MaidDetalhes, Cupons e ProdutoDetalhesLoja** via:
+
+- **Componentes compartilhados restilizados:** `ProdutoCard`, `CategoryFilter`, `Search`, `EventoCard`, `CalendarioEventos`, `CartButton`, `CartModal`, `ProdutoDetalhesModal`, `MenuContent` e `Banner` — todos com borda `var(--color-wine)` (2–3px), `var(--shadow-sticker*)` e hover com `translate(-2px, -2px)` + sombra mais profunda.
+- **Receita do card sticker:** `background: var(--color-white); border: 2px solid var(--color-wine); border-radius: var(--radius-card); box-shadow: var(--shadow-sticker-sm);` + hover `transform: translate(-2px,-2px); box-shadow: var(--shadow-sticker);`.
+- **Receita do botão primário:** `background: var(--color-wine); color: var(--color-ivory); border: 2px solid var(--color-wine-deep); border-radius: var(--radius-button); box-shadow: var(--shadow-sticker-sm);`.
+- **`ProdutoDetalhesLoja`** foi convertida de inline styles hard-coded (`#ff69b4`) para CSS Module (`styles.module.css`) usando exclusivamente tokens — siga sempre esse padrão.
 
 ### 28.2. Estrutura da Home
 

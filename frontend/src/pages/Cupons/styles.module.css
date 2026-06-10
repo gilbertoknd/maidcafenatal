@@ -13,16 +13,17 @@
 .hero {
   text-align: center;
   padding: 3rem 1rem;
-  background: linear-gradient(135deg, var(--color-primary-light), var(--color-secondary-light));
+  background: linear-gradient(135deg, var(--color-rose-light), var(--color-cream));
   color: var(--color-text);
+  border: 3px solid var(--color-wine);
   border-radius: var(--radius-card);
   margin: 0 1rem 2rem;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-sticker);
 }
 
 .hero h1 {
   font-family: var(--font-title);
-  color: var(--color-primary);
+  color: var(--color-wine);
   font-size: 3rem;
   margin-bottom: 0.5rem;
 }
@@ -74,7 +75,7 @@
 
 .campaigns h2 {
   font-family: var(--font-title);
-  color: var(--color-primary);
+  color: var(--color-wine);
   margin-bottom: 1.5rem;
   font-size: 2rem;
 }
@@ -86,8 +87,8 @@
 }
 
 .card {
-  background: var(--color-surface);
-  border: 2px solid transparent;
+  background: var(--color-white);
+  border: 2px solid var(--color-rose-soft);
   border-radius: var(--radius-card);
   padding: 1.5rem;
   cursor: pointer;
@@ -97,13 +98,14 @@
 
 .card:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-  border-color: var(--color-primary-light);
+  box-shadow: var(--shadow-sticker-sm);
+  border-color: var(--color-wine);
 }
 
 .card.selected {
-  border-color: var(--color-primary);
-  background: #fff0f5; /* light pink */
+  border-color: var(--color-wine);
+  background: var(--color-rose-light);
+  box-shadow: var(--shadow-sticker-sm);
 }
 
 .cardHeader {
@@ -120,8 +122,8 @@
 }
 
 .badge {
-  background: var(--color-primary);
-  color: white;
+  background: var(--color-wine);
+  color: var(--color-ivory);
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
   font-size: 0.9rem;
@@ -150,15 +152,16 @@
 }
 
 .formCard {
-  background: var(--color-surface);
+  background: var(--color-white);
+  border: 3px solid var(--color-wine);
   border-radius: var(--radius-card);
   padding: 2rem;
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sticker-dark);
 }
 
 .formCard h2 {
   font-family: var(--font-title);
-  color: var(--color-primary);
+  color: var(--color-wine);
   margin-bottom: 1.5rem;
   font-size: 2rem;
   text-align: center;
@@ -196,10 +199,10 @@
 }
 
 .submitBtn {
-  background: var(--color-primary);
-  color: white;
+  background: var(--color-wine);
+  color: var(--color-ivory);
   padding: 1rem;
-  border: none;
+  border: 2px solid var(--color-wine-deep);
   border-radius: var(--radius-button);
   font-weight: 600;
   font-size: 1.1rem;

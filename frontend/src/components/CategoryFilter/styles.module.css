@@ -52,10 +52,10 @@
 
 .button {
   padding: 0.5rem 1.5rem;
-  border: 2px solid var(--color-primary);
+  border: 2px solid var(--color-wine);
   border-radius: var(--radius-button);
-  background-color: var(--color-white);
-  color: var(--color-primary);
+  background-color: var(--color-ivory);
+  color: var(--color-wine);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -66,14 +66,14 @@
 }
 
 .button:hover {
-  background-color: var(--color-background);
+  background-color: var(--color-rose-light);
   transform: translateY(-2px);
 }
 
 .active {
-  background-color: var(--color-primary);
-  color: var(--color-white);
-  box-shadow: 0 4px 6px var(--color-shadow);
+  background-color: var(--color-wine);
+  color: var(--color-ivory);
+  box-shadow: var(--shadow-sticker-sm);
 }
 
 .active:hover {

@@ -10,7 +10,7 @@
 }
 
 .title {
-  color: var(--color-primary);
+  color: var(--color-wine);
   font-size: var(--font-size-5xl);
   font-family: var(--font-title-site);
 }

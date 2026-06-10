@@ -1,7 +1,8 @@
 .calendar {
   background: var(--color-white);
+  border: 2px solid var(--color-wine);
   border-radius: 12px;
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-sticker-sm);
   padding: 1.5rem;
   width: 100%;
 }
