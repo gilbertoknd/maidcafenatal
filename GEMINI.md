@@ -16,8 +16,8 @@
 - **Responsividade** Quero que você foque bastante na responsividade e funcionalidades do site para dispositivos móveis, de forma que funcione bem em celulares, que é o foco principal.
 - **Hurdle** Adicione common Hurdles que você encontrar durante o desenvolvimento, com as soluções para que você não cometa os mesmos erros novamente.
 - **Ambiente de Trabalho**: Sempre que abrir o projeto, execute `pnpm install` nas pastas `frontend` e `backend` para garantir que todas as dependências e tipagens (`@types/*`) estejam sincronizadas com o código mais recente.
-- **Identidade Visual:** O site deve seguir uma estética "fofa" (Kawaii/Maid Café), com cores pastéis (rosa, creme, branco), tipografia cursiva decorativa **Sweet Apricot** exclusivamente em **títulos de páginas, nomes de categorias, títulos de itens e Navbar** (via `var(--font-title)`), e fonte **Inter** (via `var(--font-main)`) para corpo de texto, descrições, preços, botões e demais elementos de UI. Crucialmente, botões e elementos com cantos muito arredondados (`var(--radius-button)` para botões e `var(--radius-card)` para cards/modais). O background da página principal é levemente rosado (`#FFF5F8`), mantendo o branco puro (`#FFFFFF`) apenas para elementos elevados em relevo, como os cards.
-- **Redesign 2026 (Vinho · Bege · Rosa):** A partir de 2026 está em curso uma remodelagem progressiva do frontend, **começando pela landing page (Home)**, com uma nova paleta de marca: **vinho/cardinal** (`--color-wine` `#9e1b32`), **bege/pergaminho** (`--color-cream` `#f5ecd9`) e **rosa** (`--color-rose` `#f4a9b8`), cards brancos com bordas vinho e "sombra sticker" (offset duro, `--shadow-sticker`), pills verde-menta para status e a fonte display arredondada **Fredoka** (`var(--font-display)`) para os títulos chunky. Esses tokens **convivem** com a paleta rosa pastel legada no `:root` durante o rollout — NÃO remova os tokens legados (há testes em `design-tokens.test.ts` que os exigem). Veja a seção 28.
+- **Identidade Visual:** O site deve seguir uma estética "fofa" (Kawaii/Maid Café), com a paleta **Parchment · Cardinal · Blush Mochi · Charcoal** (`#F4EBE1`, `#A91D22`, `#E8C3BA`, `#242121`). Tipografia cursiva decorativa **Sweet Apricot** exclusivamente em **títulos de páginas, nomes de categorias, títulos de itens e Navbar** (via `var(--font-title)`), e fonte **Inter** (via `var(--font-main)`) para corpo de texto, descrições, preços, botões e demais elementos de UI. Crucialmente, botões e elementos com cantos muito arredondados (`var(--radius-button)` para botões e `var(--radius-card)` para cards/modais). O background da página principal é parchment (`#F4EBE1`), mantendo o branco puro (`#FFFFFF`) apenas para elementos elevados em relevo, como os cards.
+- **Paleta Unificada 2026 (Parchment · Cardinal · Blush Mochi · Charcoal):** A paleta do site foi **unificada** em Junho/2026. Os tokens `--color-primary` e `--color-wine` agora apontam para **Cardinal Red** (`#A91D22`), `--color-background`/`--color-cream` para **Parchment** (`#F4EBE1`), `--color-rose` para **Blush Mochi** (`#E8C3BA`) e `--color-text`/`--color-ink` para **Sacristy Charcoal** (`#242121`). Cards brancos com bordas cardinal e "sombra sticker" (offset duro, `--shadow-sticker`), pills verde-menta para status e a fonte display arredondada **Fredoka** (`var(--font-display)`) para os títulos chunky. Os testes em `design-tokens.test.ts` validam esta paleta.
 
 ---
 
@@ -480,46 +480,53 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 
 Todos os tokens de design estão centralizados em `frontend/src/index.css`:
 
-### Paleta de Cores
+### Paleta de Cores — Unificada 2026 (Parchment · Cardinal · Blush Mochi · Charcoal)
 
-| Estilo    | Nome da Cor        | Hexadecimal | Variável CSS                                 | Uso Recomendado                        |
-| --------- | ------------------ | ----------- | -------------------------------------------- | -------------------------------------- |
-| Principal | Rosa Fúcsia        | `#E84D8A`   | `--color-primary`                            | Logo, botões principais e títulos      |
-| Principal | Rosa Fúcsia Escuro | `#C73872`   | `--color-primary-dark`                       | Hover de botões principais             |
-| Base      | Rosa Claro         | `#FFFDFF`   | `--color-background`                         | Fundo principal levemente rosado       |
-| Base      | Branco Neve        | `#FFFFFF`   | `--color-white`                              | Cards e áreas de relevo                |
-| Base      | Rosa Algodão Doce  | `#FCE4EC`   | `--color-secondary-background`               | Fundos de seção e modais               |
-| Destaque  | Verde Menta        | `#A8E6CF`   | `--color-accent-mint`                        | Botões de "Comprar" ou ícones, sucesso |
-| Destaque  | Amarelo Estelar    | `#FFF3B0`   | `--color-star-active`, `--color-accent-star` | Ofertas, estrelas e novidades          |
-| Apoio     | Lilás Místico      | `#D1C4E9`   | `--color-accent-lilac`                       | Bordas e detalhes decorativos          |
-| Contraste | Cinza Antracite    | `#37474F`   | `--color-text`                               | Textos longos e leitura principal      |
+| Estilo    | Nome da Cor           | Hexadecimal | Variável CSS                                 | Uso Recomendado                        |
+| --------- | --------------------- | ----------- | -------------------------------------------- | -------------------------------------- |
+| Principal | Cardinal Red          | `#A91D22`   | `--color-primary`, `--color-wine`            | Logo, botões principais e títulos      |
+| Principal | Cardinal Red Escuro   | `#8A171C`   | `--color-primary-dark`, `--color-wine-dark`  | Hover de botões principais             |
+| Base      | Parchment             | `#F4EBE1`   | `--color-background`, `--color-cream`        | Fundo principal                        |
+| Base      | Branco Neve           | `#FFFFFF`   | `--color-white`                              | Cards e áreas de relevo                |
+| Base      | Parchment Médio       | `#EDE2D6`   | `--color-secondary-background`               | Fundos de seção e modais               |
+| Softener  | Blush Mochi           | `#E8C3BA`   | `--color-rose`                               | Marcadores de texto e detalhes suaves  |
+| Destaque  | Verde Menta           | `#A8E6CF`   | `--color-accent-mint`                        | Botões de "Comprar" ou ícones, sucesso |
+| Destaque  | Amarelo Estelar       | `#FFF3B0`   | `--color-star-active`, `--color-accent-star` | Ofertas, estrelas e novidades          |
+| Apoio     | Lilás Místico         | `#D1C4E9`   | `--color-accent-lilac`                       | Bordas e detalhes decorativos          |
+| Contraste | Sacristy Charcoal     | `#242121`   | `--color-text`, `--color-ink`                | Textos longos e leitura principal      |
 
 ```css
 /* ═══ Paleta Principal ═══ */
---color-primary: #e84d8a; /* Rosa Fúcsia */
---color-primary-dark: #c73872; /* Rosa Fúcsia escuro (hover) */
---color-primary-light: #fce4ec; /* Rosa Algodão Doce (claro) */
---color-primary-border: #f8bbd0; /* Borda rosa derivada */
---color-secondary-border: #f0a4c0; /* Borda rosa secundária */
+--color-primary: #a91d22; /* Cardinal Red */
+--color-primary-dark: #8a171c; /* Cardinal escuro (hover) */
+--color-primary-light: #f4ebe1; /* Parchment claro */
+--color-primary-border: #d4a59e; /* Borda blush derivada */
+--color-secondary-border: #c49088; /* Borda blush secundária */
 
 /* ═══ Cores Base ═══ */
---color-background: #fff5f8; /* Rosa Claro — Fundo da página */
---color-secondary-background: #fce4ec; /* Rosa Algodão Doce */
---color-tertiary-background: #fff0f5; /* Lavanda rosada */
+--color-background: #f4ebe1; /* Parchment — Fundo da página */
+--color-secondary-background: #ede2d6; /* Parchment médio */
+--color-tertiary-background: #f9f3ec; /* Parchment claro */
 --color-white: #ffffff; /* Branco Neve — Cards e relevos */
 
-/* ═══ Cores de Destaque ═══ */
---color-accent-mint: #a8e6cf; /* Verde Menta */
---color-accent-mint-dark: #7dd3b0;
---color-accent-star: #fff3b0; /* Amarelo Estelar */
---color-accent-star-dark: #ffe57f;
+/* ═══ Cardinal Red (tokens semânticos) ═══ */
+--color-wine: #a91d22; /* Cardinal Red */
+--color-wine-dark: #8a171c;
+--color-wine-deep: #6b1115;
 
-/* ═══ Cor de Apoio ═══ */
---color-accent-lilac: #d1c4e9; /* Lilás Místico */
---color-accent-lilac-dark: #b39ddb;
+/* ═══ Blush Mochi (Kawaii Softener) ═══ */
+--color-rose: #e8c3ba; /* Blush Mochi */
+--color-rose-light: #f2ddd7;
+--color-rose-soft: #ecd0c8;
 
-/* ═══ Cor de Contraste ═══ */
---color-text: #37474f; /* Cinza Antracite */
+/* ═══ Parchment (superfícies) ═══ */
+--color-cream: #f4ebe1;
+--color-parchment: #f9f3ec;
+--color-ivory: #fdf8f3;
+
+/* ═══ Texto ═══ */
+--color-text: #242121; /* Sacristy Charcoal */
+--color-ink: #242121;
 
 /* ═══ Brand Colors ═══ */
 --color-star-active: #fff3b0; /* Amarelo Estelar */
