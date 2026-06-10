@@ -1,83 +1,163 @@
 .section {
-  padding: 4rem 1rem;
+  background-color: var(--color-cream);
+  padding: 4rem 1.5rem;
+  border-bottom: 3px solid var(--color-wine);
+}
+
+.card {
   max-width: var(--container-max-width);
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 2.5rem;
+  align-items: center;
+  background-color: var(--color-white);
+  border: 3px solid var(--color-wine);
+  border-radius: var(--radius-card);
+  padding: 2.5rem;
+  box-shadow: var(--shadow-sticker-dark);
 }
 
-.sectionTitle {
-  font-family: var(--font-title-site);
-  color: var(--color-primary);
-  font-size: var(--font-size-5xl);
-  text-align: center;
-  margin-bottom: 3rem;
-  position: relative;
-}
-
-.sectionTitle::after {
-  content: "";
-  display: block;
-  width: 60px;
-  height: 4px;
-  background: var(--color-secondary);
-  margin: 0.5rem auto 0;
-  border-radius: 2px;
-}
-
-.cardsContainer {
+.content {
   display: flex;
-  justify-content: center;
-  gap: 2rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.1rem;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: var(--color-rose-light);
+  color: var(--color-wine);
+  border: 2px solid var(--color-wine);
+  border-radius: var(--radius-button);
+  padding: 0.35rem 0.9rem;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-bold);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  line-height: 1.1;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.text {
+  font-size: var(--font-size-md);
+  line-height: 1.65;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.benefits {
+  list-style: none;
+  display: flex;
   flex-wrap: wrap;
+  gap: 0.6rem;
+  padding: 0;
+  margin: 0.2rem 0 0;
 }
 
-.infoCard {
-  background: var(--color-white);
-  padding: 2rem;
-  border-radius: 20px;
-  box-shadow: var(--shadow-card);
-  text-align: center;
-  width: 280px;
-  transition: transform 0.3s ease;
-  border: 2px solid transparent;
+.benefit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: var(--color-cream);
+  color: var(--color-wine);
+  border: 2px solid var(--color-wine);
+  border-radius: var(--radius-button);
+  padding: 0.4rem 0.85rem;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
 }
 
-.infoCard:hover {
-  transform: translateY(-10px);
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.5rem;
+  background-color: var(--color-wine);
+  color: var(--color-ivory);
+  border: 2px solid var(--color-wine-deep);
+  border-radius: var(--radius-button);
+  padding: 0.7rem 1.4rem;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+  text-decoration: none;
+  box-shadow: var(--shadow-sticker-sm);
+  transition: transform 0.18s ease, background-color 0.18s ease;
 }
 
-.iconWrapper {
-  background: var(--color-background);
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
+.cta:hover {
+  background-color: var(--color-wine-dark);
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-sticker-dark);
+}
+
+/* ─── Espaço visual do salão ─── */
+.media {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 1.5rem;
-  color: var(--color-primary);
+  gap: 0.8rem;
+  min-height: 320px;
+  border-radius: 18px;
+  border: 3px solid var(--color-wine);
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      var(--color-cream),
+      var(--color-cream) 16px,
+      var(--color-parchment) 16px,
+      var(--color-parchment) 32px
+    );
 }
 
-.infoCard h3 {
-  font-family: var(--font-title-site);
-  color: var(--color-primary);
-  font-size: var(--font-size-2xl-plus);
-  margin-bottom: 1rem;
+.mediaIcon {
+  color: var(--color-wine);
 }
 
-.infoCard p {
-  color: var(--color-text);
-  margin: 0.25rem 0;
-  font-size: var(--font-size-lg);
+.mediaCaption {
+  background-color: var(--color-white);
+  color: var(--color-wine);
+  border: 2px solid var(--color-wine);
+  border-radius: var(--radius-button);
+  padding: 0.3rem 0.9rem;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
 }
 
-@media (max-width: 768px) {
-  .sectionTitle {
-    font-size: 2rem;
+@media (max-width: 820px) {
+  .card {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 1.8rem;
+  }
+
+  .content {
+    align-items: center;
+    text-align: center;
+  }
+
+  .benefits {
+    justify-content: center;
+  }
+
+  .media {
+    min-height: 220px;
   }
 }
 
-.cardLink {
-  display: contents;
-  text-decoration: none;
-  color: inherit;
+@media (max-width: 480px) {
+  .section {
+    padding: 3rem 1rem;
+  }
 }

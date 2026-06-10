@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap");
 
 @font-face {
   font-family: "Sweet Apricot";
@@ -32,6 +33,39 @@
 
   /* ═══ Cor de Contraste ═══ */
   --color-text: #37474f; /* Cinza Antracite — Texto principal */
+
+  /* ════════════════════════════════════════════════════════════════════
+     PALETA REDESIGN 2026 — "Vinho · Bege · Rosa" (Landing/Home)
+     Introduzida na remodelagem da landing page. Convive com a paleta
+     rosa pastel legada (acima) durante o rollout progressivo das páginas.
+     ════════════════════════════════════════════════════════════════════ */
+
+  /* ── Vinho / Cardinal (cor de marca do redesign) ── */
+  --color-wine: #9e1b32; /* Vinho cardinal — heros, footer, bordas de card */
+  --color-wine-dark: #7d1426; /* Vinho escuro — hover e sombras projetadas */
+  --color-wine-deep: #5e0f1c; /* Vinho profundo — contornos e detalhes */
+  --color-wine-soft: rgba(158, 27, 50, 0.08); /* Véu de vinho sobre bege */
+
+  /* ── Bege / Pergaminho (superfícies claras) ── */
+  --color-cream: #f5ecd9; /* Bege pergaminho — fundo de seções claras */
+  --color-cream-dark: #ece0c8; /* Bege médio — faixas alternadas */
+  --color-parchment: #faf3e6; /* Pergaminho claro — cards e relevos */
+  --color-ivory: #fdf8ef; /* Marfim — texto sobre vinho, cards */
+
+  /* ── Rosa (destaques e marcações) ── */
+  --color-rose: #f4a9b8; /* Rosa — marcador de texto e detalhes */
+  --color-rose-light: #fbd9e0; /* Rosa claro — fundos suaves */
+  --color-rose-soft: #f8c6d0; /* Rosa médio — chips e bordas */
+
+  /* ── Apoio ── */
+  --color-mint-pill: #b8e6c8; /* Verde menta — pills de status (reference) */
+  --color-mint-pill-border: #7fcf9c; /* Borda das pills menta */
+  --color-ink: #2a1a1d; /* Tinta quente — títulos display sobre bege */
+
+  /* ── Sombra "sticker" (offset duro, estética kawaii do reference) ── */
+  --shadow-sticker: 4px 4px 0 var(--color-wine);
+  --shadow-sticker-sm: 3px 3px 0 var(--color-wine);
+  --shadow-sticker-dark: 5px 5px 0 var(--color-wine-deep);
 
   /* ═══ Utilitários ═══ */
   --color-shadow: rgba(232, 77, 138, 0.25); /* Sombra derivada do Rosa Fúcsia */
@@ -89,6 +123,8 @@
   --font-main:
     "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-title: "Sweet Apricot", cursive, sans-serif;
+  /* Fonte display arredondada (títulos chunky do redesign — reference) */
+  --font-display: "Fredoka", "Inter", sans-serif;
 
   /* Fontes Dinâmicas - Controladas via Admin */
   --font-title-site: var(--font-title);

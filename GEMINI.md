@@ -17,6 +17,7 @@
 - **Hurdle** Adicione common Hurdles que você encontrar durante o desenvolvimento, com as soluções para que você não cometa os mesmos erros novamente.
 - **Ambiente de Trabalho**: Sempre que abrir o projeto, execute `pnpm install` nas pastas `frontend` e `backend` para garantir que todas as dependências e tipagens (`@types/*`) estejam sincronizadas com o código mais recente.
 - **Identidade Visual:** O site deve seguir uma estética "fofa" (Kawaii/Maid Café), com cores pastéis (rosa, creme, branco), tipografia cursiva decorativa **Sweet Apricot** exclusivamente em **títulos de páginas, nomes de categorias, títulos de itens e Navbar** (via `var(--font-title)`), e fonte **Inter** (via `var(--font-main)`) para corpo de texto, descrições, preços, botões e demais elementos de UI. Crucialmente, botões e elementos com cantos muito arredondados (`var(--radius-button)` para botões e `var(--radius-card)` para cards/modais). O background da página principal é levemente rosado (`#FFF5F8`), mantendo o branco puro (`#FFFFFF`) apenas para elementos elevados em relevo, como os cards.
+- **Redesign 2026 (Vinho · Bege · Rosa):** A partir de 2026 está em curso uma remodelagem progressiva do frontend, **começando pela landing page (Home)**, com uma nova paleta de marca: **vinho/cardinal** (`--color-wine` `#9e1b32`), **bege/pergaminho** (`--color-cream` `#f5ecd9`) e **rosa** (`--color-rose` `#f4a9b8`), cards brancos com bordas vinho e "sombra sticker" (offset duro, `--shadow-sticker`), pills verde-menta para status e a fonte display arredondada **Fredoka** (`var(--font-display)`) para os títulos chunky. Esses tokens **convivem** com a paleta rosa pastel legada no `:root` durante o rollout — NÃO remova os tokens legados (há testes em `design-tokens.test.ts` que os exigem). Veja a seção 28.
 
 ---
 
@@ -245,11 +246,14 @@ FRONTEND_URL=http://localhost:5174
 │       │   ├── MenuContent/      # Conteúdo do cardápio
 │       │   ├── EventoCard/       # Card de evento
 │       │   ├── CalendarioEventos/ # Calendário de eventos
-│       │   ├── MaidCarousel/     # Carrossel de maids na Home
-│       │   ├── InstagramSection/ # Seção de posts do Instagram na Home
-│       │   ├── AboutSection/     # Sessão "Sobre" na Home
-│       │   ├── NewArrivalsSection/ # Novidades
-│       │   ├── PopularSection/   # Populares
+│       │   ├── HeroSection/      # [Redesign] Boas-vindas (Hero) da Home — mascote + CTAs
+│       │   ├── HighlightsSection/ # [Redesign] Destaques do maid café (grade de 4 cards)
+│       │   ├── MaidCarousel/     # [Redesign] Carrossel de maids (avatares seletores + card destaque)
+│       │   ├── HowItWorksSection/ # [Redesign] "Como funciona um maid café" (4 passos, âncora #como-funciona)
+│       │   ├── AboutSection/     # [Redesign] "Nossa História" / Sobre nós na Home
+│       │   ├── InstagramSection/ # Seção de posts do Instagram (não usada na Home pós-redesign)
+│       │   ├── NewArrivalsSection/ # Novidades (não usada na Home pós-redesign)
+│       │   ├── PopularSection/   # Populares (não usada na Home pós-redesign)
 │       │   ├── AddressMapModal/  # Modal com mapa (Leaflet)
 │       │   ├── ScrollToTop/      # Auto-scroll ao navegar
 │       │   ├── LoginModal/       # Modal de login
@@ -451,7 +455,7 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 
 | Path                | Componente            | Descrição                                          |
 | ------------------- | --------------------- | -------------------------------------------------- |
-| `/`                 | `Home`                | Landing page (banner, carrossel maids, populares, novidades, instagram, sobre) |
+| `/`                 | `Home`                | Landing page redesenhada (Header → Hero → Destaques → Carrossel de Maids → Como funciona → Sobre nós → Footer). Ver seção 28 |
 | `/home`             | redirect → `/`        | Redirect para Home                                 |
 | `/cardapio`         | `MenuPage`            | Cardápio completo com filtros e busca              |
 | `/loja`             | `LojaOnline`          | Loja de produtos importados/artesanais             |
@@ -960,7 +964,9 @@ TODO - **Imagem OG dedicada:** Substituir o `Logo.svg` por uma imagem PNG/JPG de
 
 #### Ordenação de Seções nas Páginas Públicas
 
-As páginas públicas seguem a estrutura: `Banner` (acima do Header, fullscreen hero) → `Header` (sticky) → `main` → `Footer`. O Banner deve sempre ser declarado **antes** do Header no JSX para efeito visual correto.
+As páginas públicas (Cardápio, Loja, Eventos, etc.) seguem a estrutura: `Banner` (acima do Header, fullscreen hero) → `Header` (sticky) → `main` → `Footer`. O Banner deve sempre ser declarado **antes** do Header no JSX para efeito visual correto.
+
+> **Exceção — Home (redesign 2026):** A landing page NÃO usa mais o `Banner` dinâmico. Sua estrutura é `Header` (sticky, no topo) → `main` (com `HeroSection` de boas-vindas, `HighlightsSection`, `MaidCarousel`, `HowItWorksSection`, `AboutSection`) → `Footer`. O `Banner` continua disponível para as demais páginas. Ver seção 28.
 
 #### Padrão CSS Module
 
@@ -1020,6 +1026,47 @@ Antes do deploy de amanhã, adicione as seguintes chaves em **Settings > Secrets
 | `SSH_PRIVATE_KEY` | Conteúdo da chave privada SSH associada ao OpenSSH Server do Windows | Inicia com `-----BEGIN OPENSSH PRIVATE KEY-----` |
 | `SSH_PORT` | Porta SSH (padrão: 22 ou a porta redirecionada no roteador do amigo) | `22` ou `2222` |
 | `WORK_DIR` | Caminho absoluto do repositório no Windows | `C:\Users\pdvme\Documents\GitHub\maidcafenatal` |
+
+---
+
+## 28. Redesign do Frontend 2026 (Landing / Home — "Vinho · Bege · Rosa")
+
+Remodelagem progressiva do frontend iniciada pela **Home**, seguindo a referência visual `frontend/public/claude.jpg`. A estética é a de um maid & mangá café aconchegante: **vinho/cardinal**, **bege/pergaminho** e **rosa**, com cards brancos de borda vinho e "sombra sticker" (offset duro), pills verde-menta e títulos chunky na fonte **Fredoka**.
+
+### 28.1. Tokens adicionados ao `index.css`
+
+A nova paleta **coexiste** com a paleta rosa pastel legada (rollout progressivo). **Nunca remova** os tokens legados — `design-tokens.test.ts` valida `--color-primary: #e84d8a`, `--color-secondary-background: #fce4ec`, `--color-accent-mint`, `--color-star-active`, `--color-accent-lilac`, `--color-text`, `--font-title: "Sweet Apricot"`, etc.
+
+| Token | Valor | Uso |
+| --- | --- | --- |
+| `--color-wine` | `#9e1b32` | Vinho cardinal — heros, footer, bordas de card, CTAs |
+| `--color-wine-dark` / `--color-wine-deep` | `#7d1426` / `#5e0f1c` | Hover, contornos e sombras projetadas |
+| `--color-cream` / `--color-cream-dark` | `#f5ecd9` / `#ece0c8` | Bege pergaminho — fundo de seções claras |
+| `--color-parchment` / `--color-ivory` | `#faf3e6` / `#fdf8ef` | Cards/relevos claros e texto sobre vinho |
+| `--color-rose` / `--color-rose-light` / `--color-rose-soft` | `#f4a9b8` / `#fbd9e0` / `#f8c6d0` | Marcador de texto, chips e fundos suaves |
+| `--color-mint-pill` (+`-border`) | `#b8e6c8` / `#7fcf9c` | Pills de status (estilo da referência) |
+| `--color-ink` | `#2a1a1d` | Tinta quente para títulos display sobre bege |
+| `--shadow-sticker` (+`-sm`, `-dark`) | offset duro vinho | Sombra "adesivo" dos cards/botões |
+| `--font-display` | `"Fredoka", "Inter", sans-serif` | Títulos chunky arredondados (import do Google Fonts no topo do `index.css`) |
+
+### 28.2. Estrutura da Home
+
+`Header` (sticky, com faixa de avisos no topo + wordmark + CTA "Reservar mesa") → `main`:
+`HeroSection` (boas-vindas com mascote, highlight rosa em "invocadx", CTAs e tags) → `HighlightsSection` (4 destaques) → `MaidCarousel` (fundo vinho; avatares seletores + card de destaque) → `HowItWorksSection` (4 passos; alvo da âncora `#como-funciona`) → `AboutSection` ("Magia japonesa no coração de Natal", âncora `#sobre`) → `Footer` detalhado (vinho, colunas Cardápio / O café / Visite + sociais).
+
+### 28.3. Assets e fontes
+
+- Imagens de referência ficam em `frontend/public/imgrefs/` (logos, wordmarks, `mascot.png`, maids). Para uso em produção, os arquivos necessários foram **copiados** para `frontend/public/`: `mascot.png`, `wordmark-cardinal.png` (Header, sobre bege), `wordmark-ivory.png` (Footer, sobre vinho), `logo-rose.png`.
+- A fonte display **Fredoka** é carregada via `@import` do Google Fonts no topo do `index.css`.
+
+### 28.4. Restrições de teste preservadas
+
+- **`Cabecalho.test.tsx`:** o Header mantém o texto da marca `Mew Mew Café` (visualmente oculto via classe acessível) e os 6 links (`Início`, `Cardápio`, `Loja Online`, `Mangás`, `Eventos`, `Cupons` → `/cupons`).
+- **`Rodape.test.tsx`:** o Footer mantém o copyright iniciando por `© 2024 Mew Mew Maid Café` e os links sociais com `aria-label` "Siga nosso Instagram" / "Fale conosco no WhatsApp". Os links de navegação do footer usam `<a href>` (não `<Link>`), pois o teste renderiza o `Footer` sem `BrowserRouter`.
+- **`MaidCarousel.test.tsx`:** todas as 6 maids são renderizadas no DOM (card de destaque) com `img alt={nome}`, nome, descrição breve e link `/maids/:id`. Os avatares seletores usam `alt=""` (decorativos) e `aria-label`. **Não** aplicar `aria-hidden` nos cards inativos — isso remove os links da árvore de acessibilidade e quebra `getAllByRole("link")`; o ocultamento é apenas visual (CSS).
+- **`Inicio.test.tsx`** foi atualizado para a nova composição (mocka Header, Hero, Highlights, MaidCarousel, HowItWorks, About e Footer).
+
+> **Hurdle (screenshot local sem Playwright):** Para validar a Home visualmente sem dependências de browser automation, suba o dev server (`pnpm dev`, porta 5174) e use o Edge headless: `msedge --headless=new --disable-gpu --hide-scrollbars --virtual-time-budget=9000 --window-size=1440,3200 --screenshot=out.png http://localhost:5174/`. O `--virtual-time-budget` é necessário para dar tempo de render antes do print.
 
 ---
 

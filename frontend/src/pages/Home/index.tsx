@@ -1,23 +1,25 @@
-import styles from "./styles.module.css";
 import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
-import { Banner } from "../../components/Banner";
-import { PopularSection } from "../../components/PopularSection";
-import { NewArrivalsSection } from "../../components/NewArrivalsSection";
-import { AboutSection } from "../../components/AboutSection";
-import { InstagramSection } from "../../components/InstagramSection";
+import { HeroSection } from "../../components/HeroSection";
+import { HighlightsSection } from "../../components/HighlightsSection";
 import { MaidCarousel } from "../../components/MaidCarousel";
+import { HowItWorksSection } from "../../components/HowItWorksSection";
+import { AboutSection } from "../../components/AboutSection";
 
+/**
+ * Landing page do Mew Mew Café (redesign 2026 — vinho · bege · rosa).
+ * Estrutura: Header (sticky) → Hero (boas-vindas) → Destaques →
+ * Carrossel de Maids → Como funciona → Sobre nós → Footer detalhado.
+ */
 export function Home() {
   return (
     <>
-      <Banner pagina="home" />
       <Header />
-      <main className={styles.container} id="inicio">
+      <main>
+        <HeroSection />
+        <HighlightsSection />
         <MaidCarousel />
-        <PopularSection />
-        <NewArrivalsSection />
-        <InstagramSection />
+        <HowItWorksSection />
         <AboutSection />
       </main>
       <Footer />

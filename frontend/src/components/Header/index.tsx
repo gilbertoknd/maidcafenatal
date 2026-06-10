@@ -13,8 +13,17 @@ export function Header() {
 
   return (
     <header className={styles.header}>
+      {/* Faixa de avisos */}
+      <div className={styles.topBar}>
+        <span className={styles.topBarItem}>
+          ✦ O primeiro maid &amp; mangá café do Nordeste
+        </span>
+        <span className={styles.topBarItem}>♡ Mangateca à vontade</span>
+        <span className={styles.topBarItem}>✦ Natal / RN</span>
+      </div>
+
       <div className={styles.container}>
-        {/* Lado Esquerdo: Logo Box e Nome */}
+        {/* Lado Esquerdo: Wordmark */}
         <div
           className={styles.brandContainer}
           onClick={() => {
@@ -22,7 +31,11 @@ export function Header() {
             closeMenu();
           }}
         >
-          <img src={"/Logo.svg"} alt="Logo Mew Mew" className={styles.logo} />
+          <img
+            src="/wordmark-cardinal.png"
+            alt="Mew Mew Café"
+            className={styles.logo}
+          />
           <span className={styles.brandName}>Mew Mew Café</span>
         </div>
 
@@ -87,6 +100,16 @@ export function Header() {
           >
             Cupons
           </Link>
+
+          <a
+            href="https://wa.me/558486643897"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.cta}
+            onClick={closeMenu}
+          >
+            Reservar mesa
+          </a>
         </nav>
       </div>
     </header>

@@ -1,62 +1,62 @@
+import { Link } from "react-router-dom";
+import {
+  Sparkles,
+  PawPrint,
+  Leaf,
+  Snowflake,
+  Users,
+  Home as HomeIcon,
+  ArrowRight,
+} from "lucide-react";
 import styles from "./styles.module.css";
-import { ClockIcon } from "../../assets/icons/ClockIcon";
-//import { LocationIcon } from "../../assets/icons/LocationIcon";
-import { WhatsappIcon } from "../../assets/icons/WhatsappIcon";
 
+const beneficios = [
+  { icone: PawPrint, texto: "Pet friendly" },
+  { icone: Leaf, texto: "Opções veganas" },
+  { icone: Snowflake, texto: "Climatizado" },
+  { icone: Users, texto: "Pra todas as idades" },
+];
+
+/**
+ * Seção "Sobre nós" / Nossa História.
+ * Conta a origem do Mew Mew Café com selos de diferenciais e um
+ * espaço visual do salão. Estética vinho · bege · rosa do redesign.
+ */
 export function AboutSection() {
   return (
-    <section className={styles.section}>
-      <h2 className={styles.sectionTitle}>Sobre o Mew Mew</h2>
-      <div className={styles.cardsContainer}>
-        {/* <a
-          href="https://chat.whatsapp.com/GYF1jlmSvdE5wMlpFvWFIe"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Entre no nosso grupo do WhatsApp"
-          className={styles.cardLink}
-        > */}
-        <div className={styles.cardLink}>
-          <div className={styles.infoCard}>
-            <div className={styles.iconWrapper}>
-              <WhatsappIcon width="32" height="32" />
-            </div>
-            <h3>Vilarejo</h3>
-            <p>Acesse o link e participe do nosso mundo mágico!</p>
-          </div>
-        </div>
-
-        <div className={styles.infoCard}>
-          <div className={styles.iconWrapper}>
-            <ClockIcon />
-          </div>
-          <h3>Horários</h3>
-          <p>
-            <strong>Terça-Domingo</strong> <br /> DELIVERY ABERTO!
-            <br />
-            <strong>Quarta e Quinta</strong> <br /> 14 às 21h
-            <br />
-            <strong>Sexta-Domingo</strong> <br /> 14h às 22h
+    <section className={styles.section} id="sobre">
+      <div className={styles.card}>
+        <div className={styles.content}>
+          <span className={styles.eyebrow}>
+            <Sparkles size={15} /> Nossa história
+          </span>
+          <h2 className={styles.title}>Magia japonesa no coração de Natal</h2>
+          <p className={styles.text}>
+            Inaugurado em 2025, o Mew Mew é o primeiro maid café do Nordeste e a
+            primeira cafeteria temática do RN. Inspirado nos cafés de Akihabara,
+            aqui as maids são <em>mahō shōjo</em> — cada uma com seu estilo e sua
+            “magia” — e cada cliente é tratado como um convidado especial.
+            Comida boa de verdade, mangá à vontade e aquele acolhimento que vira
+            recordação. Okaeri, mestre! ♡
           </p>
+
+          <ul className={styles.benefits}>
+            {beneficios.map(({ icone: Icone, texto }) => (
+              <li className={styles.benefit} key={texto}>
+                <Icone size={15} /> {texto}
+              </li>
+            ))}
+          </ul>
+
+          <Link to="/eventos" className={styles.cta}>
+            Conheça o nosso mundo <ArrowRight size={16} />
+          </Link>
         </div>
 
-        {/* <a
-          href="https://maps.app.goo.gl/4rQwYJmjEe1rudGd7"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Localização do Mew Mew"
-          className={styles.cardLink}
-        >
-          <div className={styles.infoCard}>
-            <div className={styles.iconWrapper}>
-              <LocationIcon />
-            </div>
-            <h3>Localização</h3>
-            <p>
-              Rua Camilo de Paula, 2, Tirol <br />
-              Natal - RN
-            </p>
-          </div>
-        </a> */}
+        <div className={styles.media} aria-hidden="true">
+          <HomeIcon size={56} className={styles.mediaIcon} />
+          <span className={styles.mediaCaption}>foto · salão do café</span>
+        </div>
       </div>
     </section>
   );

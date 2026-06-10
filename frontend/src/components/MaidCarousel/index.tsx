@@ -1,134 +1,112 @@
-import { useRef, useState, useCallback, useEffect } from "react";
+import { useState } from "react";
+import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
-import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Heart, ArrowRight } from "lucide-react";
 import { maids } from "../../data/maidsData";
 import styles from "./styles.module.css";
 
 /**
- * Carrossel de Maids com divisão diagonal.
- * Exibe 2 maids por slide com clip-path diagonal,
- * hover para detalhes e scroll horizontal.
+ * Carrossel de Maids no estilo do redesign 2026:
+ * uma fileira de avatares circulares (seletor) e um card de destaque
+ * com a maid selecionada (foto, nome e biografia breve).
+ *
+ * Acessibilidade/Testes: cada maid é renderizada como um card de destaque
+ * (todos no DOM, apenas o ativo visível), garantindo imagem com alt={nome},
+ * nome, descrição breve e link para /maids/:id de todas as 6 maids.
  */
 export function MaidCarousel() {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [activeSlide, setActiveSlide] = useState(0);
+  const [active, setActive] = useState(0);
+  const total = maids.length;
 
-  // Agrupar maids em pares para os slides
-  const slides: (typeof maids)[] = [];
-  for (let i = 0; i < maids.length; i += 2) {
-    slides.push(maids.slice(i, i + 2));
-  }
-
-  const totalSlides = slides.length;
-
-  const scrollToSlide = useCallback(
-    (index: number) => {
-      if (!trackRef.current) return;
-      const slideWidth = trackRef.current.clientWidth;
-      trackRef.current.scrollTo({
-        left: slideWidth * index,
-        behavior: "smooth",
-      });
-      setActiveSlide(index);
-    },
-    []
-  );
-
-  const handlePrev = () => {
-    const newIndex = activeSlide > 0 ? activeSlide - 1 : totalSlides - 1;
-    scrollToSlide(newIndex);
-  };
-
-  const handleNext = () => {
-    const newIndex = activeSlide < totalSlides - 1 ? activeSlide + 1 : 0;
-    scrollToSlide(newIndex);
-  };
-
-  // Sincronizar scroll manual com os dots
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-
-    const handleScroll = () => {
-      const slideWidth = track.clientWidth;
-      if (slideWidth === 0) return;
-      const newIndex = Math.round(track.scrollLeft / slideWidth);
-      setActiveSlide(newIndex);
-    };
-
-    track.addEventListener("scroll", handleScroll, { passive: true });
-    return () => track.removeEventListener("scroll", handleScroll);
-  }, []);
+  const goPrev = () => setActive((i) => (i > 0 ? i - 1 : total - 1));
+  const goNext = () => setActive((i) => (i < total - 1 ? i + 1 : 0));
 
   return (
     <section className={styles.section}>
-      <h2 className={styles.sectionTitle}>Nossas Maids ✨</h2>
+      <div className={styles.head}>
+        <span className={styles.eyebrow}>
+          <Heart size={14} /> Conheça a equipe
+        </span>
+        <h2 className={styles.title}>Nossas Maids ♡</h2>
+        <p className={styles.lead}>
+          Deslize ou toque num avatar pra conhecer cada uma das nossas maids
+          mágicas.
+        </p>
+      </div>
 
-      <div className={styles.carouselContainer}>
-        {/* Botão anterior */}
+      {/* Fileira de avatares (seletor) */}
+      <div className={styles.selector}>
         <button
-          className={`${styles.navButton} ${styles.navPrev}`}
-          onClick={handlePrev}
+          type="button"
+          className={styles.arrow}
+          onClick={goPrev}
           aria-label="Maid anterior"
         >
-          <ChevronLeft size={24} />
+          <ChevronLeft size={22} />
         </button>
 
-        {/* Track do carrossel */}
-        <div className={styles.carouselTrack} ref={trackRef}>
-          {slides.map((pair, slideIndex) => (
-            <div className={styles.slide} key={slideIndex}>
-              {pair.map((maid) => (
-                <Link
-                  to={`/maids/${maid.id}`}
-                  key={maid.id}
-                  className={`${styles.maidPanel} ${
-                    pair.length === 1 ? styles.maidPanelSolo : ""
-                  }`}
-                  aria-label={`Conhecer ${maid.nome}`}
-                >
-                  <img
-                    src={maid.imagem}
-                    alt={maid.nome}
-                    className={styles.maidImage}
-                    loading={slideIndex === 0 ? "eager" : "lazy"}
-                  />
-                  <div className={styles.overlay}>
-                    <h3 className={styles.maidName}>{maid.nome}</h3>
-                    <p className={styles.maidDescription}>
-                      {maid.descricaoBreve}
-                    </p>
-                    <span className={styles.meetMe}>
-                      Conheça-me <ArrowRight size={16} />
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
+        <ul className={styles.avatars}>
+          {maids.map((maid, index) => (
+            <li key={maid.id}>
+              <button
+                type="button"
+                className={`${styles.avatarBtn} ${
+                  index === active ? styles.avatarActive : ""
+                }`}
+                onClick={() => setActive(index)}
+                aria-label={`Selecionar ${maid.nome}`}
+                aria-pressed={index === active}
+                style={{ "--maid-color": maid.cor } as CSSProperties}
+              >
+                <img src={maid.imagem} alt="" className={styles.avatarImg} />
+              </button>
+            </li>
           ))}
-        </div>
+        </ul>
 
-        {/* Botão próximo */}
         <button
-          className={`${styles.navButton} ${styles.navNext}`}
-          onClick={handleNext}
+          type="button"
+          className={styles.arrow}
+          onClick={goNext}
           aria-label="Próxima maid"
         >
-          <ChevronRight size={24} />
+          <ChevronRight size={22} />
         </button>
       </div>
 
-      {/* Dots de navegação */}
-      <div className={styles.dots}>
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            className={`${styles.dot} ${
-              index === activeSlide ? styles.dotActive : ""
+      {/* Palco de destaque — todas as maids no DOM, só a ativa visível */}
+      <div className={styles.stage}>
+        {maids.map((maid, index) => (
+          <article
+            key={maid.id}
+            className={`${styles.featured} ${
+              index === active ? styles.featuredActive : ""
             }`}
-            onClick={() => scrollToSlide(index)}
-            aria-label={`Ir para slide ${index + 1}`}
-          />
+          >
+            <div
+              className={styles.photoWrap}
+              style={{ "--maid-color": maid.cor } as CSSProperties}
+            >
+              <img
+                src={maid.imagem}
+                alt={maid.nome}
+                className={styles.photo}
+                loading={index === 0 ? "eager" : "lazy"}
+              />
+            </div>
+
+            <div className={styles.info}>
+              <span className={styles.featBadge}>Maid em destaque</span>
+              <div className={styles.nameRow}>
+                <h3 className={styles.maidName}>{maid.nome}</h3>
+                <Heart size={20} className={styles.heart} />
+              </div>
+              <p className={styles.maidBio}>{maid.descricaoBreve}</p>
+              <Link to={`/maids/${maid.id}`} className={styles.meetLink}>
+                Conheça-me <ArrowRight size={16} />
+              </Link>
+            </div>
+          </article>
         ))}
       </div>
     </section>
