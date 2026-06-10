@@ -15,7 +15,7 @@
 
 .monthTitle {
   font-size: var(--font-size-xl);
-  font-weight: bold;
+  font-weight: var(--font-weight-bold);
   color: var(--color-primary-dark);
 }
 
@@ -30,7 +30,7 @@
   align-items: center;
   justify-content: center;
   color: var(--color-primary);
-  font-weight: bold;
+  font-weight: var(--font-weight-bold);
   transition: background 0.2s;
 }
 
@@ -48,7 +48,7 @@
 
 .weekDay {
   text-align: center;
-  font-weight: bold;
+  font-weight: var(--font-weight-bold);
   font-size: var(--font-size-xsm);
   color: var(--color-gray-medium);
 }
@@ -91,7 +91,7 @@
 .today {
   background-color: var(--color-primary-light);
   border-color: var(--color-primary);
-  font-weight: bold;
+  font-weight: var(--font-weight-bold);
 }
 
 .selectedDay {

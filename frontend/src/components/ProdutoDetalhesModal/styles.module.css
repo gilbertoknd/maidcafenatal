@@ -80,7 +80,7 @@
 
 .price {
   font-size: var(--font-size-xl);
-  font-weight: bold;
+  font-weight: var(--font-weight-bold);
   color: var(--color-primary);
 
 }
@@ -143,7 +143,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font-weight: bold;
+  font-weight: var(--font-weight-bold);
   font-size: var(--font-size-md);
   margin-top: 12px;
   box-shadow: 0 4px 10px var(--color-shadow);

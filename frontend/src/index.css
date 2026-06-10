@@ -44,15 +44,19 @@
   --color-overlay-dark: rgba(0, 0, 0, 0.6);
   --color-icon-inactive: #9ca3af;
 
-  /* New Variables */
-  /* Layout */
+  /* ═══ Layout ═══ */
   --container-max-width: 1200px;
   --radius-card: 20px;
   --radius-button: 50px;
   --radius-circle: 50%;
+  --transition-default: all 0.3s ease;
+
+  /* ═══ Shadows ═══ */
   --shadow-card: 0 4px 6px var(--color-shadow);
   --shadow-card-hover: 0 6px 12px var(--color-shadow);
-  --transition-default: all 0.3s ease;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
 
   /* Neutral Grays */
   --color-gray-50: #f9fafb;
@@ -73,6 +77,7 @@
 
   /* Brand Colors */
   --color-whatsapp: #25d366;
+  --color-btn-edit: #007bff;
   --color-star-active: #fff3b0; /* Amarelo Estelar — Estrelas e curtidas */
   --color-star-shadow: rgba(255, 243, 176, 0.5);
   --color-success: #a8e6cf; /* Verde Menta — Sucesso */
@@ -93,6 +98,7 @@
   --font-description: var(--font-main);
   --font-button: var(--font-main);
   --font-general: var(--font-main);
+  --font-size-xs: 0.75rem;
   --font-size-sm: 0.9rem;
   --font-size-md: 1rem;
   --font-size-lg: 1.1rem;
@@ -107,18 +113,6 @@
   --font-weight-bold: 700;
   --font-weight-extrabold: 800;
 
-  /* Layout & Spacing */
-  --container-max-width: 1200px;
-  --radius-card: 20px;
-  --radius-button: 50px;
-  --transition-default: all 0.3s ease;
-
-  /* Shadows */
-  --shadow-card: 0 4px 6px var(--color-shadow);
-  --shadow-card-hover: 0 6px 12px var(--color-shadow);
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
 
   /* Opacity Variants */
   --opacity-90: 0.9;

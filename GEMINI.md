@@ -212,23 +212,30 @@ FRONTEND_URL=http://localhost:5174
 │       ├── services/
 │       │   └── api.ts            # Todas as chamadas HTTP ao backend
 │       ├── hooks/
-│       │   ├── useAutenticacao.ts # Autenticação (login, verificar token)
-│       │   ├── useCarrinho.tsx    # Carrinho de compras (Context API)
-│       │   ├── useProdutos.ts     # Fetch de produtos (público)
-│       │   ├── useAdminProdutos.ts # CRUD de produtos (admin)
-│       │   └── useDebugScreen.ts  # Debug de dimensões de tela
+│       │   ├── useAutenticacao.ts      # Autenticação (login, verificar token)
+│       │   ├── useCarrinho.tsx         # Carrinho de compras (Context API)
+│       │   ├── useProdutos.ts          # Fetch de produtos (público, TanStack Query)
+│       │   ├── useAdminProdutos.ts     # CRUD de produtos (admin)
+│       │   ├── useProductLike.ts       # Gerencia curtidas otimistas por produto
+│       │   ├── useBanners.ts           # Fetch de banners (TanStack Query)
+│       │   ├── useConfiguracoesGlobais.ts # Carrega config ativa, injeta @font-face e tokens CSS
+│       │   └── useDebugTela.ts         # Debug de dimensões de tela (NÃO usar em produção)
 │       ├── pages/
 │       │   ├── Home/             # Landing page
 │       │   ├── Menu/             # Cardápio com filtros por categoria
-│       │   ├── OnlineStore/      # Loja online (produtos is_loja)
-│       │   ├── StoreProductDetails/ # Detalhes de produto da loja
-│       │   ├── Events/           # Calendário de eventos
-│       │   └── Admin/            # Painel administrativo
-│       ├── components/           # 22 componentes reutilizáveis
-│       │   ├── Header/           # Navegação principal
+│       │   ├── LojaOnline/       # Loja online (produtos is_loja)
+│       │   ├── ProdutoDetalhesLoja/ # Detalhes de produto da loja
+│       │   ├── Eventos/          # Calendário de eventos
+│       │   ├── EventoDetalhes/   # Detalhes de evento individual
+│       │   ├── Mangas/           # Seção de mangás (is_manga=TRUE)
+│       │   ├── MaidDetalhes/     # Perfil detalhado de maid (dados em src/data/)
+│       │   ├── Cupons/           # Página de cupons de desconto
+│       │   └── Admin/            # Painel administrativo (protegido por JWT)
+│       ├── components/           # Componentes reutilizáveis
+│       │   ├── Header/           # Navegação principal (sticky, mobile slide-in)
 │       │   ├── Footer/           # Rodapé
-│       │   ├── Banner/           # Banner principal
-│       │   ├── ProdutoCard/      # Card de produto
+│       │   ├── Banner/           # Banner dinâmico por página (imagem ou vídeo)
+│       │   ├── ProdutoCard/      # Card de produto (sub-componentes: CardImage, CardAdminActions, CardPublicActions)
 │       │   ├── ProdutoDetalhesModal/ # Modal de detalhes
 │       │   ├── ProdutoForm/      # Formulário CRUD produto (admin)
 │       │   ├── CategoryFilter/   # Filtro por categorias
@@ -238,15 +245,21 @@ FRONTEND_URL=http://localhost:5174
 │       │   ├── MenuContent/      # Conteúdo do cardápio
 │       │   ├── EventoCard/       # Card de evento
 │       │   ├── CalendarioEventos/ # Calendário de eventos
-│       │   ├── AdminDashboard/   # Dashboard admin principal
-│       │   ├── AdminEventos/     # Gerenciamento de eventos
-│       │   ├── AdminPedidos/     # Gerenciamento de pedidos
-│       │   ├── LoginModal/       # Modal de login
+│       │   ├── MaidCarousel/     # Carrossel de maids na Home
+│       │   ├── InstagramSection/ # Seção de posts do Instagram na Home
 │       │   ├── AboutSection/     # Sessão "Sobre" na Home
 │       │   ├── NewArrivalsSection/ # Novidades
 │       │   ├── PopularSection/   # Populares
 │       │   ├── AddressMapModal/  # Modal com mapa (Leaflet)
-│       │   └── ScrollToTop/      # Auto-scroll ao navegar
+│       │   ├── ScrollToTop/      # Auto-scroll ao navegar
+│       │   ├── LoginModal/       # Modal de login
+│       │   ├── AdminDashboard/   # Dashboard admin principal
+│       │   ├── AdminBanners/     # Gerenciamento de banners por página
+│       │   ├── AdminEventos/     # Gerenciamento de eventos
+│       │   ├── AdminPedidos/     # Gerenciamento de pedidos
+│       │   ├── AdminFontes/      # Gerenciamento de fontes customizadas
+│       │   ├── AdminCupons/      # Gerenciamento de cupons
+│       │   └── AdminInstagram/   # Gerenciamento de posts do Instagram
 │       ├── utils/
 │       └── tests/                # Testes do frontend (Vitest + RTL)
 ```
@@ -436,16 +449,19 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 
 ## 7. Rotas do Frontend (React Router)
 
-| Path                | Página                | Descrição                                          |
+| Path                | Componente            | Descrição                                          |
 | ------------------- | --------------------- | -------------------------------------------------- |
-| `/`                 | `Home`                | Landing page (banner, populares, novidades, sobre) |
+| `/`                 | `Home`                | Landing page (banner, carrossel maids, populares, novidades, instagram, sobre) |
+| `/home`             | redirect → `/`        | Redirect para Home                                 |
 | `/cardapio`         | `MenuPage`            | Cardápio completo com filtros e busca              |
-| `/loja`             | `OnlineStore`         | Loja de produtos importados/artesanais             |
-| `/mangas`           | `Mangas`              | Venda de mangás (colecionáveis)                    |
-| `/loja/produto/:id` | `StoreProductDetails` | Detalhes de produto da loja                        |
-| `/eventos`          | `EventsPage`          | Calendário de eventos                              |
-| `/maids/:id`        | `MaidDetalhes`        | Perfil detalhado das maids                         |
-| `/admin`            | `Admin`               | Painel administrativo (protegido por login)        |
+| `/loja`             | `LojaOnline`          | Loja de produtos importados/artesanais             |
+| `/mangas`           | `Mangas`              | Venda de mangás (is_manga=TRUE)                    |
+| `/loja/produto/:id` | `ProdutoDetalhesLoja` | Detalhes de produto da loja                        |
+| `/eventos`          | `EventosPage`         | Calendário de eventos                              |
+| `/eventos/:id`      | `EventoDetalhes`      | Detalhes de evento individual                      |
+| `/maids/:id`        | `MaidDetalhes`        | Perfil detalhado das maids (dados estáticos em `src/data/`) |
+| `/cupons`           | `CuponsPage`          | Página de cupons de desconto                       |
+| `/admin`            | `Admin`               | Painel administrativo (protegido por login JWT)    |
 
 ### Components & UI Adicionais (Admin Dashboard)
 
@@ -712,6 +728,12 @@ pnpm lint        # eslint
 **Causa:** Uso de `multi_replace_file_content` ou `replace_file_content` onde o bloco `TargetContent` inadvertidamente exclui linhas no topo do arquivo ao tentar "limpar" ou "organizar" imports.
 **Solução:** Sempre verificar se todos os imports necessários (especialmente `styles.module.css`) permanecem no arquivo após a edição. Se o componente falhar ao renderizar com erro de "styles is not defined", verifique o topo do arquivo.
 
+**Hurdle:** `useDebugTela()` esquecido em produção.
+**Causa:** O hook `useDebugTela` (em `hooks/useDebugTela.ts`) exibe informações de debug de dimensões de tela no ambiente de desenvolvimento. Ele foi importado e chamado em `MenuPage` e pode ser deixado acidentalmente em produção.
+**Solução:** Garantir que `useDebugTela()` seja removido (ou comentado) de qualquer página antes de commitar para produção. Ele deve existir apenas como utilitário de desenvolvimento local.
+
+---
+
 **Hurdle:** Ambiguidade na busca de textos de categorias em testes (`TestingLibraryElementError: Found multiple elements with the text: X`).
 
 **Causa:** O componente `CategoryFilter` cria botões com o nome da categoria, e o agrupamento no cardápio cria subtítulos (`h2`) com o mesmo nome. O `getByText` falha por encontrar ambos no DOM.
@@ -931,6 +953,44 @@ O site possui configurações completas de SEO para ser encontrado em buscas com
 #### Próximos Passos de SEO (Manual)
 
 TODO - **Imagem OG dedicada:** Substituir o `Logo.svg` por uma imagem PNG/JPG de 1200x630px específica para preview em redes sociais
+
+---
+
+### 26. Padrões de Estrutura do Frontend
+
+#### Ordenação de Seções nas Páginas Públicas
+
+As páginas públicas seguem a estrutura: `Banner` (acima do Header, fullscreen hero) → `Header` (sticky) → `main` → `Footer`. O Banner deve sempre ser declarado **antes** do Header no JSX para efeito visual correto.
+
+#### Padrão CSS Module
+
+Cada componente tem obrigatoriamente uma pasta com `index.tsx` + `styles.module.css` (plural). Use sempre `styles.module.css` — a variante `style.module.css` (singular) está sendo depreciada e padronizada para o plural.
+
+#### Dados Estáticos de Maids
+
+Os dados dos perfis das maids (nome, foto, bio, etc.) são armazenados em `frontend/src/data/` como arquivos TypeScript estáticos, não vindos da API. A rota `/maids/:id` usa esse `data/` para renderizar `MaidDetalhes`.
+
+#### Nomenclatura de Arquivos de Testes
+
+Testes do frontend ficam em `frontend/src/tests/`. O padrão é `NomeComponente.test.tsx` para componentes e `nomeFuncao.test.ts` para utilitários.
+
+---
+
+### 27. Problemas de CSS Identificados (Backlog de Refatoração)
+
+#### ✅ Corrigidos
+
+| Problema | Localização | Correção Aplicada |
+| --- | --- | --- |
+| `var(--font-size-xs)` usada mas não definida | `ProdutoCard/styles.module.css` | Adicionado `--font-size-xs: 0.75rem;` ao `:root` do `index.css` |
+| Variáveis CSS duplicadas no `:root` | `index.css` | Removida segunda declaração de `--container-max-width`, `--radius-*`, `--shadow-card`, `--shadow-card-hover`, `--transition-default`. `--shadow-sm/md/lg` consolidadas no bloco único de layout |
+| `background: #007bff` hard-coded no `.btnEdit` | `ProdutoCard/styles.module.css` | Criada variável `--color-btn-edit: #007bff` no `index.css`; `.btnEdit` agora usa `var(--color-btn-edit)` |
+| Nomenclatura inconsistente `style.module.css` | `AdminDashboard/`, `ProdutoForm/` | Renomeados para `styles.module.css`; imports atualizados; arquivos órfãos de `LoginModal/` e `Admin/` deletados |
+| `font-weight: bold` hard-coded no `.addToCartBtn` | `ProdutoCard/styles.module.css` | Substituído por `var(--font-weight-bold)` |
+
+#### ✅ Débito Adicional — Resolvido
+
+`font-weight: bold` eliminado de todos os arquivos CSS do projeto. Todos os 10 arquivos afetados agora usam `var(--font-weight-bold)`.
 
 ---
 

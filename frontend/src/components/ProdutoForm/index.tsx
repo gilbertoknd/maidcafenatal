@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import type { FormEvent } from "react";
 import { Edit, Plus, X } from "lucide-react";
-import styles from "./style.module.css";
+import styles from "./styles.module.css";
 import type { Produto } from "../../types/Produto";
 import { useProdutos } from "../../hooks/useProdutos";
 

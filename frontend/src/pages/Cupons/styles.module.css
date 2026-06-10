@@ -270,7 +270,7 @@
 .codeBox span {
   font-family: monospace;
   font-size: 1.5rem;
-  font-weight: bold;
+  font-weight: var(--font-weight-bold);
   letter-spacing: 2px;
   color: var(--color-text);
 }

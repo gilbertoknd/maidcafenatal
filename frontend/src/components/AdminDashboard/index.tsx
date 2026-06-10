@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { LogOut } from "lucide-react";
-import styles from "./style.module.css";
+import styles from "./styles.module.css";
 //Componentes
 import LoginModal from "../LoginModal";
 import { ProdutoForm } from "../ProdutoForm/index";
