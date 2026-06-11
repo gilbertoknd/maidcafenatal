@@ -1,0 +1,224 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-background);
+}
+
+.main {
+  flex: 1;
+  padding-bottom: 3rem;
+}
+
+/* Hero pequeno — cream com padrão de dots */
+.hero {
+  text-align: center;
+  padding: 3rem 1rem;
+  background-color: var(--color-cream);
+  background-image: radial-gradient(
+    rgba(169, 29, 34, 0.08) 1.4px,
+    transparent 1.4px
+  );
+  background-size: 22px 22px;
+  border-bottom: 3px solid var(--color-wine);
+  margin-bottom: 2rem;
+}
+
+.hero h1 {
+  font-family: var(--font-title);
+  color: var(--color-wine);
+  font-size: clamp(2.2rem, 6vw, 3rem);
+  margin-bottom: 0.4rem;
+}
+
+.hero p {
+  font-size: 1.1rem;
+  color: var(--color-text-light);
+}
+
+.content {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  width: 100%;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  background: var(--color-white);
+  border: 3px solid var(--color-wine);
+  border-radius: var(--radius-card);
+  padding: 2rem 1.5rem;
+  box-shadow: var(--shadow-sticker-dark);
+}
+
+/* ─── Cards de tipo de serviço ─── */
+.serviceFieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.legend {
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 0.8rem;
+}
+
+.serviceGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 0.8rem;
+}
+
+.serviceCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  text-align: center;
+  background: var(--color-white);
+  border: 2px solid var(--color-wine);
+  border-radius: var(--radius-card);
+  padding: 1rem 0.8rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-sticker-sm);
+  transition: transform 0.15s ease, background-color 0.15s ease,
+    border-width 0.15s ease, box-shadow 0.15s ease;
+}
+
+.serviceCard:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-sticker);
+}
+
+.serviceSelected {
+  background-color: var(--color-rose-light);
+  border-width: 3.5px;
+}
+
+/* Radio escondido visualmente, mas acessível para foco e leitores */
+.serviceRadio {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.serviceCard:has(.serviceRadio:focus-visible) {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.serviceEmoji {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.serviceName {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* ─── Campos ─── */
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.inputGroup label {
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.inputGroup input,
+.inputGroup textarea {
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--color-rose-soft);
+  border-radius: var(--radius-card);
+  font-family: var(--font-main);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+  background: var(--color-white);
+  resize: vertical;
+}
+
+.inputGroup input:focus,
+.inputGroup textarea:focus {
+  border-color: var(--color-wine);
+}
+
+.fieldError {
+  color: #dc2626;
+  font-size: 0.85rem;
+  margin: 0.3rem 0 0;
+}
+
+.submitBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--color-wine);
+  color: var(--color-ivory);
+  padding: 1rem;
+  border: 2px solid var(--color-wine-deep);
+  border-radius: var(--radius-button);
+  font-family: var(--font-button);
+  font-weight: var(--font-weight-bold);
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-sticker-sm);
+  transition: transform 0.18s ease, background-color 0.18s ease,
+    box-shadow 0.18s ease;
+  margin-top: 0.5rem;
+}
+
+.submitBtn:hover {
+  background-color: var(--color-wine-dark);
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-sticker-dark);
+}
+
+.hint {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--color-text-light);
+}
+
+/* ─── Mobile ─── */
+@media (max-width: 768px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  .serviceGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .form {
+    padding: 1.5rem 1rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .serviceGrid {
+    grid-template-columns: 1fr;
+  }
+}

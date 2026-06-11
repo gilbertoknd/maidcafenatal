@@ -1,15 +1,55 @@
-/* Faixa de avisos no topo */
+/* Rolling banner (marquee) no topo */
 .topBar {
   background-color: var(--color-wine);
   color: var(--color-ivory);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 2.5rem;
-  padding: 0.35rem 1rem;
+  overflow: hidden;
+  padding: 0.35rem 0;
+  max-height: 2rem;
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
   letter-spacing: 0.02em;
+  transition: transform 0.35s ease, max-height 0.35s ease, padding 0.35s ease;
+}
+
+/* Banner escondido ao rolar a página para baixo */
+.topBarHidden {
+  transform: translateY(-100%);
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* O track contém duas cópias do conteúdo; animar até -50% reinicia
+   exatamente onde a segunda cópia começa, criando o loop contínuo */
+.marqueeTrack {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 28s linear infinite;
+}
+
+.marqueeTrack:hover {
+  animation-play-state: paused;
+}
+
+.marqueeContent {
+  display: flex;
+  gap: 2.5rem;
+  padding-right: 2.5rem;
+}
+
+@keyframes marqueeScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marqueeTrack {
+    animation: none;
+  }
 }
 
 .topBarItem {
@@ -150,12 +190,12 @@
 
 @media (max-width: 768px) {
   .topBar {
-    gap: 1.2rem;
     font-size: 0.65rem;
   }
 
-  .topBarItem:nth-child(2) {
-    display: none;
+  .marqueeContent {
+    gap: 1.2rem;
+    padding-right: 1.2rem;
   }
 
   .mobileMenuBtn {

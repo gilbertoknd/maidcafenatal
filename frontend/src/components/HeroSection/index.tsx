@@ -1,12 +1,5 @@
 import { Link } from "react-router-dom";
-import {
-  Sparkles,
-  PawPrint,
-  Snowflake,
-  Users,
-  BookOpen,
-  ArrowRight,
-} from "lucide-react";
+import { Sparkles, BookOpen, ArrowRight } from "lucide-react";
 import styles from "./styles.module.css";
 
 /**
@@ -21,7 +14,8 @@ export function HeroSection() {
         {/* Coluna de texto */}
         <div className={styles.content}>
           <span className={styles.badge}>
-            <Sparkles size={16} /> O primeiro maid &amp; mangá café do Nordeste
+            <Sparkles size={16} /> A experiência maid café mais mágica do
+            Nordeste
           </span>
 
           <h1 className={styles.title}>
@@ -30,9 +24,9 @@ export function HeroSection() {
           </h1>
 
           <p className={styles.subtitle}>
-            Comidinhas japonesas, mangá à vontade e maids mágicas te esperando.
-            Aqui cada cliente é tratado como um convidado especial. Senta, relaxa
-            e deixa a gente cuidar de você. Okaeri, mestre! ♡
+            Doces temáticos, comidas japonesas e maids mágicas na sua festa!
+            Eventos personalizados, delivery e kit festa com o carinho do Mew
+            Mew. Okaeri, mestre! ♡
           </p>
 
           <div className={styles.actions}>
@@ -45,15 +39,9 @@ export function HeroSection() {
           </div>
 
           <ul className={styles.tags}>
-            <li className={styles.tag}>
-              <PawPrint size={15} /> Pet friendly
-            </li>
-            <li className={styles.tag}>
-              <Snowflake size={15} /> Climatizado
-            </li>
-            <li className={styles.tag}>
-              <Users size={15} /> Pra todas as idades
-            </li>
+            <li className={styles.tag}>🎂 Aniversários temáticos</li>
+            <li className={styles.tag}>🎓 Formaturas &amp; eventos</li>
+            <li className={styles.tag}>📦 Delivery &amp; encomendas</li>
           </ul>
         </div>
 

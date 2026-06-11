@@ -118,6 +118,41 @@
   margin: 0;
 }
 
+/* O item do CTA não estiliza o <li>: o Link interno assume o card,
+   participando do grid no lugar dele */
+.ctaItem {
+  display: contents;
+}
+
+/* Card CTA — fundo vinho, texto claro, leva ao /agendar */
+.stepCta {
+  background-color: var(--color-wine);
+  border-color: var(--color-wine-deep);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.stepCta .stepTitle,
+.stepCta .stepText {
+  color: var(--color-ivory);
+}
+
+.stepCta .number {
+  background-color: var(--color-ivory);
+  color: var(--color-wine);
+  border-color: var(--color-wine-deep);
+}
+
+.stepCta .iconBox {
+  background-color: var(--color-wine-deep);
+  border-color: var(--color-ivory);
+  color: var(--color-ivory);
+}
+
+.stepCta:hover {
+  background-color: var(--color-wine-dark);
+}
+
 @media (max-width: 900px) {
   .steps {
     grid-template-columns: repeat(2, 1fr);

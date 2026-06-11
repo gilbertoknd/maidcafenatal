@@ -39,8 +39,8 @@ export function Footer() {
               title="Voltar ao topo"
             />
             <p className={styles.description}>
-              O primeiro maid &amp; mangá café do Nordeste. Comidinhas
-              japonesas, mangá à vontade e maids mágicas. Okaeri, mestre! ♡
+              A experiência maid café mais mágica do Nordeste. Eventos
+              personalizados, delivery e doces temáticos. Okaeri, mestre! ♡
             </p>
             <div className={styles.socials}>
               <a
@@ -80,24 +80,11 @@ export function Footer() {
             </nav>
           ))}
 
-          {/* Visite */}
-          <div className={styles.column}>
-            <h3 className={styles.columnTitle}>Visite</h3>
-            <address className={styles.address}>
-              Rua Camilo de Paula, 2 — Tirol
-              <br />
-              Natal / RN
-              <br />
-              <a href="tel:+5584986643897" className={styles.columnLink}>
-                (84) 98664-3897
-              </a>
-            </address>
-          </div>
         </div>
 
         <div className={styles.bottom}>
           <p className={styles.copyright}>
-            © 2024 Mew Mew Maid Café · Natal/RN. Feito com ♡
+            © 2025 Mew Mew Maid Café · Natal/RN. Feito com ♡
           </p>
           <p className={styles.note}>
             Personagens e mangás pertencem aos seus autores.

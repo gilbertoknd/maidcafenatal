@@ -5,7 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import { MaidCarousel } from "../components/MaidCarousel";
 import { maids } from "../data/maidsData";
 
-describe("MaidCarousel Component", () => {
+describe("MaidCarousel Component (painéis diagonais)", () => {
   const renderCarousel = () =>
     render(
       <BrowserRouter>
@@ -34,19 +34,31 @@ describe("MaidCarousel Component", () => {
     });
   });
 
-  it("deve conter links para as páginas de detalhes das maids", () => {
-    renderCarousel();
-    const links = screen.getAllByRole("link");
-    const maidLinks = links.filter((link) =>
-      link.getAttribute("href")?.startsWith("/maids/")
-    );
-    expect(maidLinks.length).toBe(maids.length);
-  });
-
-  it("deve exibir as descrições breves das maids", () => {
+  it("cada painel deve ser um link para a página de detalhes da maid", () => {
     renderCarousel();
     maids.forEach((maid) => {
-      expect(screen.getByText(maid.descricaoBreve)).toBeInTheDocument();
+      const painel = screen.getByText(maid.nome).closest("a");
+      expect(painel).toHaveAttribute("href", `/maids/${maid.id}`);
+    });
+  });
+
+  it("não deve renderizar o seletor de avatares nem as setas", () => {
+    renderCarousel();
+    expect(screen.queryByLabelText("Maid anterior")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Próxima maid")).not.toBeInTheDocument();
+    maids.forEach((maid) => {
+      expect(
+        screen.queryByLabelText(`Selecionar ${maid.nome}`)
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  it("não deve renderizar o card de destaque com bio e 'Conheça-me'", () => {
+    renderCarousel();
+    expect(screen.queryByText(/Conheça-me/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Maid em destaque/i)).not.toBeInTheDocument();
+    maids.forEach((maid) => {
+      expect(screen.queryByText(maid.descricaoBreve)).not.toBeInTheDocument();
     });
   });
 });

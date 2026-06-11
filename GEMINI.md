@@ -465,6 +465,7 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 | `/eventos/:id`      | `EventoDetalhes`      | Detalhes de evento individual                      |
 | `/maids/:id`        | `MaidDetalhes`        | Perfil detalhado das maids (dados estáticos em `src/data/`) |
 | `/cupons`           | `CuponsPage`          | Página de cupons de desconto                       |
+| `/agendar`          | `AgendarPage`         | Formulário de agendamento de eventos/encomendas → redireciona para o WhatsApp com mensagem pré-preenchida. Ver seção 29 |
 | `/admin`            | `Admin`               | Painel administrativo (protegido por login JWT)    |
 
 ### Components & UI Adicionais (Admin Dashboard)
@@ -1071,8 +1072,10 @@ O padrão visual foi propagado para **Cardápio, Loja Online, Mangás, Eventos, 
 
 ### 28.2. Estrutura da Home
 
-`Header` (sticky, com faixa de avisos no topo + wordmark + CTA "Reservar mesa") → `main`:
-`HeroSection` (boas-vindas com mascote, highlight rosa em "invocadx", CTAs e tags) → `HighlightsSection` (4 destaques) → `MaidCarousel` (fundo vinho; avatares seletores + card de destaque) → `HowItWorksSection` (4 passos; alvo da âncora `#como-funciona`) → `AboutSection` ("Magia japonesa no coração de Natal", âncora `#sobre`) → `Footer` detalhado (vinho, colunas Cardápio / O café / Visite + sociais).
+> ⚠️ Atualizada pelo pivô de Junho/2026 — ver seção 29.
+
+`Header` (sticky, com rolling banner marquee no topo + wordmark + CTA "Agendar evento" → `/agendar`) → `main`:
+`HeroSection` (boas-vindas com mascote, highlight rosa em "invocadx", CTAs e tags de serviços) → `HighlightsSection` (4 destaques) → `MaidCarousel` (fundo vinho; painéis diagonais clicáveis) → `HowItWorksSection` (4 passos; alvo da âncora `#como-funciona`; o 4º card é CTA para `/agendar`) → `AboutSection` ("Magia japonesa na sua festa", âncora `#sobre`) → `Footer` (vinho, colunas Cardápio / O café + sociais).
 
 ### 28.3. Assets e fontes
 
@@ -1081,12 +1084,42 @@ O padrão visual foi propagado para **Cardápio, Loja Online, Mangás, Eventos, 
 
 ### 28.4. Restrições de teste preservadas
 
-- **`Cabecalho.test.tsx`:** o Header mantém o texto da marca `Mew Mew Café` (visualmente oculto via classe acessível) e os 6 links (`Início`, `Cardápio`, `Loja Online`, `Mangás`, `Eventos`, `Cupons` → `/cupons`).
-- **`Rodape.test.tsx`:** o Footer mantém o copyright iniciando por `© 2024 Mew Mew Maid Café` e os links sociais com `aria-label` "Siga nosso Instagram" / "Fale conosco no WhatsApp". Os links de navegação do footer usam `<a href>` (não `<Link>`), pois o teste renderiza o `Footer` sem `BrowserRouter`.
-- **`MaidCarousel.test.tsx`:** todas as 6 maids são renderizadas no DOM (card de destaque) com `img alt={nome}`, nome, descrição breve e link `/maids/:id`. Os avatares seletores usam `alt=""` (decorativos) e `aria-label`. **Não** aplicar `aria-hidden` nos cards inativos — isso remove os links da árvore de acessibilidade e quebra `getAllByRole("link")`; o ocultamento é apenas visual (CSS).
+- **`Cabecalho.test.tsx`:** o Header mantém o texto da marca `Mew Mew Café` (visualmente oculto via classe acessível), os 6 links (`Início`, `Cardápio`, `Loja Online`, `Mangás`, `Eventos`, `Cupons` → `/cupons`), o CTA "Agendar evento" → `/agendar` e o rolling banner (testes de marquee duplicado, ausência de local físico e esconder/reexibir no scroll).
+- **`Rodape.test.tsx`:** o Footer mantém o copyright iniciando por `© 2025 Mew Mew Maid Café`, os links sociais com `aria-label` "Siga nosso Instagram" / "Fale conosco no WhatsApp", e testes negativos garantindo ausência da coluna "Visite"/endereço físico. Os links de navegação do footer usam `<a href>` (não `<Link>`), pois o teste renderiza o `Footer` sem `BrowserRouter`.
+- **`MaidCarousel.test.tsx`:** todas as 6 maids são renderizadas como painéis diagonais — cada painel é um `<Link>` para `/maids/:id` com `img alt={nome}` e nome em overlay. Testes negativos garantem ausência do seletor de avatares, das setas e do card de destaque (design antigo).
 - **`Inicio.test.tsx`** foi atualizado para a nova composição (mocka Header, Hero, Highlights, MaidCarousel, HowItWorks, About e Footer).
+- **`HeroSection.test.tsx` / `AboutSection.test.tsx` / `HowItWorksSection.test.tsx` / `Agendar.test.tsx`:** cobrem os textos do pivô para eventos (seção 29) e incluem testes negativos contra textos do modelo presencial — ao alterar copy dessas seções, atualize os testes junto.
 
 > **Hurdle (screenshot local sem Playwright):** Para validar a Home visualmente sem dependências de browser automation, suba o dev server (`pnpm dev`, porta 5174) e use o Edge headless: `msedge --headless=new --disable-gpu --hide-scrollbars --virtual-time-budget=9000 --window-size=1440,3200 --screenshot=out.png http://localhost:5174/`. O `--virtual-time-budget` é necessário para dar tempo de render antes do print.
 
 ---
+
+## 29. Pivô do Negócio — Eventos, Encomendas e Delivery (Junho/2026)
+
+O café **não opera mais presencialmente**. O negócio agora é: **eventos personalizados** (aniversários, formaturas, confraternizações), **kit festa**, **encomendas de doces/comidas** e **delivery**. Regra editorial: **nenhuma página pública pode referenciar local físico, mesa, visita presencial ou endereço** — ao criar/editar copy, foque na experiência levada até o cliente.
+
+### 29.1. Mudanças aplicadas no frontend
+
+- **Header:** a `.topBar` estática virou um **rolling banner (marquee)** com animação CSS pura (`@keyframes marqueeScroll`, track com o conteúdo duplicado animado até `translateX(-50%)` para loop contínuo; a cópia leva `aria-hidden`). O banner **some ao rolar** a página (`useEffect` + listener de scroll passivo; threshold de 50px em `LIMITE_SCROLL_BANNER`) com `translateY(-100%)` + colapso de `max-height`. Expõe `data-testid="rolling-banner"` e `data-visible` para os testes. Itens do banner em `ITENS_BANNER`. Pausa no hover e respeita `prefers-reduced-motion`. CTA do Header: `<Link to="/agendar">Agendar evento</Link>` (não há mais link direto pro WhatsApp).
+- **HeroSection:** badge "A experiência maid café mais mágica do Nordeste"; subtítulo focado em eventos/delivery/kit festa; tags com emoji (🎂 Aniversários temáticos / 🎓 Formaturas & eventos / 📦 Delivery & encomendas).
+- **HowItWorksSection:** eyebrow "✨ Conheça a experiência", título "Como funciona", 4 passos novos (Sparkles, Cake, PartyPopper, ArrowRight). O 4º passo ("Faça sua encomenda") é um `<Link to="/agendar">` com classe `.stepCta` (fundo wine, texto ivory); o `<li>` dele usa `display: contents` para o Link assumir a célula do grid.
+- **MaidCarousel:** redesign "team showcase" — 6 painéis com corte diagonal (`clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%)`) sobrepostos via `margin-left` negativo; cada painel é um `<Link>` para `/maids/:id` com nome em overlay de gradiente + barra de accent na cor da maid (`--maid-color`). Hover/focus-visible: `flex-grow: 1.7`, imagem mais vívida, nome destacado. Mobile (<768px): empilha verticalmente com `aspect-ratio: 4/3` e corte diagonal horizontal. Sem avatares, setas ou card de destaque.
+- **AboutSection:** título "Magia japonesa na sua festa", texto sobre a experiência de eventos, benefícios com emoji, CTA "Agende seu evento" → `/agendar`.
+- **Footer:** coluna "Visite" (endereço/telefone) **removida**; descrição focada em eventos/delivery; copyright © 2025.
+
+### 29.2. Página `/agendar` (`AgendarPage`)
+
+Formulário de agendamento que redireciona para o WhatsApp com mensagem pré-preenchida (mesmo padrão do `CartModal`: `window.open("https://wa.me/<numero>?text=" + encodeURIComponent(msg))`).
+
+- **Campos:** Tipo de serviço (5 cards-radio clicáveis com emoji: 🎂 Aniversário temático, 🎓 Formatura / Confraternização, 📦 Encomenda de doces/comidas, 🎉 Evento personalizado, 🚚 Delivery — input radio visualmente oculto mas acessível/focável), Nome completo*, Telefone* (máscara `(XX) XXXXX-XXXX`), Data desejada*, Horário preferido, Local do evento, Número de convidados, Detalhes adicionais. Botão: "Enviar pelo WhatsApp ♡".
+- **Validação:** **zod** (dependência adicionada em Junho/2026, v4) via `esquemaAgendamento.safeParse`; erros por campo extraídos de `error.issues` (compatível v3/v4 — evite `error.flatten()`, deprecado na v4). Obrigatórios: tipoServico, nome, telefone, data.
+- **Mensagem gerada:** começa com `🎀 Novo pedido — Mew Mew Café 🎀`, lista `Tipo/Nome/Telefone/Data (dd/mm/aaaa)` + opcionais preenchidos e termina com `Enviado pelo site mewworld.space`. Número de destino em `WHATSAPP_MEW_MEW` (`558486643897`).
+- **Estilo:** hero cream com dots pattern (`radial-gradient` cardinal a 8%), form em card sticker, cards de serviço selecionados ficam com `var(--color-rose-light)` + borda mais grossa, inputs com `var(--radius-card)` e borda cardinal no focus. Mobile-first (grid colapsa para 1 coluna).
+- **Testes:** `Agendar.test.tsx` — hero, radios, campos, mensagem decodificada do `window.open` mockado, e bloqueio de envio com erros zod visíveis.
+
+### 29.3. Hurdles desta fase
+
+- **`getByLabelText` × `aria-label` do Footer:** em páginas que renderizam o `Footer`, `getByLabelText(/WhatsApp/i)` casa também com o ícone social ("Fale conosco no WhatsApp"). Use a string exata (`getByLabelText("WhatsApp")`) ou labels mais específicos.
+- **`getByText` com copy repetida:** textos que aparecem no parágrafo e num chip/benefício (ex: "Doces temáticos" no AboutSection) quebram `getByText` por match múltiplo — teste pelo texto exato do chip (com emoji) ou use `getAllByText`.
+- **Borda de accent + `clip-path`:** borda comum vaza do recorte diagonal; use um pseudo-elemento interno (`::after` com `background-color`) que é clipado junto com o painel.
 

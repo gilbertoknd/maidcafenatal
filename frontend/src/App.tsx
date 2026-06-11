@@ -9,6 +9,7 @@ import { EventosPage } from "./pages/Eventos";
 import { EventoDetalhes } from "./pages/EventoDetalhes";
 import { MaidDetalhes } from "./pages/MaidDetalhes";
 import { CuponsPage } from "./pages/Cupons";
+import { AgendarPage } from "./pages/Agendar";
 import "./App.css";
 
 import { ScrollToTop } from "./components/ScrollToTop";
@@ -36,6 +37,7 @@ function App() {
         <Route path="/admin" element={<Admin />} />
         <Route path="/maids/:id" element={<MaidDetalhes />} />
         <Route path="/cupons" element={<CuponsPage />} />
+        <Route path="/agendar" element={<AgendarPage />} />
       </Routes>
     </BrowserRouter>
   );

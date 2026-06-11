@@ -48,227 +48,125 @@
   margin: 0;
 }
 
-/* ─── Seletor de avatares ─── */
-.selector {
-  max-width: 40rem;
-  margin: 0 auto 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.8rem;
-}
-
-.avatars {
-  list-style: none;
-  display: flex;
-  gap: 0.7rem;
-  padding: 0;
-  margin: 0;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.avatars::-webkit-scrollbar {
-  display: none;
-}
-
-.avatarBtn {
-  --maid-color: var(--color-rose);
-  width: 64px;
-  height: 64px;
-  flex-shrink: 0;
-  padding: 0;
-  border-radius: var(--radius-circle);
-  border: 3px solid var(--color-ivory);
-  background-color: var(--maid-color);
-  cursor: pointer;
-  overflow: hidden;
-  opacity: 0.65;
-  transition: transform 0.18s ease, opacity 0.18s ease, border-color 0.18s ease;
-}
-
-.avatarBtn:hover {
-  opacity: 1;
-  transform: translateY(-3px);
-}
-
-.avatarActive {
-  opacity: 1;
-  border-color: var(--color-rose);
-  transform: scale(1.12);
-  box-shadow: 0 0 0 3px var(--color-wine), 0 6px 14px rgba(0, 0, 0, 0.3);
-}
-
-.avatarImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  flex-shrink: 0;
-  border-radius: var(--radius-circle);
-  border: 2px solid var(--color-ivory);
-  background-color: var(--color-ivory);
-  color: var(--color-wine);
-  cursor: pointer;
-  transition: transform 0.18s ease, background-color 0.18s ease;
-}
-
-.arrow:hover {
-  background-color: var(--color-rose);
-  transform: scale(1.08);
-}
-
-/* ─── Palco de destaque ─── */
-.stage {
-  position: relative;
-  max-width: 50rem;
+/* ─── Faixa de painéis diagonais ─── */
+.strip {
+  max-width: var(--container-max-width);
   margin: 0 auto;
-  min-height: 320px;
+  display: flex;
+  height: clamp(320px, 42vw, 440px);
 }
 
-.featured {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  grid-template-columns: 0.8fr 1.2fr;
-  gap: 1.5rem;
-  align-items: center;
-  background-color: var(--color-parchment);
-  border: 3px solid var(--color-wine-deep);
-  border-radius: var(--radius-card);
-  padding: 1.4rem;
-  box-shadow: var(--shadow-sticker-dark);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(12px);
-  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
-}
-
-.featuredActive {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-  position: relative;
-}
-
-.photoWrap {
+.panel {
   --maid-color: var(--color-rose);
-  border-radius: 16px;
+  position: relative;
+  flex: 1;
+  display: block;
   overflow: hidden;
-  border: 3px solid var(--color-wine);
-  background-color: var(--maid-color);
-  aspect-ratio: 3 / 4;
+  clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
+  text-decoration: none;
+  transition: flex-grow 0.35s ease;
+}
+
+/* Sobreposição das fatias: cada painel invade o corte do anterior */
+.panel + .panel {
+  margin-left: calc(-1 * clamp(18px, 3vw, 42px));
+}
+
+.panel:hover,
+.panel:focus-visible {
+  flex-grow: 1.7;
 }
 
 .photo {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
+  filter: saturate(0.75) brightness(0.92);
+  transition: filter 0.35s ease, transform 0.35s ease;
 }
 
-.info {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.7rem;
-  text-align: left;
+.panel:hover .photo,
+.panel:focus-visible .photo {
+  filter: saturate(1.1) brightness(1.02);
+  transform: scale(1.04);
 }
 
-.featBadge {
-  display: inline-flex;
-  align-items: center;
-  background-color: var(--color-rose-light);
-  color: var(--color-wine);
-  border: 2px solid var(--color-wine);
-  border-radius: var(--radius-button);
-  padding: 0.25rem 0.75rem;
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+/* Gradiente escuro atrás do nome + barra de accent na cor da maid */
+.overlay {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 55%;
+  background: linear-gradient(
+    to top,
+    rgba(20, 8, 12, 0.85) 0%,
+    rgba(20, 8, 12, 0.35) 55%,
+    transparent 100%
+  );
+  pointer-events: none;
 }
 
-.nameRow {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
+.overlay::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 6px;
+  background-color: var(--maid-color);
 }
 
-.maidName {
+.name {
+  position: absolute;
+  inset: auto 0 1.1rem 0;
+  text-align: center;
   font-family: var(--font-display);
   font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-4xl);
-  color: var(--color-ink);
-  margin: 0;
-}
-
-.heart {
-  color: var(--color-wine);
-  fill: var(--color-rose);
-}
-
-.maidBio {
-  font-size: var(--font-size-md);
-  line-height: 1.55;
-  color: var(--color-text);
-  margin: 0;
-}
-
-.meetLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-top: 0.3rem;
-  background-color: var(--color-wine);
+  font-size: clamp(1.05rem, 2vw, 1.5rem);
   color: var(--color-ivory);
-  border: 2px solid var(--color-wine-deep);
-  border-radius: var(--radius-button);
-  padding: 0.6rem 1.2rem;
-  font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-sm);
-  text-decoration: none;
-  box-shadow: var(--shadow-sticker-sm);
-  transition: transform 0.18s ease, background-color 0.18s ease;
+  text-shadow: 0 2px 8px rgba(20, 8, 12, 0.7);
+  letter-spacing: 0.03em;
+  transition: transform 0.35s ease, color 0.35s ease;
 }
 
-.meetLink:hover {
-  background-color: var(--color-wine-dark);
-  transform: translate(-2px, -2px);
-  box-shadow: var(--shadow-sticker-dark);
+.panel:hover .name,
+.panel:focus-visible .name {
+  transform: translateY(-4px) scale(1.08);
+  color: var(--maid-color);
 }
 
-@media (max-width: 700px) {
-  .featured {
-    grid-template-columns: 1fr;
-    text-align: center;
-    position: relative;
-    display: none;
+/* ─── Mobile: painéis empilhados com corte diagonal vertical ─── */
+@media (max-width: 768px) {
+  .strip {
+    flex-direction: column;
+    height: auto;
   }
 
-  .photoWrap {
-    max-width: 14rem;
-    margin: 0 auto;
+  .panel {
+    flex: none;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    clip-path: polygon(0 8%, 100% 0, 100% 92%, 0 100%);
   }
 
-  .info {
-    align-items: center;
-    text-align: center;
+  .panel + .panel {
+    margin-left: 0;
+    margin-top: calc(-1 * clamp(20px, 7vw, 36px));
   }
 
-  .stage {
-    min-height: 0;
+  .panel:hover,
+  .panel:focus-visible {
+    flex-grow: 0;
   }
 
-  .featuredActive {
-    display: grid;
+  .name {
+    inset: auto 0 2rem 0;
+  }
+
+  .overlay {
+    height: 65%;
+  }
+
+  .overlay::after {
+    bottom: 8%;
   }
 }

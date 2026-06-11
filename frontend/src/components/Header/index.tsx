@@ -1,25 +1,62 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import styles from "./styles.module.css";
 
+const ITENS_BANNER = [
+  "✦ A experiência mais mágica do Nordeste",
+  "♡ Doces & comidas temáticas",
+  "✦ Eventos personalizados",
+  "♡ Delivery & encomendas",
+  "✦ Kit Festa & aniversários",
+];
+
+const LIMITE_SCROLL_BANNER = 50;
+
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isBannerVisible, setIsBannerVisible] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
 
+  useEffect(() => {
+    const aoRolar = () =>
+      setIsBannerVisible(window.scrollY <= LIMITE_SCROLL_BANNER);
+
+    aoRolar();
+    window.addEventListener("scroll", aoRolar, { passive: true });
+    return () => window.removeEventListener("scroll", aoRolar);
+  }, []);
+
   return (
     <header className={styles.header}>
-      {/* Faixa de avisos */}
-      <div className={styles.topBar}>
-        <span className={styles.topBarItem}>
-          ✦ O primeiro maid &amp; mangá café do Nordeste
-        </span>
-        <span className={styles.topBarItem}>♡ Mangateca à vontade</span>
-        <span className={styles.topBarItem}>✦ Natal / RN</span>
+      {/* Rolling banner de avisos */}
+      <div
+        className={`${styles.topBar} ${
+          isBannerVisible ? "" : styles.topBarHidden
+        }`}
+        data-testid="rolling-banner"
+        data-visible={isBannerVisible}
+      >
+        <div className={styles.marqueeTrack}>
+          {/* o conteúdo é duplicado para o loop do marquee ser contínuo */}
+          {[false, true].map((duplicado) => (
+            <div
+              key={duplicado ? "copia" : "original"}
+              className={styles.marqueeContent}
+              aria-hidden={duplicado || undefined}
+            >
+              {ITENS_BANNER.map((item) => (
+                <span key={item} className={styles.topBarItem}>
+                  {item}
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className={styles.container}>
@@ -101,15 +138,9 @@ export function Header() {
             Cupons
           </Link>
 
-          <a
-            href="https://wa.me/558486643897"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.cta}
-            onClick={closeMenu}
-          >
-            Reservar mesa
-          </a>
+          <Link to="/agendar" className={styles.cta} onClick={closeMenu}>
+            Agendar evento
+          </Link>
         </nav>
       </div>
     </header>
