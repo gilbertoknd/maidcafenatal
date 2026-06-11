@@ -691,6 +691,12 @@ pnpm lint        # eslint
 
 ---
 
+**Hurdle:** `docker compose build` do frontend falha em `pnpm install --frozen-lockfile` com `ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING` (Junho/2026).
+**Causa:** O Dockerfile usa `corepack enable pnpm` e, sem o campo `packageManager` no `package.json`, o corepack baixa **a última versão do pnpm** — o pnpm 11.x não roda no Node 20 das imagens `node:20-alpine`. O backend nunca quebrou porque já tinha `"packageManager": "pnpm@10.20.0"` pinado.
+**Solução:** Sempre pinar `"packageManager": "pnpm@10.x.x"` no `package.json` de **frontend e backend** (idealmente a mesma versão usada localmente, que gerou o lockfile). Se atualizar o pnpm local, atualize o pin junto.
+
+---
+
 **Hurdle:** Perda massiva de tokens de design (`--font-*`, `--radius-*`) no `index.css`.
 **Causa:** Uso incorreto de ferramentas de edição (`replace_file_content`) em blocos grandes, resultando no apagamento acidental de definições localizadas no meio ou fim do bloco `:root`.
 **Solução:** Sempre validar a integridade total do `index.css` após edições. Os tokens de tipografia e layout são a espinha dorsal da estética "fofa" (Fredoka + Arredondamento) e não podem ser removidos sob hipótese alguma. Se o site aparecer quadrado ou com fonte padrão, a primeira verificação deve ser os tokens do `:root`.
