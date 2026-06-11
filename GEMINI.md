@@ -697,6 +697,12 @@ pnpm lint        # eslint
 
 ---
 
+**Hurdle:** Vite dev dentro do Docker falha com `Failed to resolve import "<pacote>"` logo após instalar uma dependência nova localmente (ex: `zod`).
+**Causa:** O `docker-compose.override.yml` (modo dev) monta `./frontend` em `/app` e protege o `node_modules` com **volume anônimo** (`- /app/node_modules`). Esse volume congela o `node_modules` de quando o container foi criado e **sobrevive a `docker compose up --build`** — a imagem nova tem o pacote, mas o volume antigo a sobrepõe.
+**Solução:** Após adicionar dependências, recrie o container renovando os volumes anônimos: `docker compose up -d --build --no-deps --force-recreate --renew-anon-volumes frontend` (vale igual para o `backend`, que usa o mesmo padrão).
+
+---
+
 **Hurdle:** Perda massiva de tokens de design (`--font-*`, `--radius-*`) no `index.css`.
 **Causa:** Uso incorreto de ferramentas de edição (`replace_file_content`) em blocos grandes, resultando no apagamento acidental de definições localizadas no meio ou fim do bloco `:root`.
 **Solução:** Sempre validar a integridade total do `index.css` após edições. Os tokens de tipografia e layout são a espinha dorsal da estética "fofa" (Fredoka + Arredondamento) e não podem ser removidos sob hipótese alguma. Se o site aparecer quadrado ou com fonte padrão, a primeira verificação deve ser os tokens do `:root`.
@@ -1081,7 +1087,7 @@ O padrão visual foi propagado para **Cardápio, Loja Online, Mangás, Eventos, 
 > ⚠️ Atualizada pelo pivô de Junho/2026 — ver seção 29.
 
 `Header` (sticky, com rolling banner marquee no topo + wordmark + CTA "Agendar evento" → `/agendar`) → `main`:
-`HeroSection` (boas-vindas com mascote, highlight rosa em "invocadx", CTAs e tags de serviços) → `HighlightsSection` (4 destaques) → `MaidCarousel` (fundo vinho; painéis diagonais clicáveis) → `HowItWorksSection` (4 passos; alvo da âncora `#como-funciona`; o 4º card é CTA para `/agendar`) → `AboutSection` ("Magia japonesa na sua festa", âncora `#sobre`) → `Footer` (vinho, colunas Cardápio / O café + sociais).
+`HeroSection` (boas-vindas com mascote, highlight rosa em "invocadx", CTAs e tags de serviços) → `HighlightsSection` (4 destaques) → `MaidCarousel` (fundo vinho; painéis diagonais clicáveis) → `HowItWorksSection` (4 passos; alvo da âncora `#como-funciona`; o 4º card é CTA para `/agendar`) → `AboutSection` ("Magia japonesa na sua festa", âncora `#sobre`) → `InstagramSection` (mosaico do feed: 1º post em destaque 2x2 + 4 posts + card "Seguir @mewmewnatal"; some se a API não retornar posts) → `Footer` (vinho, colunas Cardápio / O café + sociais).
 
 ### 28.3. Assets e fontes
 

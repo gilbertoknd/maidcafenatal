@@ -29,6 +29,9 @@ vi.mock("../components/HowItWorksSection", () => ({
 vi.mock("../components/AboutSection", () => ({
   AboutSection: () => <div>About Section</div>,
 }));
+vi.mock("../components/InstagramSection", () => ({
+  InstagramSection: () => <div>Instagram Section</div>,
+}));
 
 describe("Página Inicial", () => {
   it("deve renderizar todas as seções do redesign", () => {
@@ -44,6 +47,7 @@ describe("Página Inicial", () => {
     expect(screen.getByText("Maid Carousel")).toBeInTheDocument();
     expect(screen.getByText("How It Works Section")).toBeInTheDocument();
     expect(screen.getByText("About Section")).toBeInTheDocument();
+    expect(screen.getByText("Instagram Section")).toBeInTheDocument();
     expect(screen.getByText("Footer")).toBeInTheDocument();
   });
 });

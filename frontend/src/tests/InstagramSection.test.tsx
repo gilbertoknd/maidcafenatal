@@ -1,5 +1,5 @@
 import "../setupTests";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { InstagramSection } from "../components/InstagramSection";
 import * as api from "../services/api";
@@ -34,27 +34,37 @@ describe("InstagramSection Component", () => {
   it("should show 5 dynamic posts and the 6th card as a redirect", async () => {
     render(<InstagramSection />);
 
-    await waitFor(() => {
-      // 5 regular post cards + 1 redirect card = 6 <a> tags inside the grid
-      // We can find all links and check the count
-      // Filtering links that have an image (posts) vs the one with text (redirect)
-      const links = screen.getAllByRole("link");
-      
-      // Filter out only the ones in the grid
-      // We know the redirect card should point to the profile
-      const profileLinks = links.filter(link => link.getAttribute('href') === "https://www.instagram.com/mewmewnatal/");
-      const postLinks = links.filter(link => link.getAttribute('href')?.includes('/p/'));
+    // espera os posts carregarem de fato (e não o estado de loading)
+    await screen.findByTestId("instagram-destaque");
 
-      expect(postLinks.length).toBe(5);
-      expect(profileLinks.length).toBe(1);
-    });
+    const links = screen.getAllByRole("link");
+    const profileLinks = links.filter(
+      (link) =>
+        link.getAttribute("href") === "https://www.instagram.com/mewmewnatal/"
+    );
+    const postLinks = links.filter((link) =>
+      link.getAttribute("href")?.includes("/p/")
+    );
+
+    expect(postLinks.length).toBe(5);
+    expect(profileLinks.length).toBe(1);
   });
 
-  it("should NOT render the 'Ver perfil completo' button in the footer", async () => {
+  it("deve destacar o primeiro post (card maior do mosaico)", async () => {
     render(<InstagramSection />);
 
+    const destaque = await screen.findByTestId("instagram-destaque");
+    // o destaque é o primeiro post da ordem
+    expect(destaque).toHaveAttribute("href", "https://www.instagram.com/p/1");
+    expect(within(destaque).getByText(/Destaque/i)).toBeInTheDocument();
+  });
+
+  it("não deve renderizar nada se não houver posts", async () => {
+    vi.mocked(api.buscarInstagramPosts).mockResolvedValue([]);
+    const { container } = render(<InstagramSection />);
+
     await waitFor(() => {
-      expect(screen.queryByText(/Ver perfil completo/i)).not.toBeInTheDocument();
+      expect(container).toBeEmptyDOMElement();
     });
   });
 });
