@@ -1,12 +1,15 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
+import { MapContainer, TileLayer, useMapEvents, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { X, MapPin, Loader2, Check } from "lucide-react";
+import { X, MapPin, Loader2, Check, Search } from "lucide-react";
 import styles from "./styles.module.css";
 
 // Definimos o centro inicial: Natal/RN
 const DEFAULT_CENTER: [number, number] = [-5.805, -35.209];
+
+// Viewbox da região de Natal para priorizar resultados locais na busca
+const NATAL_VIEWBOX = "-35.32,-5.70,-35.13,-5.92";
 
 export interface AddressData {
   address: string;
@@ -14,10 +17,26 @@ export interface AddressData {
   lng: number;
 }
 
+interface SugestaoEndereco {
+  display_name: string;
+  lat: string;
+  lon: string;
+}
+
 interface AddressMapModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: (data: AddressData) => void;
+}
+
+// Move o mapa suavemente até o destino escolhido na busca (o center do
+// MapContainer só vale na montagem; depois disso é preciso flyTo)
+function FlyToController({ destino }: { destino: [number, number] | null }) {
+  const map = useMap();
+  useEffect(() => {
+    if (destino) map.flyTo(destino, 17);
+  }, [destino, map]);
+  return null;
 }
 
 // Sub-componente mágico do Leaflet para observar o movimento livre do mapa
@@ -43,9 +62,60 @@ export function AddressMapModal({
   const [centerMap, setCenterMap] = useState<[number, number]>(DEFAULT_CENTER);
   const [currentAddress, setCurrentAddress] = useState<string>("Carregando endereço...");
   const [isGeocoding, setIsGeocoding] = useState<boolean>(false);
-  
+
+  // Busca de endereço (geocoding direto): o usuário digita e o pino voa até lá
+  const [busca, setBusca] = useState("");
+  const [sugestoes, setSugestoes] = useState<SugestaoEndereco[]>([]);
+  const [buscandoSugestoes, setBuscandoSugestoes] = useState(false);
+  const [destinoVoo, setDestinoVoo] = useState<[number, number] | null>(null);
+  // Evita reabrir o dropdown quando o próprio código preenche o input
+  const ignorarProximaBusca = useRef(false);
+
   // Timeout para "debounce", não ficar pesando a API pública enquanto a pessoa arrasta rápido
   const geocodeTimeout = useRef<number | null>(null);
+
+  // Debounce da busca por texto (Nominatim /search, priorizando Natal/RN)
+  useEffect(() => {
+    if (ignorarProximaBusca.current) {
+      ignorarProximaBusca.current = false;
+      return;
+    }
+    if (busca.trim().length < 3) {
+      setSugestoes([]);
+      return;
+    }
+    const timeout = window.setTimeout(async () => {
+      try {
+        setBuscandoSugestoes(true);
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&countrycodes=br&viewbox=${NATAL_VIEWBOX}&q=${encodeURIComponent(
+            busca
+          )}`
+        );
+        const dados = await response.json();
+        setSugestoes(Array.isArray(dados) ? dados : []);
+      } catch {
+        setSugestoes([]);
+      } finally {
+        setBuscandoSugestoes(false);
+      }
+    }, 450);
+    return () => clearTimeout(timeout);
+  }, [busca]);
+
+  // Ao escolher uma sugestão, o pino voa até o endereço — o cliente só confirma
+  const escolherSugestao = (sugestao: SugestaoEndereco) => {
+    const lat = parseFloat(sugestao.lat);
+    const lng = parseFloat(sugestao.lon);
+    const partes = sugestao.display_name.split(",").map((p) => p.trim());
+
+    ignorarProximaBusca.current = true;
+    setBusca(partes.slice(0, 2).join(", "));
+    setSugestoes([]);
+    setCenterMap([lat, lng]);
+    setDestinoVoo([lat, lng]);
+    setCurrentAddress(partes.slice(0, 2).join(", "));
+  };
 
   // Usa Nominatim/OSM para transformar Lat/Lng em rua
   const reverseGeocode = useCallback(async (lat: number, lng: number) => {
@@ -108,6 +178,7 @@ export function AddressMapModal({
                 (pos) => {
                     const newCenter: [number, number] = [pos.coords.latitude, pos.coords.longitude];
                     setCenterMap(newCenter);
+                    setDestinoVoo(newCenter);
                     reverseGeocode(newCenter[0], newCenter[1]);
                 },
                 () => {
@@ -141,6 +212,43 @@ export function AddressMapModal({
           </button>
         </div>
 
+        {/* Busca por texto: digite e o pino vai sozinho até o endereço */}
+        <div className={styles.searchSection}>
+          <div className={styles.searchBox}>
+            {buscandoSugestoes ? (
+              <Loader2 size={18} className={styles.loadingSpinner} />
+            ) : (
+              <Search size={18} />
+            )}
+            <input
+              type="text"
+              className={styles.searchInput}
+              placeholder="Digite seu endereço (rua, bairro, cidade)"
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+            />
+          </div>
+          {sugestoes.length > 0 && (
+            <ul className={styles.suggestionsList}>
+              {sugestoes.map((sugestao) => (
+                <li key={`${sugestao.lat},${sugestao.lon}`}>
+                  <button
+                    type="button"
+                    className={styles.suggestionItem}
+                    onClick={() => escolherSugestao(sugestao)}
+                  >
+                    <MapPin size={15} />
+                    {sugestao.display_name
+                      .split(",")
+                      .slice(0, 4)
+                      .join(",")}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
         <div className={styles.mapWrapper}>
           <MapContainer
             center={centerMap}
@@ -155,6 +263,7 @@ export function AddressMapModal({
             />
             {/* O evento de movimento */}
             <MapEventListener onMoveEnd={handleMapMoveEnd} />
+            <FlyToController destino={destinoVoo} />
           </MapContainer>
 
           {/* O Pino customizado parado sempre bem no meio do flexbox, fixo sobre o mapa */}
@@ -165,7 +274,8 @@ export function AddressMapModal({
 
         <div className={styles.footer}>
           <p className={styles.confirmMessage}>
-            Arraste o mapa até o Pino estar em cima da sua casa.
+            Confira se o pino está em cima da sua casa — se precisar, ajuste
+            arrastando o mapa.
           </p>
           
           <h4 className={styles.currentAddressText}>

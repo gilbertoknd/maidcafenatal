@@ -1,4 +1,5 @@
 import { handleScrollTop } from "../../utils/scroll";
+import { WHATSAPP_URL, INSTAGRAM_URL } from "../../utils/contato";
 import styles from "./styles.module.css";
 import { InstagramIcon } from "../../assets/icons/InstagramIcon";
 import { WhatsappIcon } from "../../assets/icons/WhatsappIcon";
@@ -44,7 +45,7 @@ export function Footer() {
             </p>
             <div className={styles.socials}>
               <a
-                href="https://www.instagram.com/mewmewnatal/"
+                href={INSTAGRAM_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.iconLink}
@@ -53,7 +54,7 @@ export function Footer() {
                 <InstagramIcon />
               </a>
               <a
-                href="https://wa.me/558486643897"
+                href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.iconLink}

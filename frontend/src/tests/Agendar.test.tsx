@@ -95,7 +95,7 @@ describe("Página de Agendamento", () => {
 
     expect(abrirJanela).toHaveBeenCalledTimes(1);
     const url = abrirJanela.mock.calls[0][0] as string;
-    expect(url).toContain("https://wa.me/558486643897?text=");
+    expect(url).toContain("https://wa.me/5584998350914?text=");
 
     const mensagem = decodeURIComponent(url.split("?text=")[1]);
     expect(mensagem).toContain("🎀 Novo pedido — Mew Mew Café 🎀");

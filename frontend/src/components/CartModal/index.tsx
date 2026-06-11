@@ -9,6 +9,7 @@ import type { AddressData } from "../AddressMapModal";
 import { trackEvent } from "../../utils/analytics";
 import { useValidarCupom } from "../../hooks/useCupons";
 import type { CupomValido } from "../../types/Cupom";
+import { WHATSAPP_NUMERO } from "../../utils/contato";
 export function CartModal() {
   const {
     itens,
@@ -105,8 +106,7 @@ export function CartModal() {
       
       message += `\n\n📍 *Localização GPS:* https://www.google.com/maps?q=${addressData.lat},${addressData.lng}`;
 
-      const whatsappNumber = "5584998350914"; //Replace with real number or env variable
-      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+      const whatsappUrl = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(message)}`;
 
       window.open(whatsappUrl, "_blank");
 

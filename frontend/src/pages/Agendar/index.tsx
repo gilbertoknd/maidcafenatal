@@ -3,6 +3,7 @@ import { z } from "zod";
 import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
 import { Send } from "lucide-react";
+import { WHATSAPP_NUMERO } from "../../utils/contato";
 import styles from "./styles.module.css";
 
 const TIPOS_SERVICO = [
@@ -13,7 +14,7 @@ const TIPOS_SERVICO = [
   { emoji: "🚚", nome: "Delivery" },
 ];
 
-const WHATSAPP_MEW_MEW = "558486643897";
+
 
 const esquemaAgendamento = z.object({
   tipoServico: z.string().min(1, "Escolha o tipo de serviço."),
@@ -87,7 +88,7 @@ export function AgendarPage() {
     if (detalhes.trim()) linhas.push(`Detalhes: ${detalhes.trim()}`);
     linhas.push("", "Enviado pelo site mewworld.space");
 
-    const url = `https://wa.me/${WHATSAPP_MEW_MEW}?text=${encodeURIComponent(
+    const url = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(
       linhas.join("\n")
     )}`;
     window.open(url, "_blank");

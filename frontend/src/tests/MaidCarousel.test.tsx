@@ -20,7 +20,7 @@ describe("MaidCarousel Component (painéis diagonais)", () => {
     ).toBeInTheDocument();
   });
 
-  it("deve renderizar todas as 6 maids com suas imagens", () => {
+  it("deve renderizar todas as 5 maids com suas imagens", () => {
     renderCarousel();
     maids.forEach((maid) => {
       expect(screen.getByAltText(maid.nome)).toBeInTheDocument();

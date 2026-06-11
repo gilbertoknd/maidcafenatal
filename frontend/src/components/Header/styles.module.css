@@ -87,6 +87,7 @@
   width: auto;
   flex-shrink: 0;
   transition: transform 0.3s ease;
+  padding: 2px 0;
 }
 
 .logo:hover {

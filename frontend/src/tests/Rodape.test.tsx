@@ -42,6 +42,6 @@ describe("Footer Component", () => {
 
     const whatsappLink = screen.getByLabelText("Fale conosco no WhatsApp");
     expect(whatsappLink).toBeInTheDocument();
-    expect(whatsappLink).toHaveAttribute("href", "https://wa.me/558486643897");
+    expect(whatsappLink).toHaveAttribute("href", "https://wa.me/5584998350914");
   });
 });

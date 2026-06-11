@@ -1117,6 +1117,10 @@ Formulário de agendamento que redireciona para o WhatsApp com mensagem pré-pre
 - **Estilo:** hero cream com dots pattern (`radial-gradient` cardinal a 8%), form em card sticker, cards de serviço selecionados ficam com `var(--color-rose-light)` + borda mais grossa, inputs com `var(--radius-card)` e borda cardinal no focus. Mobile-first (grid colapsa para 1 coluna).
 - **Testes:** `Agendar.test.tsx` — hero, radios, campos, mensagem decodificada do `window.open` mockado, e bloqueio de envio com erros zod visíveis.
 
+### 29.2b. Checkout do carrinho — busca de endereço no mapa
+
+O `AddressMapModal` (usado pelo `CartModal` no checkout de delivery) tem **busca de endereço por texto com autocomplete** (Nominatim `/search`, `countrycodes=br` + viewbox priorizando Natal, debounce de 450ms a partir de 3 caracteres). Ao escolher uma sugestão, o componente `FlyToController` (filho com `useMap()`) executa `map.flyTo(coords, 17)` — o `center` do `MapContainer` só vale na montagem, então **toda recentralização pós-mount deve usar esse padrão** (o GPS inicial também usa). Arrastar o mapa segue funcionando para ajuste fino do pino, com reverse geocode no `moveend`. Testes em `AddressMapModal.test.tsx` mockam `react-leaflet` (`vi.hoisted` para o spy de `flyTo`) e o `fetch` do Nominatim.
+
 ### 29.3. Hurdles desta fase
 
 - **`getByLabelText` × `aria-label` do Footer:** em páginas que renderizam o `Footer`, `getByLabelText(/WhatsApp/i)` casa também com o ícone social ("Fale conosco no WhatsApp"). Use a string exata (`getByLabelText("WhatsApp")`) ou labels mais específicos.
