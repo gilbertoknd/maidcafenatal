@@ -15,12 +15,13 @@ vi.mock("react-leaflet", () => ({
   useMap: () => ({ flyTo }),
 }));
 
+// Local público usado apenas como fixture de teste (não é endereço do negócio)
 const sugestaoNominatim = [
   {
     display_name:
-      "Rua Camilo de Paula, Tirol, Natal, Rio Grande do Norte, Brasil",
-    lat: "-5.7945",
-    lon: "-35.2041",
+      "Midway Mall, Avenida Bernardo Vieira, Tirol, Natal, Rio Grande do Norte, Brasil",
+    lat: "-5.8050",
+    lon: "-35.2122",
   },
 ];
 
@@ -35,7 +36,7 @@ function mockFetch() {
     return Promise.resolve({
       json: () =>
         Promise.resolve({
-          address: { road: "Rua Camilo de Paula", suburb: "Tirol" },
+          address: { road: "Avenida Bernardo Vieira", suburb: "Tirol" },
         }),
     } as Response);
   });
@@ -66,7 +67,7 @@ describe("AddressMapModal — busca de endereço", () => {
     renderModal();
 
     fireEvent.change(screen.getByPlaceholderText(/Digite seu endereço/i), {
-      target: { value: "Rua Camilo de Paula" },
+      target: { value: "Midway Mall" },
     });
 
     const sugestao = await screen.findByRole("button", {
@@ -85,14 +86,14 @@ describe("AddressMapModal — busca de endereço", () => {
     renderModal();
 
     fireEvent.change(screen.getByPlaceholderText(/Digite seu endereço/i), {
-      target: { value: "Rua Camilo de Paula" },
+      target: { value: "Midway Mall" },
     });
     fireEvent.click(
       await screen.findByRole("button", { name: /Tirol, Natal/i })
     );
 
     await waitFor(() => {
-      expect(flyTo).toHaveBeenCalledWith([-5.7945, -35.2041], 17);
+      expect(flyTo).toHaveBeenCalledWith([-5.805, -35.2122], 17);
     });
     // a lista de sugestões some após a escolha
     expect(
@@ -106,7 +107,7 @@ describe("AddressMapModal — busca de endereço", () => {
     renderModal(onConfirm);
 
     fireEvent.change(screen.getByPlaceholderText(/Digite seu endereço/i), {
-      target: { value: "Rua Camilo de Paula" },
+      target: { value: "Midway Mall" },
     });
     fireEvent.click(
       await screen.findByRole("button", { name: /Tirol, Natal/i })
@@ -120,8 +121,8 @@ describe("AddressMapModal — busca de endereço", () => {
 
     expect(onConfirm).toHaveBeenCalledTimes(1);
     const dados = onConfirm.mock.calls[0][0];
-    expect(dados.lat).toBeCloseTo(-5.7945);
-    expect(dados.lng).toBeCloseTo(-35.2041);
-    expect(dados.address).toMatch(/Rua Camilo de Paula/i);
+    expect(dados.lat).toBeCloseTo(-5.805);
+    expect(dados.lng).toBeCloseTo(-35.2122);
+    expect(dados.address).toMatch(/Midway Mall/i);
   });
 });

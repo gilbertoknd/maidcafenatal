@@ -17,7 +17,7 @@ describe("Footer Component", () => {
   it("não deve exibir a coluna 'Visite' nem endereço físico", () => {
     render(<Footer />);
     expect(screen.queryByText("Visite")).not.toBeInTheDocument();
-    expect(screen.queryByText(/Rua Camilo de Paula/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Tirol/i)).not.toBeInTheDocument();
   });
 
   it("deve exibir a descrição focada em eventos e delivery", () => {
