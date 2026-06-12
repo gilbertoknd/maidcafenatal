@@ -134,59 +134,41 @@
   color: var(--maid-color);
 }
 
-/* ─── Mobile: grade de cards lado a lado (sem empilhar verticalmente) ─── */
-@media (max-width: 768px) {
+/* ─── Celular: mantém as fatias diagonais, mas quebra em linhas
+   (3 em cima, 2 embaixo p/ as 5 maids). Tablets (>600px) seguem na
+   faixa única diagonal, igual ao desktop. ─── */
+@media (max-width: 600px) {
   .strip {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.6rem;
+    flex-wrap: wrap;
     height: auto;
+    row-gap: 0.4rem;
+    column-gap: 0;
   }
 
   .panel {
-    flex: none;
-    width: 100%;
-    aspect-ratio: 3 / 4;
-    clip-path: none;
-    border-radius: var(--radius-card);
-    border: 2px solid var(--color-rose);
-    box-shadow: var(--shadow-sticker-sm);
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    /* ~3 fatias por linha; a última linha cresce p/ preencher a largura,
+       resultando em 3 fatias em cima e 2 (maiores) embaixo */
+    flex: 1 1 34%;
+    height: clamp(168px, 46vw, 240px);
   }
 
-  /* Sem hover de toque: as fotos já entram vívidas no mobile */
+  /* Fotos entram vívidas — no toque não há hover pra realçar */
   .photo {
-    filter: saturate(1) brightness(1);
+    filter: saturate(1) brightness(0.98);
   }
 
-  .panel + .panel {
+  /* A 1ª fatia de cada linha (1, 4, …) não sobrepõe a fatia anterior */
+  .panel:nth-child(3n + 1) {
     margin-left: 0;
   }
 
+  /* Evita salto de layout no toque/foco: a fatia não "engole" a linha */
   .panel:hover,
   .panel:focus-visible {
-    flex-grow: 0;
-    transform: translate(-2px, -2px);
-    box-shadow: var(--shadow-sticker-dark);
+    flex-grow: 1;
   }
 
   .name {
-    inset: auto 0 0.6rem 0;
-    font-size: var(--font-size-sm);
-  }
-
-  .overlay {
-    height: 52%;
-  }
-
-  .overlay::after {
-    bottom: 0;
-  }
-}
-
-/* Telas bem estreitas: 2 colunas para os rostos não ficarem minúsculos */
-@media (max-width: 380px) {
-  .strip {
-    grid-template-columns: repeat(2, 1fr);
+    inset: auto 0 0.85rem 0;
   }
 }

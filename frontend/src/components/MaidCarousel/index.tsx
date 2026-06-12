@@ -6,10 +6,11 @@ import styles from "./styles.module.css";
 
 /**
  * Showcase das Maids em painéis com corte diagonal (clip-path).
- * As 6 maids ficam lado a lado em fatias sobrepostas; o painel inteiro
- * é um link para a página de detalhes (/maids/:id). No hover o painel
- * expande e a imagem ganha destaque. No mobile, vira uma grade de cards
- * arredondados lado a lado (3 colunas; 2 em telas bem estreitas).
+ * As maids ficam lado a lado em fatias diagonais sobrepostas; o painel
+ * inteiro é um link para a página de detalhes (/maids/:id). No hover o
+ * painel expande e a imagem ganha destaque. No celular (≤600px) a faixa
+ * quebra em linhas mantendo o corte diagonal (3 fatias em cima, 2 embaixo
+ * para as 5 maids); tablets/desktop seguem com a faixa única.
  */
 export function MaidCarousel() {
   return (

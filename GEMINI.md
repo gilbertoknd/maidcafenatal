@@ -1116,7 +1116,7 @@ O café **não opera mais presencialmente**. O negócio agora é: **eventos pers
 - **Header:** a `.topBar` estática virou um **rolling banner (marquee)** com animação CSS pura (`@keyframes marqueeScroll`, track com o conteúdo duplicado animado até `translateX(-50%)` para loop contínuo; a cópia leva `aria-hidden`). O banner **some ao rolar** a página (`useEffect` + listener de scroll passivo; threshold de 50px em `LIMITE_SCROLL_BANNER`) com `translateY(-100%)` + colapso de `max-height`. Expõe `data-testid="rolling-banner"` e `data-visible` para os testes. Itens do banner em `ITENS_BANNER`. Pausa no hover e respeita `prefers-reduced-motion`. CTA do Header: `<Link to="/agendar">Agendar evento</Link>` (não há mais link direto pro WhatsApp).
 - **HeroSection:** badge "A experiência maid café mais mágica do Nordeste"; subtítulo focado em eventos/delivery/kit festa; tags com emoji (🎂 Aniversários temáticos / 🎓 Formaturas & eventos / 📦 Delivery & encomendas).
 - **HowItWorksSection:** eyebrow "✨ Conheça a experiência", título "Como funciona", 4 passos novos (Sparkles, Cake, PartyPopper, ArrowRight). O 4º passo ("Faça sua encomenda") é um `<Link to="/agendar">` com classe `.stepCta` (fundo wine, texto ivory); o `<li>` dele usa `display: contents` para o Link assumir a célula do grid.
-- **MaidCarousel:** redesign "team showcase" — 6 painéis com corte diagonal (`clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%)`) sobrepostos via `margin-left` negativo; cada painel é um `<Link>` para `/maids/:id` com nome em overlay de gradiente + barra de accent na cor da maid (`--maid-color`). Hover/focus-visible: `flex-grow: 1.7`, imagem mais vívida, nome destacado. Mobile (<768px): vira **grade de 3 colunas** de cards arredondados lado a lado (`border-radius`, borda `--color-rose`, sem `clip-path`), caindo para 2 colunas abaixo de 380px — ver seção 30. Sem avatares, setas ou card de destaque.
+- **MaidCarousel:** redesign "team showcase" — 6 painéis com corte diagonal (`clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%)`) sobrepostos via `margin-left` negativo; cada painel é um `<Link>` para `/maids/:id` com nome em overlay de gradiente + barra de accent na cor da maid (`--maid-color`). Hover/focus-visible: `flex-grow: 1.7`, imagem mais vívida, nome destacado. Mobile (≤600px): **mantém as fatias diagonais**, apenas quebrando a faixa em linhas (3 fatias em cima + 2 embaixo p/ as 5 maids) via `flex-wrap` — ver seção 30. Tablets/desktop (>600px) seguem na faixa única. Sem avatares, setas ou card de destaque.
 - **AboutSection:** título "Magia japonesa na sua festa", texto sobre a experiência de eventos, benefícios com emoji, CTA "Agende seu evento" → `/agendar`.
 - **Footer:** coluna "Visite" (endereço/telefone) **removida**; descrição focada em eventos/delivery; copyright © 2025.
 
@@ -1152,17 +1152,17 @@ O `AddressMapModal` (usado pelo `CartModal` no checkout de delivery) tem **busca
 
 Ao criar/editar uma grade de cards nas páginas públicas, siga esta escada de breakpoints (nunca caia para `1fr` num grid de cards homogêneos):
 
-| Tipo de grade | Desktop | Tablet (~≤900px) | Phone (~≤520px) | Phone estreito (≤380px) |
-| --- | --- | --- | --- | --- |
-| Cards de seção (Destaques, Como Funciona) | 4 col | 2 col | **2 col** | 2 col |
-| Maids (`MaidCarousel`) | 6 fatias diagonais | 6 fatias | **3 col (grade)** | 2 col |
-| Produtos (`MenuContent`, Loja, Mangás) | auto-fill | **3 col** | 3 col | 3 col |
-| Instagram | 3 col | 3 col | 2 col | 2 col |
+| Tipo de grade | Desktop | Tablet | Phone (~≤520-600px) |
+| --- | --- | --- | --- |
+| Cards de seção (Destaques, Como Funciona) | 4 col | 2 col | **2 col** (2x2) |
+| Maids (`MaidCarousel`) | faixa única de 5 fatias diagonais | faixa única (até >600px) | **fatias diagonais quebradas em 3 em cima + 2 embaixo** |
+| Produtos (`MenuContent`, Loja, Mangás) | auto-fill | **3 col** | 3 col |
+| Instagram | 3 col | 3 col | 2 col |
 
 ### 30.2. Ajustes aplicados nesta rodada
 
 - **`HighlightsSection`** e **`HowItWorksSection`:** o breakpoint `≤520px` deixou de usar `grid-template-columns: 1fr` e agora mantém `repeat(2, 1fr)` (2x2), com `padding`/`font-size` levemente reduzidos para caber. O 4º passo CTA do `HowItWorks` (`.ctaItem { display: contents }`) participa normalmente do grid 2x2.
-- **`MaidCarousel`:** no mobile (`≤768px`) o `.strip` deixou de empilhar verticalmente (com `clip-path` diagonal) e virou `display: grid; grid-template-columns: repeat(3, 1fr)`. Cada `.panel` perde o `clip-path`, ganha `border-radius: var(--radius-card)`, borda `var(--color-rose)` e `box-shadow: var(--shadow-sticker-sm)`, mantendo o overlay de nome + barra de accent (`--maid-color`). Abaixo de `380px` cai para 2 colunas. A estrutura JSX (Links + img + nome) é intacta, então `MaidCarousel.test.tsx` segue válido.
+- **`MaidCarousel`:** o **corte diagonal (`clip-path`) entre as maids é mantido no mobile** — não vira caixa por maid. No celular (`≤600px`) o `.strip` usa `flex-wrap: wrap` e cada `.panel` recebe `flex: 1 1 34%` (≈3 fatias por linha) + `row-gap`; a última linha cresce via `flex-grow` e preenche a largura, resultando em **3 fatias em cima e 2 (maiores) embaixo** para as 5 maids. A sobreposição diagonal (`.panel + .panel { margin-left: -overlap }`) é preservada dentro de cada linha; só a 1ª fatia de cada linha zera a sobreposição via `.panel:nth-child(3n + 1) { margin-left: 0 }` (regra geral: funciona p/ 6+ maids também, sempre 3 por linha). **Tablets/desktop (>600px) seguem na faixa única diagonal** (mais parecido com o PC). A estrutura JSX (Links + img + nome) é intacta, então `MaidCarousel.test.tsx` segue válido.
 - **Produtos:** já estavam corretos em 3 colunas no mobile (ver "Densidade Mobile" na seção 13) — não alterados.
 
 ### 30.3. Hurdle — limitação dos testes para layout CSS
