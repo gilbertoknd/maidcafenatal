@@ -1,5 +1,5 @@
 import "../setupTests";
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { InstagramSection } from "../components/InstagramSection";
 import * as api from "../services/api";
@@ -35,7 +35,7 @@ describe("InstagramSection Component", () => {
     render(<InstagramSection />);
 
     // espera os posts carregarem de fato (e não o estado de loading)
-    await screen.findByTestId("instagram-destaque");
+    await screen.findByTestId("instagram-primeiro-post");
 
     const links = screen.getAllByRole("link");
     const profileLinks = links.filter(
@@ -50,13 +50,12 @@ describe("InstagramSection Component", () => {
     expect(profileLinks.length).toBe(1);
   });
 
-  it("deve destacar o primeiro post (card maior do mosaico)", async () => {
+  it("deve renderizar o primeiro post no topo da ordem", async () => {
     render(<InstagramSection />);
 
-    const destaque = await screen.findByTestId("instagram-destaque");
-    // o destaque é o primeiro post da ordem
-    expect(destaque).toHaveAttribute("href", "https://www.instagram.com/p/1");
-    expect(within(destaque).getByText(/Destaque/i)).toBeInTheDocument();
+    const primeiro = await screen.findByTestId("instagram-primeiro-post");
+    // o primeiro é o primeiro post da ordem
+    expect(primeiro).toHaveAttribute("href", "https://www.instagram.com/p/1");
   });
 
   it("não deve renderizar nada se não houver posts", async () => {
