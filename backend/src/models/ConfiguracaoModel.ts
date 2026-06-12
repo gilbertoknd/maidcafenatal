@@ -20,8 +20,11 @@ export class ConfiguracaoModel {
       await client.query("BEGIN");
       for (const [chave, valor] of Object.entries(dados)) {
         await client.query(
-          `UPDATE configuracoes SET valor = $1, atualizado_em = CURRENT_TIMESTAMP WHERE chave = $2`,
-          [valor, chave],
+          `INSERT INTO configuracoes (chave, valor)
+           VALUES ($1, $2)
+           ON CONFLICT (chave) DO UPDATE
+           SET valor = EXCLUDED.valor, atualizado_em = CURRENT_TIMESTAMP`,
+          [chave, valor],
         );
       }
       await client.query("COMMIT");

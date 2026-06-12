@@ -4,7 +4,7 @@ import { AppError } from "../errors/AppError.js";
 import fs from "fs";
 import path from "path";
 
-// Chaves válidas para as configurações de fontes
+// Chaves válidas para as configurações
 const CHAVES_VALIDAS = [
   "fonte_titulo_site",
   "fonte_navbar",
@@ -13,6 +13,8 @@ const CHAVES_VALIDAS = [
   "fonte_descricoes",
   "fonte_botoes",
   "fonte_geral",
+  // Conteúdo da seção de eventos da home (JSON serializado)
+  "home_eventos",
 ];
 
 export class ConfiguracaoController {

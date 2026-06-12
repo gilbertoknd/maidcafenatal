@@ -1,0 +1,234 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem;
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+}
+
+.formTitle {
+  margin: 0;
+  color: var(--color-primary-dark);
+  font-size: var(--font-size-2xl);
+  font-family: var(--font-title-site);
+  font-weight: var(--font-weight-bold);
+}
+
+.help {
+  margin: 0;
+  color: var(--color-gray-600);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+}
+
+.loading {
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-gray-600);
+}
+
+.errorAlert {
+  background-color: #fee2e2;
+  border: 1px solid var(--color-error);
+  color: var(--color-error-dark);
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  font-size: var(--font-size-sm);
+}
+
+.bloco {
+  background-color: var(--color-tertiary-background);
+  padding: 1.5rem;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--color-secondary-border);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sectionTitle {
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  border-bottom: 2px solid var(--color-primary-light);
+  padding-bottom: 8px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  font-weight: var(--font-weight-medium);
+}
+
+.input,
+.textarea {
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--color-secondary-border);
+  border-radius: 10px;
+  font-family: var(--font-general);
+  font-size: var(--font-size-md);
+  background-color: var(--color-white);
+  color: var(--color-text);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.textarea {
+  resize: vertical;
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-shadow);
+}
+
+/* ─── Editor de cards ─── */
+.cardEditor {
+  border: 1.5px dashed var(--color-primary-border);
+  border-radius: var(--radius-card);
+  padding: 1rem 1.2rem 1.2rem;
+  margin: 0;
+  background-color: var(--color-white);
+}
+
+.cardLegend {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-dark);
+  padding: 0 0.4rem;
+}
+
+.cardActions {
+  display: inline-flex;
+  gap: 0.3rem;
+}
+
+.iconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--color-secondary-border);
+  border-radius: 8px;
+  background-color: var(--color-white);
+  color: var(--color-gray-600);
+  cursor: pointer;
+  transition: var(--transition-default);
+}
+
+.iconBtn:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.iconBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.iconBtnDanger:hover:not(:disabled) {
+  border-color: var(--color-error);
+  color: var(--color-error);
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
+}
+
+.spanFull {
+  grid-column: 1 / -1;
+}
+
+.addBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  align-self: flex-start;
+  padding: 0.6rem 1.2rem;
+  border: 1.5px dashed var(--color-primary);
+  border-radius: var(--radius-button);
+  background: none;
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: var(--transition-default);
+}
+
+.addBtn:hover {
+  background-color: var(--color-primary-light);
+}
+
+/* ─── Ações ─── */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.saveBtn,
+.resetBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.6rem;
+  border-radius: var(--radius-button);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-md);
+  cursor: pointer;
+  transition: var(--transition-default);
+}
+
+.saveBtn {
+  border: none;
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  box-shadow: var(--shadow-card);
+}
+
+.saveBtn:hover:not(:disabled) {
+  background-color: var(--color-primary-dark);
+}
+
+.saveBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.resetBtn {
+  border: 1px solid var(--color-secondary-border);
+  background-color: var(--color-white);
+  color: var(--color-gray-600);
+}
+
+.resetBtn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+@media (max-width: 640px) {
+  .cardGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+}

@@ -10,6 +10,7 @@ import {
   Image,
   Instagram,
   Type,
+  Sparkles,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import styles from "./styles.module.css";
@@ -23,6 +24,7 @@ import { AdminBanners } from "../AdminBanners";
 import AdminFontes from "../AdminFontes";
 import { AdminInstagram } from "../AdminInstagram";
 import { AdminCupons } from "../AdminCupons";
+import { AdminHomeEventos } from "../AdminHomeEventos";
 // Hooks e Types
 import { useAutenticacao } from "../../hooks/useAutenticacao";
 import { useAdminProdutos } from "../../hooks/useAdminProdutos";
@@ -38,7 +40,8 @@ type AdminTab =
   | "banners"
   | "fontes"
   | "instagram"
-  | "cupons";
+  | "cupons"
+  | "agenda_home";
 
 interface TabItem {
   id: AdminTab;
@@ -72,6 +75,7 @@ const gruposDeTabs: TabGroup[] = [
     titulo: "Conteúdo",
     itens: [
       { id: "eventos", label: "Eventos", icone: CalendarDays },
+      { id: "agenda_home", label: "Agenda da Home", icone: Sparkles },
       { id: "banners", label: "Banners", icone: Image },
       { id: "instagram", label: "Instagram", icone: Instagram },
     ],
@@ -266,6 +270,7 @@ export default function AdminDashboard() {
           </MenuContent>
         )}
         {activeTab === "eventos" && <AdminEventos />}
+        {activeTab === "agenda_home" && <AdminHomeEventos />}
         {activeTab === "fontes" && <AdminFontes />}
         {activeTab === "instagram" && <AdminInstagram />}
         {activeTab === "cupons" && <AdminCupons />}

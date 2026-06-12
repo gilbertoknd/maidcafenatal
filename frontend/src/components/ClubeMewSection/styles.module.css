@@ -1,0 +1,259 @@
+.section {
+  background-color: var(--color-cream);
+  padding: 4rem 1.5rem;
+}
+
+/* Painel rosa estilo "cupomref": chamada à esquerda, cupom à direita */
+.panel {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  background-color: var(--color-rose);
+  background-image: radial-gradient(
+    rgba(169, 29, 34, 0.07) 1.4px,
+    transparent 1.4px
+  );
+  background-size: 20px 20px;
+  border: 3px solid var(--color-wine);
+  border-radius: 32px;
+  box-shadow: var(--shadow-sticker-dark);
+  padding: 3rem 3.5rem;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: var(--color-ivory);
+  color: var(--color-wine);
+  border: 2px solid var(--color-wine);
+  border-radius: var(--radius-button);
+  padding: 0.35rem 0.9rem;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-bold);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  line-height: 1.1;
+  color: var(--color-wine-deep);
+  margin: 0;
+}
+
+.lead {
+  font-size: var(--font-size-md);
+  line-height: 1.55;
+  color: var(--color-wine-deep);
+  max-width: 30rem;
+  margin: 0;
+}
+
+/* ─── Formulário ─── */
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 0.4rem;
+  width: 100%;
+  max-width: 30rem;
+}
+
+.input {
+  flex: 1 1 14rem;
+  padding: 0.85rem 1.3rem;
+  border: 2px solid var(--color-wine);
+  border-radius: var(--radius-button);
+  font-family: var(--font-general);
+  font-size: var(--font-size-md);
+  background-color: var(--color-white);
+  color: var(--color-ink);
+}
+
+.input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(169, 29, 34, 0.25);
+}
+
+.input::placeholder {
+  color: var(--color-gray-500);
+}
+
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1.6rem;
+  background-color: var(--color-wine);
+  color: var(--color-ivory);
+  border: 2px solid var(--color-wine-deep);
+  border-radius: var(--radius-button);
+  font-family: var(--font-button);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-md);
+  cursor: pointer;
+  box-shadow: var(--shadow-sticker-sm);
+  transition: transform 0.18s ease, background-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.submit:hover {
+  background-color: var(--color-wine-dark);
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-sticker-dark);
+}
+
+.error {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-wine-deep);
+}
+
+.cuponsLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--color-wine-deep);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: gap 0.18s ease;
+}
+
+.cuponsLink:hover {
+  gap: 0.6rem;
+}
+
+/* ─── Cupom ilustrativo ─── */
+.visual {
+  display: flex;
+  justify-content: center;
+}
+
+.coupon {
+  display: flex;
+  background-color: var(--color-white);
+  border: 2.5px solid var(--color-wine);
+  border-radius: 18px;
+  box-shadow: var(--shadow-sticker);
+  transform: rotate(3deg);
+  overflow: hidden;
+  max-width: 22rem;
+  width: 100%;
+  transition: transform 0.25s ease;
+}
+
+.coupon:hover {
+  transform: rotate(0deg) scale(1.02);
+}
+
+.couponLeft {
+  flex: 1.2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+  padding: 1.4rem 1.2rem;
+  border-right: 2.5px dashed var(--color-rose-soft);
+}
+
+.couponIcon {
+  color: var(--color-wine);
+}
+
+.couponBrand {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-xl);
+  color: var(--color-wine);
+}
+
+.couponHint {
+  font-size: var(--font-size-xs);
+  color: var(--color-text);
+  line-height: 1.4;
+}
+
+.couponRight {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  padding: 1.4rem 1rem;
+  background-color: var(--color-rose-light);
+  text-align: center;
+}
+
+.couponValue {
+  font-family: var(--font-display);
+  font-size: var(--font-size-2xl-plus);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-wine);
+  line-height: 1;
+}
+
+.couponOff {
+  font-size: var(--font-size-xs);
+  color: var(--color-wine-deep);
+  font-weight: var(--font-weight-bold);
+}
+
+.couponCode {
+  margin-top: 0.4rem;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.08em;
+  color: var(--color-wine);
+  border: 1.5px dashed var(--color-wine);
+  border-radius: 8px;
+  padding: 0.25rem 0.6rem;
+  background-color: var(--color-white);
+}
+
+/* ─── Responsivo ─── */
+@media (max-width: 860px) {
+  .panel {
+    grid-template-columns: 1fr;
+    padding: 2.2rem 1.5rem;
+  }
+
+  .content {
+    align-items: center;
+    text-align: center;
+  }
+
+  .form {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 3rem 1rem;
+  }
+
+  .submit {
+    flex: 1 1 100%;
+  }
+
+  .coupon {
+    transform: rotate(0deg);
+  }
+}

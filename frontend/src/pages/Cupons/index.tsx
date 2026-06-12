@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
 import { useCampanhasAtivas, useResgatarCupom } from "../../hooks/useCupons";
@@ -18,8 +19,13 @@ export function CuponsPage() {
   const { data: campanhas, isLoading, isError } = useCampanhasAtivas();
   const resgatarMutation = useResgatarCupom();
 
+  // Número pré-preenchido quando o cliente chega pelo Clube Mew da home
+  const location = useLocation();
+  const whatsappInicial =
+    (location.state as { whatsapp?: string } | null)?.whatsapp ?? "";
+
   const [nome, setNome] = useState("");
-  const [whatsapp, setWhatsapp] = useState("");
+  const [whatsapp, setWhatsapp] = useState(whatsappInicial);
   const [campanhaSelecionada, setCampanhaSelecionada] = useState<number | null>(null);
   
   const [cupomGerado, setCupomGerado] = useState<string | null>(null);
