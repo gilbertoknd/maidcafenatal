@@ -1116,7 +1116,7 @@ O café **não opera mais presencialmente**. O negócio agora é: **eventos pers
 - **Header:** a `.topBar` estática virou um **rolling banner (marquee)** com animação CSS pura (`@keyframes marqueeScroll`, track com o conteúdo duplicado animado até `translateX(-50%)` para loop contínuo; a cópia leva `aria-hidden`). O banner **some ao rolar** a página (`useEffect` + listener de scroll passivo; threshold de 50px em `LIMITE_SCROLL_BANNER`) com `translateY(-100%)` + colapso de `max-height`. Expõe `data-testid="rolling-banner"` e `data-visible` para os testes. Itens do banner em `ITENS_BANNER`. Pausa no hover e respeita `prefers-reduced-motion`. CTA do Header: `<Link to="/agendar">Agendar evento</Link>` (não há mais link direto pro WhatsApp).
 - **HeroSection:** badge "A experiência maid café mais mágica do Nordeste"; subtítulo focado em eventos/delivery/kit festa; tags com emoji (🎂 Aniversários temáticos / 🎓 Formaturas & eventos / 📦 Delivery & encomendas).
 - **HowItWorksSection:** eyebrow "✨ Conheça a experiência", título "Como funciona", 4 passos novos (Sparkles, Cake, PartyPopper, ArrowRight). O 4º passo ("Faça sua encomenda") é um `<Link to="/agendar">` com classe `.stepCta` (fundo wine, texto ivory); o `<li>` dele usa `display: contents` para o Link assumir a célula do grid.
-- **MaidCarousel:** redesign "team showcase" — 6 painéis com corte diagonal (`clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%)`) sobrepostos via `margin-left` negativo; cada painel é um `<Link>` para `/maids/:id` com nome em overlay de gradiente + barra de accent na cor da maid (`--maid-color`). Hover/focus-visible: `flex-grow: 1.7`, imagem mais vívida, nome destacado. Mobile (<768px): empilha verticalmente com `aspect-ratio: 4/3` e corte diagonal horizontal. Sem avatares, setas ou card de destaque.
+- **MaidCarousel:** redesign "team showcase" — 6 painéis com corte diagonal (`clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%)`) sobrepostos via `margin-left` negativo; cada painel é um `<Link>` para `/maids/:id` com nome em overlay de gradiente + barra de accent na cor da maid (`--maid-color`). Hover/focus-visible: `flex-grow: 1.7`, imagem mais vívida, nome destacado. Mobile (<768px): vira **grade de 3 colunas** de cards arredondados lado a lado (`border-radius`, borda `--color-rose`, sem `clip-path`), caindo para 2 colunas abaixo de 380px — ver seção 30. Sem avatares, setas ou card de destaque.
 - **AboutSection:** título "Magia japonesa na sua festa", texto sobre a experiência de eventos, benefícios com emoji, CTA "Agende seu evento" → `/agendar`.
 - **Footer:** coluna "Visite" (endereço/telefone) **removida**; descrição focada em eventos/delivery; copyright © 2025.
 
@@ -1141,4 +1141,33 @@ O `AddressMapModal` (usado pelo `CartModal` no checkout de delivery) tem **busca
 - **Borda de accent + `clip-path`:** borda comum vaza do recorte diagonal; use um pseudo-elemento interno (`::after` com `background-color`) que é clipado junto com o painel.
 - **SVG Favicon e recursos externos:** Navegadores bloqueiam requisições a recursos externos (como imagens aninhadas) em SVGs declarados como favicons. A solução é embutir qualquer imagem/SVG necessário diretamente no `favicon.svg` como Data URI em Base64.
 - **Mosaico do Instagram Padronizado (Junho/2026):** A seção do Instagram foi simplificada para exibir posts com dimensões e proporções idênticas (cards do mesmo tamanho), eliminando o post principal maior (destaque 2x2). O layout agora usa 3 colunas (desktop/tablet) e 2 colunas (mobile), exibindo 5 posts dinâmicos + 1 card de redirecionamento para o perfil (totalizando 6 cards organizados de forma equilibrada sem sobras de grid).
+
+---
+
+## 30. Densidade Mobile — Grids Multi-coluna (Junho/2026)
+
+**Princípio (foco mobile-first, ver seção 0):** dispositivos móveis devem se parecer com o desktop em **densidade** — as "caixas" (cards, maids, passos) ficam **lado a lado em grade**, nunca empilhadas em coluna única. Coluna única só é aceitável para conteúdo intrinsecamente linear (formulários do admin, listas verticais como a agenda de eventos, painéis 2-em-1 do `ClubeMewSection`/`HeroSection` que separam texto e visual).
+
+### 30.1. Padrão de colapso de colunas (público)
+
+Ao criar/editar uma grade de cards nas páginas públicas, siga esta escada de breakpoints (nunca caia para `1fr` num grid de cards homogêneos):
+
+| Tipo de grade | Desktop | Tablet (~≤900px) | Phone (~≤520px) | Phone estreito (≤380px) |
+| --- | --- | --- | --- | --- |
+| Cards de seção (Destaques, Como Funciona) | 4 col | 2 col | **2 col** | 2 col |
+| Maids (`MaidCarousel`) | 6 fatias diagonais | 6 fatias | **3 col (grade)** | 2 col |
+| Produtos (`MenuContent`, Loja, Mangás) | auto-fill | **3 col** | 3 col | 3 col |
+| Instagram | 3 col | 3 col | 2 col | 2 col |
+
+### 30.2. Ajustes aplicados nesta rodada
+
+- **`HighlightsSection`** e **`HowItWorksSection`:** o breakpoint `≤520px` deixou de usar `grid-template-columns: 1fr` e agora mantém `repeat(2, 1fr)` (2x2), com `padding`/`font-size` levemente reduzidos para caber. O 4º passo CTA do `HowItWorks` (`.ctaItem { display: contents }`) participa normalmente do grid 2x2.
+- **`MaidCarousel`:** no mobile (`≤768px`) o `.strip` deixou de empilhar verticalmente (com `clip-path` diagonal) e virou `display: grid; grid-template-columns: repeat(3, 1fr)`. Cada `.panel` perde o `clip-path`, ganha `border-radius: var(--radius-card)`, borda `var(--color-rose)` e `box-shadow: var(--shadow-sticker-sm)`, mantendo o overlay de nome + barra de accent (`--maid-color`). Abaixo de `380px` cai para 2 colunas. A estrutura JSX (Links + img + nome) é intacta, então `MaidCarousel.test.tsx` segue válido.
+- **Produtos:** já estavam corretos em 3 colunas no mobile (ver "Densidade Mobile" na seção 13) — não alterados.
+
+### 30.3. Hurdle — limitação dos testes para layout CSS
+
+**Hurdle:** jsdom (Vitest) **não computa layout** (grid/flex), então não dá para asseverar "N colunas no mobile" via `getComputedStyle` nos testes. Mudanças de responsividade que só tocam CSS Module **não quebram** os testes estruturais existentes, mas também **não são cobertas** por eles.
+**Solução:** valide layout mobile visualmente com o Chrome/Edge headless em largura de phone — ex.: `chrome --headless=new --disable-gpu --hide-scrollbars --virtual-time-budget=9000 --window-size=390,8000 --screenshot=out.png http://localhost:5174/`. Ao mexer no CSS, **não altere a estrutura JSX** dos componentes com testes (especialmente `MaidCarousel`, `HeroSection`, `AboutSection`, `HowItWorksSection`) para preservar as asserções de conteúdo/links.
+**Nota (Windows):** o Chrome headless costuma falhar na **primeira** execução com `--user-data-dir` novo (perfil ainda não inicializado); basta repetir o comando com o mesmo `--user-data-dir`.
 

@@ -159,12 +159,22 @@
   }
 }
 
+/* Mobile: mantém 2 colunas (2x2) ao invés de empilhar os 4 passos */
 @media (max-width: 520px) {
   .section {
     padding: 3rem 1rem;
   }
 
   .steps {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .step {
+    padding: 1.4rem 1rem 1.2rem;
+  }
+
+  .stepTitle {
+    font-size: var(--font-size-lg);
   }
 }
