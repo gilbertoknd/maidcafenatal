@@ -10,7 +10,21 @@
   overflow: hidden;
 }
 
+/* Quadrinhos de mangá ao fundo, bem suaves para não brigar com o texto */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/wallpaperManga.jpg");
+  background-size: cover;
+  background-position: center;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
 .inner {
+  position: relative;
+  z-index: 1;
   max-width: var(--container-max-width);
   margin: 0 auto;
   padding: 4rem 1.5rem;
@@ -89,7 +103,9 @@
   font-size: var(--font-size-md);
   text-decoration: none;
   cursor: pointer;
-  transition: transform 0.18s ease, box-shadow 0.18s ease,
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
     background-color 0.18s ease;
 }
 
@@ -178,14 +194,13 @@
 
 .mascotCard {
   position: relative;
-  background:
-    repeating-linear-gradient(
-      -45deg,
-      var(--color-rose-light),
-      var(--color-rose-light) 14px,
-      var(--color-parchment) 14px,
-      var(--color-parchment) 28px
-    );
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--color-rose-light),
+    var(--color-rose-light) 14px,
+    var(--color-parchment) 14px,
+    var(--color-parchment) 28px
+  );
   border: 3px solid var(--color-wine);
   border-radius: 30px;
   padding: 1.5rem;
