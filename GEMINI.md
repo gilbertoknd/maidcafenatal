@@ -312,16 +312,17 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 
 ### `eventos`
 
-| Coluna       | Tipo           | Descrição              |
-| ------------ | -------------- | ---------------------- |
-| `id`         | `SERIAL PK`    | ID auto-incremento     |
-| `titulo`     | `VARCHAR(100)` | Título do evento       |
-| `descricao`  | `TEXT`         | Descrição              |
-| `data`       | `TIMESTAMP`    | Data e hora do evento  |
-| `local`      | `VARCHAR(255)` | Local do evento        |
-| `imagem_url` | `VARCHAR(255)` | Imagem do evento       |
-| `visivel`    | `BOOLEAN`      | Visível para usuários? |
-| `criado_em`  | `TIMESTAMP`    | Data de criação        |
+| Coluna       | Tipo           | Descrição                         |
+| ------------ | -------------- | --------------------------------- |
+| `id`         | `SERIAL PK`    | ID auto-incremento                |
+| `titulo`     | `VARCHAR(100)` | Título do evento                  |
+| `descricao`  | `TEXT`         | Descrição                         |
+| `data`       | `TIMESTAMP`    | Data e hora de início do evento   |
+| `data_fim`   | `TIMESTAMP`    | Data e hora de término do evento  |
+| `local`      | `VARCHAR(255)` | Local do evento                   |
+| `imagem_url` | `VARCHAR(255)` | Imagem do evento                  |
+| `visivel`    | `BOOLEAN`      | Visível para usuários?            |
+| `criado_em`  | `TIMESTAMP`    | Data de criação                   |
 
 ### `banners`
 

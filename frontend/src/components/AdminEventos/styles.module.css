@@ -57,6 +57,18 @@
   box-shadow: 0 0 0 3px var(--color-shadow);
 }
 
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: var(--font-size-md);
+  color: var(--color-text);
+  font-weight: var(--font-weight-medium);
+}
+
 .textarea {
   grid-column: span 2;
   min-height: 100px;

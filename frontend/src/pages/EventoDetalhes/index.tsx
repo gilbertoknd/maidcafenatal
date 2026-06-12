@@ -4,6 +4,7 @@ import { buscarEventoPorId } from "../../services/api";
 import type { Evento } from "../../types/Evento.ts";
 import { Calendar, MapPin, ChevronLeft } from "lucide-react";
 import styles from "./styles.module.css";
+import { formatEventDate } from "../../utils/formatadores";
 
 export function EventoDetalhes() {
   const { id } = useParams<{ id: string }>();
@@ -50,14 +51,7 @@ export function EventoDetalhes() {
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
   
-  // Formatação nativa para evitar dependências extras problemáticas
-  const dataFormatada = new Intl.DateTimeFormat('pt-BR', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    hour: '2-digit',
-    minute: '2-digit'
-  }).format(new Date(evento.data)).replace('-feira', '');
+  const dataFormatada = formatEventDate(evento.data, evento.data_fim);
 
   return (
     <div className={styles.container}>

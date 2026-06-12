@@ -42,13 +42,14 @@ export const EventoController = {
     try {
       const imagem_url = req.file ? `/images/${req.file.filename}` : null;
       
-      const { titulo, descricao, data, local } = req.body;
+      const { titulo, descricao, data, data_fim, local } = req.body;
       const visivel = req.body.visivel === "false" ? false : true;
 
       const eventData: Partial<Evento> = {
         titulo,
         descricao,
         data,
+        data_fim: data_fim || null,
         local,
         visivel,
         imagem_url
@@ -69,13 +70,14 @@ export const EventoController = {
       const { id } = req.params;
       const imagem_url = req.file ? `/images/${req.file.filename}` : undefined;
 
-      const { titulo, descricao, data, local } = req.body;
+      const { titulo, descricao, data, data_fim, local } = req.body;
       const visivel = req.body.visivel !== undefined ? req.body.visivel === "true" : undefined;
 
       const eventData: Partial<Evento> = {
         titulo,
         descricao,
         data,
+        data_fim: data_fim === undefined ? undefined : (data_fim || null),
         local,
         visivel,
         imagem_url

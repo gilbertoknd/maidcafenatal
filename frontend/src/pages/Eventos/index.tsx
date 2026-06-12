@@ -42,10 +42,14 @@ export function EventosPage() {
     const eventDateOnly = new Date(eDate);
     eventDateOnly.setHours(0, 0, 0, 0);
 
+    const eEndDate = e.data_fim ? new Date(e.data_fim) : new Date(e.data);
+    const eventEndDateOnly = new Date(eEndDate);
+    eventEndDateOnly.setHours(0, 0, 0, 0);
+
     if (selectedDate) {
       const selectedDateOnly = new Date(selectedDate);
       selectedDateOnly.setHours(0, 0, 0, 0);
-      return eventDateOnly.getTime() >= selectedDateOnly.getTime();
+      return eventEndDateOnly.getTime() >= selectedDateOnly.getTime();
     }
 
     const isCurrentRealMonthAndYear = 
@@ -60,7 +64,7 @@ export function EventosPage() {
       filterStartDate = startOfViewedMonth.getTime();
     }
 
-    return eventDateOnly.getTime() >= filterStartDate;
+    return eventEndDateOnly.getTime() >= filterStartDate;
   });
 
   return (

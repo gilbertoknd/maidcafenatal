@@ -56,4 +56,39 @@ describe("CalendarioEventos Component", () => {
     fireEvent.click(prevButton);
     fireEvent.click(nextButton);
   });
+
+  it("should highlight all days in a multi-day event range", () => {
+    const multiDayEvent: Evento[] = [
+      {
+        id: 3,
+        titulo: "Evento Multi-dia",
+        descricao: "Dura 3 dias",
+        data: new Date(currentYear, currentMonth, 12, 10, 0).toISOString(),
+        data_fim: new Date(currentYear, currentMonth, 14, 18, 0).toISOString(),
+        local: "Mew Mew",
+        visivel: true,
+        criado_em: new Date().toISOString()
+      }
+    ];
+
+    render(<CalendarioEventos eventos={multiDayEvent} />);
+    
+    const day12 = screen.getByText("12").closest("div");
+    const day13 = screen.getByText("13").closest("div");
+    const day14 = screen.getByText("14").closest("div");
+    const day15 = screen.getByText("15").closest("div");
+
+    expect(day12).toBeInTheDocument();
+    expect(day13).toBeInTheDocument();
+    expect(day14).toBeInTheDocument();
+    expect(day15).toBeInTheDocument();
+
+    // Verify dot element with event title is present on the days of the range
+    expect(day12?.querySelector(`[title="Evento Multi-dia"]`)).toBeInTheDocument();
+    expect(day13?.querySelector(`[title="Evento Multi-dia"]`)).toBeInTheDocument();
+    expect(day14?.querySelector(`[title="Evento Multi-dia"]`)).toBeInTheDocument();
+    
+    // Day 15 is outside the range
+    expect(day15?.querySelector(`[title="Evento Multi-dia"]`)).not.toBeInTheDocument();
+  });
 });

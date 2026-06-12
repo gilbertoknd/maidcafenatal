@@ -99,6 +99,11 @@
   font-size: var(--font-size-lg);
 }
 
+.range {
+  font-size: var(--font-size-xs);
+  text-align: center;
+}
+
 .content {
   flex: 1;
   display: flex;
@@ -173,6 +178,14 @@
   font-weight: var(--font-weight-bold);
 }
 
+.statusBadgeVisible {
+  background-color: #10b981;
+}
+
+.statusBadgeHidden {
+  background-color: #ef4444;
+}
+
 .adminBtn {
   border: none;
   padding: 4px 8px;
@@ -206,6 +219,8 @@
   .card {
     flex-direction: column;
     height: 100%;
+    max-width: 280px;
+    margin: 0 auto;
   }
 
   .imageWrapper {

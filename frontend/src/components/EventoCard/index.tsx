@@ -2,6 +2,7 @@ import styles from "./styles.module.css";
 import type { Evento } from "../../types/Evento";
 import { Edit, Trash2, MapPin, CalendarDays } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { formatEventDate } from "../../utils/formatadores";
 
 interface EventoCardProps {
   evento: Evento;
@@ -20,18 +21,38 @@ export function EventoCard({
 }: EventoCardProps) {
   const navigate = useNavigate();
   const eventoDate = new Date(evento.data);
-  const formattedDate = eventoDate.toLocaleDateString("pt-BR", {
-    weekday: "short",
-    day: "2-digit",
-    month: "long",
-    hour: "2-digit",
-    minute: "2-digit"
-  });
+  const formattedDate = formatEventDate(evento.data, evento.data_fim);
 
   const maxDescLength = 50;
   const truncatedDesc = evento.descricao && evento.descricao.length > maxDescLength
     ? evento.descricao.substring(0, maxDescLength) + "..."
     : evento.descricao;
+
+  const formatarBadgeRange = (dataStr: string, dataFimStr: string): string => {
+    const start = new Date(dataStr);
+    const end = new Date(dataFimStr);
+    
+    const formataMes = (d: Date) => {
+      const m = d.toLocaleString("pt-BR", { month: "short" }).replace(".", "");
+      return m.charAt(0).toUpperCase() + m.slice(1);
+    };
+    
+    const startDay = start.getDate().toString().padStart(2, "0");
+    const startMonth = formataMes(start);
+    
+    const endDay = end.getDate().toString().padStart(2, "0");
+    const endMonth = formataMes(end);
+
+    if (start.toDateString() === end.toDateString()) {
+      return `${startMonth}. ${startDay}`;
+    }
+
+    if (start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear()) {
+      return `${startMonth}. ${startDay} - ${endDay}`;
+    }
+
+    return `${startMonth}. ${startDay} - ${endMonth}. ${endDay}`;
+  };
 
   return (
     <article 
@@ -49,8 +70,16 @@ export function EventoCard({
           <div className={styles.imagePlaceholder}>Sem Imagem</div>
         )}
         <div className={styles.dateBadge}>
-          <span className={styles.month}>{eventoDate.toLocaleString("pt-BR", { month: "short" })}</span>
-          <span className={styles.day}>{eventoDate.getDate().toString().padStart(2, "0")}</span>
+          {!evento.data_fim ? (
+            <>
+              <span className={styles.month}>{eventoDate.toLocaleString("pt-BR", { month: "short" }).replace(".", "")}</span>
+              <span className={styles.day}>{eventoDate.getDate().toString().padStart(2, "0")}</span>
+            </>
+          ) : (
+            <span className={styles.range}>
+              {formatarBadgeRange(evento.data, evento.data_fim)}
+            </span>
+          )}
         </div>
       </div>
 
@@ -74,7 +103,7 @@ export function EventoCard({
         {isAdmin && (
           <div className={styles.bottomSection}>
             <div className={styles.adminActions}>
-              <span className={styles.statusBadge} style={{ backgroundColor: evento.visivel ? "#10b981" : "#ef4444" }}>
+              <span className={`${styles.statusBadge} ${evento.visivel ? styles.statusBadgeVisible : styles.statusBadgeHidden}`}>
                  {evento.visivel ? "Visível" : "Oculto"}
               </span>
               <button 

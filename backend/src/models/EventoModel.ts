@@ -19,14 +19,15 @@ export const EventoModel = {
 
   criar: async (data: Partial<Evento>) => {
     const query = `
-      INSERT INTO eventos (titulo, descricao, data, local, imagem_url, visivel)
-      VALUES ($1, $2, $3, $4, $5, $6)
+      INSERT INTO eventos (titulo, descricao, data, data_fim, local, imagem_url, visivel)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING *;
     `;
     const values = [
       data.titulo,
       data.descricao || null,
       data.data,
+      data.data_fim || null,
       data.local,
       data.imagem_url || null,
       data.visivel ?? true,
@@ -36,21 +37,29 @@ export const EventoModel = {
   },
 
   atualizar: async (id: string | number, data: Partial<Evento>) => {
+    let dataFimValor = data.data_fim;
+    if (dataFimValor === undefined) {
+      const atual = await pool.query("SELECT data_fim FROM eventos WHERE id = $1", [id]);
+      dataFimValor = atual.rows[0]?.data_fim || null;
+    }
+
     const query = `
       UPDATE eventos
       SET titulo = $1,
           descricao = $2,
           data = $3,
-          local = $4,
-          imagem_url = COALESCE($5, imagem_url),
-          visivel = $6
-      WHERE id = $7
+          data_fim = $4,
+          local = $5,
+          imagem_url = COALESCE($6, imagem_url),
+          visivel = $7
+      WHERE id = $8
       RETURNING *;
     `;
     const values = [
       data.titulo,
       data.descricao || null,
       data.data,
+      dataFimValor || null,
       data.local,
       data.imagem_url === undefined ? null : data.imagem_url,
       data.visivel ?? true,

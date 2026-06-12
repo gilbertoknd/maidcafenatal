@@ -57,10 +57,15 @@ export function CalendarioEventos({ eventos, selectedDate, onDateSelect, onMonth
   }
 
   for (let day = 1; day <= daysInMonth; day++) {
-    // Check if there are eventos on this day
-const dayEventos = eventos.filter((e) => {
-      const eDate = new Date(e.data);
-      return eDate.getDate() === day && eDate.getMonth() === month && eDate.getFullYear() === year;
+    // Check if there are eventos on this day (including multi-day ranges)
+    const dayEventos = eventos.filter((e) => {
+      const start = new Date(e.data);
+      start.setHours(0, 0, 0, 0);
+      const end = e.data_fim ? new Date(e.data_fim) : new Date(e.data);
+      end.setHours(23, 59, 59, 999);
+      
+      const currentDay = new Date(year, month, day);
+      return currentDay >= start && currentDay <= end;
     });
 
     const isToday = new Date().toDateString() === new Date(year, month, day).toDateString();

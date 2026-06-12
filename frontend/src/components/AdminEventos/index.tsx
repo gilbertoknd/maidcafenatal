@@ -20,6 +20,7 @@ export function AdminEventos() {
     titulo: "",
     descricao: "",
     data: "",
+    data_fim: "",
     local: "",
     visivel: true,
     imagem: null,
@@ -66,6 +67,14 @@ export function AdminEventos() {
       payload.append("titulo", formData.titulo);
       if (formData.descricao) payload.append("descricao", formData.descricao);
       payload.append("data", dateObj.toISOString());
+      
+      if (formData.data_fim) {
+        const dateFimObj = new Date(formData.data_fim as string);
+        payload.append("data_fim", dateFimObj.toISOString());
+      } else {
+        payload.append("data_fim", "");
+      }
+
       payload.append("local", formData.local);
       payload.append("visivel", String(formData.visivel));
       if (formData.imagem) {
@@ -97,10 +106,18 @@ export function AdminEventos() {
     const tzOffset = dateObj.getTimezoneOffset() * 60000; // offset em milissegundos
     const localISOTime = (new Date(dateObj.getTime() - tzOffset)).toISOString().slice(0, 16);
 
+    let localISODataFim = "";
+    if (evento.data_fim) {
+      const dateFimObj = new Date(evento.data_fim);
+      const tzOffsetFim = dateFimObj.getTimezoneOffset() * 60000;
+      localISODataFim = (new Date(dateFimObj.getTime() - tzOffsetFim)).toISOString().slice(0, 16);
+    }
+
     setFormData({
       titulo: evento.titulo,
       descricao: evento.descricao || "",
       data: localISOTime,
+      data_fim: localISODataFim,
       local: evento.local,
       visivel: evento.visivel,
       imagem: null,
@@ -132,6 +149,7 @@ export function AdminEventos() {
       titulo: "",
       descricao: "",
       data: "",
+      data_fim: "",
       local: "",
       visivel: true,
       imagem: null,
@@ -163,15 +181,30 @@ export function AdminEventos() {
             className={styles.input}
           />
 
-          <input 
-            name="data" 
-            type="datetime-local" 
-            value={formData.data} 
-            onChange={handleInputChange} 
-            required 
-            className={styles.input}
-            style={{ color: '#000' }}
-          />
+          <div className={styles.inputGroup}>
+            <label htmlFor="event-data" className={styles.label}>Data de Início *</label>
+            <input 
+              id="event-data"
+              name="data" 
+              type="datetime-local" 
+              value={formData.data} 
+              onChange={handleInputChange} 
+              required 
+              className={styles.input}
+            />
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label htmlFor="event-data-fim" className={styles.label}>Data de Término (Opcional)</label>
+            <input 
+              id="event-data-fim"
+              name="data_fim" 
+              type="datetime-local" 
+              value={formData.data_fim || ""} 
+              onChange={handleInputChange} 
+              className={styles.input}
+            />
+          </div>
 
           <div className={styles.checkboxContainer}>
             <input 
@@ -195,8 +228,9 @@ export function AdminEventos() {
           />
 
           <div className={styles.fileInputContainer}>
-            <label className={styles.fileLabel}>Imagem de Divulgação (Opcional na Edição)</label>
+            <label htmlFor="event-imagem" className={styles.fileLabel}>Imagem de Divulgação (Opcional na Edição)</label>
             <input 
+              id="event-imagem"
               type="file" 
               name="imagem" 
               accept="image/*"
