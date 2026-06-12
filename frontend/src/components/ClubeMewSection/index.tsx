@@ -39,16 +39,12 @@ export function ClubeMewSection() {
             <Sparkles size={14} /> Clube Mew · Grátis
           </span>
 
-          <h2 className={styles.title}>
-            Junte patinhas,
-            <br />
-            ganhe mimos ♡
-          </h2>
+          <h2 className={styles.title}>Ganhe mimos Mew Mew ♡</h2>
 
           <p className={styles.lead}>
-            Deixe seu WhatsApp e resgate um cupom de desconto pra usar no
-            caixa ou no pedido online. Avisamos dos eventos e novidades do
-            cardápio por lá também!
+            Deixe seu WhatsApp e resgate um cupom de desconto pra usar no caixa
+            ou no pedido online. Avisamos dos eventos e novidades do cardápio
+            por lá também!
           </p>
 
           <form className={styles.form} onSubmit={handleSubmit} noValidate>
