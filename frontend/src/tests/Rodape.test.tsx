@@ -1,7 +1,12 @@
 import "../setupTests";
-import { render, screen } from "@testing-library/react";
+import { render as rtlRender, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { describe, it, expect } from "vitest";
 import { Footer } from "../components/Footer";
+
+// O Footer usa hooks do react-router (links e clique na logo)
+const render = (ui: React.ReactElement) =>
+  rtlRender(<MemoryRouter>{ui}</MemoryRouter>);
 
 describe("Footer Component", () => {
   it("should render the copyright text", () => {

@@ -1,3 +1,4 @@
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { handleScrollTop } from "../../utils/scroll";
 import { WHATSAPP_URL, INSTAGRAM_URL } from "../../utils/contato";
 import styles from "./styles.module.css";
@@ -26,6 +27,18 @@ const colunas = [
 ];
 
 export function Footer() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Na home, o clique na logo só rola ao topo; em outras páginas, volta pra home.
+  const handleLogoClick = () => {
+    if (location.pathname === "/") {
+      handleScrollTop();
+    } else {
+      navigate("/");
+    }
+  };
+
   return (
     <footer className={styles.footer}>
       <div className={styles.container}>
@@ -36,7 +49,7 @@ export function Footer() {
               src="/wordmark-ivory.png"
               alt="Logo Mew Mew Maid Café - Voltar ao topo"
               className={styles.wordmark}
-              onClick={handleScrollTop}
+              onClick={handleLogoClick}
               title="Voltar ao topo"
             />
             <p className={styles.description}>
@@ -72,9 +85,9 @@ export function Footer() {
               <ul className={styles.columnList}>
                 {coluna.links.map((link) => (
                   <li key={link.texto}>
-                    <a href={link.href} className={styles.columnLink}>
+                    <Link to={link.href} className={styles.columnLink}>
                       {link.texto}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
