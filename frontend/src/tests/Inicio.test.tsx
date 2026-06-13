@@ -38,6 +38,9 @@ vi.mock("../components/InstagramSection", () => ({
 vi.mock("../components/ClubeMewSection", () => ({
   ClubeMewSection: () => <div>Clube Mew Section</div>,
 }));
+vi.mock("../components/HomeBanner", () => ({
+  HomeBanner: () => <div>Home Banner</div>,
+}));
 
 describe("Página Inicial", () => {
   it("deve renderizar todas as seções do redesign", () => {
@@ -48,6 +51,7 @@ describe("Página Inicial", () => {
     );
 
     expect(screen.getByText("Header")).toBeInTheDocument();
+    expect(screen.getByText("Home Banner")).toBeInTheDocument();
     expect(screen.getByText("Hero Section")).toBeInTheDocument();
     expect(screen.getByText("Highlights Section")).toBeInTheDocument();
     expect(screen.getByText("Maid Carousel")).toBeInTheDocument();

@@ -10,7 +10,8 @@
   overflow: hidden;
 }
 
-/* Quadrinhos de mangá ao fundo, bem suaves para não brigar com o texto */
+/* Quadrinhos de mangá ao fundo — DESATIVADO temporariamente.
+   Wallpaper comentado para retornar ao fundo padrão (cream com polka dots).
 .hero::before {
   content: "";
   position: absolute;
@@ -21,6 +22,7 @@
   opacity: 0.2;
   pointer-events: none;
 }
+*/
 
 .inner {
   position: relative;
@@ -71,8 +73,8 @@
   color: var(--color-wine-deep);
   padding: 0 0.25em;
   border-radius: 6px;
-  box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
 .subtitle {
