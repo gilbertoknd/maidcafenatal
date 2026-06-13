@@ -2,7 +2,6 @@ import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
 import { Banner } from "../../components/Banner";
 import { HeroSection } from "../../components/HeroSection";
-import { HighlightsSection } from "../../components/HighlightsSection";
 import { MaidCarousel } from "../../components/MaidCarousel";
 import { EventsSection } from "../../components/EventsSection";
 import { HowItWorksSection } from "../../components/HowItWorksSection";
@@ -13,7 +12,7 @@ import { ClubeMewSection } from "../../components/ClubeMewSection";
 /**
  * Landing page do Mew Mew Café (redesign 2026 — vinho · bege · rosa).
  * Estrutura: Header (sticky) → Banner (vídeo/imagem da home) → Hero (boas-vindas) →
- * Destaques → Carrossel de Maids → Eventos → Como funciona → Sobre nós →
+ * Como funciona → Carrossel de Maids → Eventos → Sobre nós →
  * Instagram → Clube Mew (cupom via WhatsApp) → Footer.
  */
 export function Home() {
@@ -23,10 +22,9 @@ export function Home() {
       <main>
         <Banner pagina="home" />
         <HeroSection />
-        <HighlightsSection />
+        <HowItWorksSection />
         <MaidCarousel />
         <EventsSection />
-        <HowItWorksSection />
         <AboutSection />
         <InstagramSection />
         <ClubeMewSection />

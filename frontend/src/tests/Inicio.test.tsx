@@ -17,9 +17,7 @@ vi.mock("../components/Footer", () => ({
 vi.mock("../components/HeroSection", () => ({
   HeroSection: () => <div>Hero Section</div>,
 }));
-vi.mock("../components/HighlightsSection", () => ({
-  HighlightsSection: () => <div>Highlights Section</div>,
-}));
+// HighlightsSection removida do redesign (Jun/2026)
 vi.mock("../components/MaidCarousel", () => ({
   MaidCarousel: () => <div>Maid Carousel</div>,
 }));
@@ -53,11 +51,10 @@ describe("Página Inicial", () => {
     expect(screen.getByText("Header")).toBeInTheDocument();
     expect(screen.getByText("Home Banner")).toBeInTheDocument();
     expect(screen.getByText("Hero Section")).toBeInTheDocument();
-    expect(screen.getByText("Highlights Section")).toBeInTheDocument();
+    expect(screen.getByText("How It Works Section")).toBeInTheDocument();
     expect(screen.getByText("Maid Carousel")).toBeInTheDocument();
     expect(screen.getByText("Events Section")).toBeInTheDocument();
     expect(screen.getByText("Clube Mew Section")).toBeInTheDocument();
-    expect(screen.getByText("How It Works Section")).toBeInTheDocument();
     expect(screen.getByText("About Section")).toBeInTheDocument();
     expect(screen.getByText("Instagram Section")).toBeInTheDocument();
     expect(screen.getByText("Footer")).toBeInTheDocument();
