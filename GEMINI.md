@@ -710,6 +710,10 @@ pnpm lint        # eslint
 
 ---
 
+**Hurdle:** O antigo `HomeBanner` (banner de vídeo fullscreen da Home, com auto-hide ao scrollar) fazia a página "pular para baixo" ao rolar de volta para o topo (Junho/2026).
+**Causa:** O `HomeBanner` reagia ao scroll alternando seu estado e mudando a **altura** (`max-height` de `100vh` → `0`). Como o banner é um elemento em fluxo no topo do `<main>`, qualquer mudança de altura adiciona/remove ~100vh de conteúdo acima do viewport; combinado com o scroll anchoring do navegador, a posição de scroll é empurrada para baixo ao retornar ao topo. Mesmo trocando o colapso por `opacity`, manter um listener de scroll alterando estado no topo continuou instável.
+**Solução:** O `HomeBanner` foi **removido**. A Home reaproveita o componente genérico `Banner` (`<Banner pagina="home" />`), que é 100% estático em fluxo — sem listener de scroll, sem animação de altura. O usuário simplesmente rola por ele, sem reflow nem salto. **Regra geral:** nunca anime a altura nem alterne layout de elementos em fluxo no topo da página em resposta ao scroll; para "esconder ao scrollar", o elemento precisa estar fora do fluxo (`position: fixed`/`absolute`) ou simplesmente ser rolado para fora naturalmente, como o `Banner` faz.
+
 ---
 
 **Hurdle:** Menu mobile com itens apertados e difícil de tocar.

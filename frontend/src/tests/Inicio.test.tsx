@@ -38,8 +38,8 @@ vi.mock("../components/InstagramSection", () => ({
 vi.mock("../components/ClubeMewSection", () => ({
   ClubeMewSection: () => <div>Clube Mew Section</div>,
 }));
-vi.mock("../components/HomeBanner", () => ({
-  HomeBanner: () => <div>Home Banner</div>,
+vi.mock("../components/Banner", () => ({
+  Banner: () => <div>Home Banner</div>,
 }));
 
 describe("Página Inicial", () => {
