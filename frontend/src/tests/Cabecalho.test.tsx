@@ -1,9 +1,14 @@
 import "../setupTests";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { Header } from "../components/Header";
 import { CarrinhoProvider } from "../hooks/useCarrinho";
+
+// Mock do hook de visibilidade — sempre visível para os testes existentes
+vi.mock("../hooks/useNavVisibilidade", () => ({
+  useNavVisibilidade: () => ({ temLoja: true, temMangas: true, isLoading: false }),
+}));
 
 function renderHeader() {
   return render(

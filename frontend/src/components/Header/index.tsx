@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import styles from "./styles.module.css";
+import { useNavVisibilidade } from "../../hooks/useNavVisibilidade";
 
 const ITENS_BANNER = [
   "✦ A experiência mais mágica do Nordeste",
@@ -16,6 +17,7 @@ const LIMITE_SCROLL_BANNER = 50;
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isBannerVisible, setIsBannerVisible] = useState(true);
+  const { temLoja, temMangas } = useNavVisibilidade();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -101,24 +103,28 @@ export function Header() {
           >
             Cardápio
           </Link>
-          <Link
-            to="/loja"
-            onClick={closeMenu}
-            className={`${styles.navLink} ${
-              location.pathname === "/loja" ? styles.active : ""
-            }`}
-          >
-            Loja Online
-          </Link>
-          <Link
-            to="/mangas"
-            onClick={closeMenu}
-            className={`${styles.navLink} ${
-              location.pathname === "/mangas" ? styles.active : ""
-            }`}
-          >
-            Mangás
-          </Link>
+          {temLoja && (
+            <Link
+              to="/loja"
+              onClick={closeMenu}
+              className={`${styles.navLink} ${
+                location.pathname === "/loja" ? styles.active : ""
+              }`}
+            >
+              Loja Online
+            </Link>
+          )}
+          {temMangas && (
+            <Link
+              to="/mangas"
+              onClick={closeMenu}
+              className={`${styles.navLink} ${
+                location.pathname === "/mangas" ? styles.active : ""
+              }`}
+            >
+              Mangás
+            </Link>
+          )}
           <Link
             to="/eventos"
             onClick={closeMenu}

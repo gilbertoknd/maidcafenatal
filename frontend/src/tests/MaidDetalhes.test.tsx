@@ -14,6 +14,11 @@ vi.mock("react-router-dom", async () => {
   };
 });
 
+// Mock do hook de visibilidade da nav (Header depende dele)
+vi.mock("../hooks/useNavVisibilidade", () => ({
+  useNavVisibilidade: () => ({ temLoja: true, temMangas: true, isLoading: false }),
+}));
+
 describe("MaidDetalhes Page", () => {
   const renderPage = () =>
     render(

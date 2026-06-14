@@ -9,6 +9,12 @@ import { CarrinhoProvider } from "../hooks/useCarrinho";
 
 vi.mock("../services/api", () => ({
   buscarEventos: vi.fn(),
+  buscarProdutos: vi.fn().mockResolvedValue([]),
+}));
+
+// Mock do hook de visibilidade da nav (Header depende dele)
+vi.mock("../hooks/useNavVisibilidade", () => ({
+  useNavVisibilidade: () => ({ temLoja: true, temMangas: true, isLoading: false }),
 }));
 
 vi.mock("../components/Banner", () => ({
