@@ -342,7 +342,7 @@
 
 .featuredHeader .title {
   font-family: var(--font-title);
-  font-size: var(--font-size-2xl-plus);
+  font-size: var(--font-size-4xl);
   color: var(--color-wine);
   margin: 0 0 0.25rem 0;
   font-weight: var(--font-weight-regular);
@@ -364,7 +364,7 @@
 }
 
 .featured .imageContainer {
-  height: 280px;
+  height: 420px;
   background: transparent !important;
   display: flex;
   justify-content: center;
@@ -414,10 +414,10 @@
 /* Em telas menores reduz a altura para caber confortavelmente */
 @media (max-width: 768px) {
   .featuredHeader .title {
-    font-size: var(--font-size-xl);
+    font-size: var(--font-size-2xl-plus);
   }
   .featured .imageContainer {
-    height: 220px;
+    height: 330px;
     margin-bottom: 0.75rem;
   }
   .featuredHeader {
