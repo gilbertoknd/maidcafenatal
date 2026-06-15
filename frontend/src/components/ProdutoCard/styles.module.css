@@ -315,3 +315,46 @@
   font-size: 0.8rem;
   font-weight: var(--font-weight-bold);
 }
+
+/* ===== Layout em destaque (cardápio com poucos itens) =====
+   Imagem grande, sem corte (contain) e sobre um fundo suave, para
+   valorizar as fotos em PNG sem fundo, como adesivos fofos. */
+.featured .imageContainer {
+  height: 230px;
+  background: linear-gradient(160deg, var(--color-rose-light), var(--color-cream));
+}
+
+.featured .image {
+  object-fit: contain;
+  padding: 0.75rem;
+  box-sizing: border-box;
+}
+
+.featured .content {
+  padding: 0.85rem 0.9rem 0.9rem;
+}
+
+.featured .title {
+  font-size: var(--font-size-lg);
+  margin-bottom: 0.4rem;
+}
+
+.featured .description {
+  font-size: var(--font-size-sm);
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  margin-bottom: 0.75rem;
+}
+
+/* Em telas menores reduz a altura para caber 2 colunas confortavelmente */
+@media (max-width: 768px) {
+  .featured .imageContainer {
+    height: 165px;
+  }
+  .featured .image {
+    padding: 0.5rem;
+  }
+  .featured .title {
+    font-size: var(--font-size-md);
+  }
+}

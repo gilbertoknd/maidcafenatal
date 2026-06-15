@@ -193,11 +193,12 @@ INSERT INTO produtos (nome, descricao, preco, categoria, imagem_url, promocao) V
 ('Matchá Shake', 'Milkshake de matchá puro.', 21.90, '抹茶 - Matcha', '/images/Matcha_shake.webp', FALSE),
 
 -- Doces Japoneses
-('Dango', 'Bolinhos de arroz com calda.', 9.90, 'Doces Japoneses', '/images/Dango.webp', FALSE),
+('Dango', 'Trio de bolinhos de mochi no espeto, levemente adocicados. Fofura em cada mordida!', 9.90, 'Doces Japoneses', '/images/Dango.png', FALSE),
 ('Taiyaki', 'Bolinho peixe com chocolate.', 14.90, 'Doces Japoneses', '/images/Tayiaki.webp', FALSE),
-('Mochi', 'Sabores variados.', 9.90, 'Doces Japoneses', '/images/Mochi.webp', FALSE),
+('Mochi', 'Massa de arroz macia e geladinha em sabores variados. Escolha o seu favorito!', 9.90, 'Doces Japoneses', '/images/Mochi.png', FALSE),
 ('Dupla de Mochis', 'Dois mochis recheados.', 15.90, 'Doces Japoneses', '/images/Dupla_de_mochis.webp', FALSE),
-('Panna Cat', 'Panna Cotta com morango.', 22.90, 'Doces Japoneses', '/images/Panna_cat.webp', FALSE),
+('Panna Cat', 'Panna cotta de baunilha em formato de gatinho, com calda de frutas vermelhas. Cremosa e irresistível!', 22.90, 'Doces Japoneses', '/images/Pannacota_Baunilha.png', FALSE),
+('Panna Cotta de Caramelo', 'Panna cotta de caramelo em formato de capivara, fofa demais pra comer (mas você vai querer)!', 22.90, 'Doces Japoneses', '/images/Pannacota_Caramelo.png', FALSE),
 
 -- Croissants
 ('Croissant Pepperoni', 'Pepperoni e cream cheese.', 25.90, 'Croissants', '/images/Pepperoni_com_cream_cheese.webp', FALSE),
@@ -214,7 +215,9 @@ INSERT INTO produtos (nome, descricao, preco, categoria, imagem_url, promocao) V
 ('Croquet Madame', 'Croque monsieur com ovo.', 25.90, 'Sanduíches', '/images/Croquet_madame.webp', FALSE),
 
 -- Doces e Sobremesas
-('Cookies!', '-Chocolate Chip -Matcha & Chocolate Branco -Dark Chocolate', 8.90, 'Doces e Sobremesas', '/images/Cookies.webp', FALSE),
+('Cookies!', 'Cookies caseiros e recheados: Chocolate Chip, Matcha com Chocolate Branco ou Dark Chocolate.', 8.90, 'Doces e Sobremesas', '/images/Cookie.png', FALSE),
+('Cake Pops', 'Bolinhos no palito cobertos com chocolate colorido e granuladinho. Doçura mágica em formato fofo!', 12.90, 'Doces e Sobremesas', '/images/Cake_pops.png', FALSE),
+('Cheesecake Japonês', 'Cheesecake japonês super fofinho e aerado, com calda de morango. Leve como uma nuvem!', 18.90, 'Doces e Sobremesas', '/images/Japanese_Cheesecake.png', FALSE),
 ('Fatia de Torta', 'Fuwa Fuwa – Tortas Geladas Sabores do dia: - Chocolate com Brigadeiro - Ninho com Nutella - Red Velvet!', 19.90, 'Doces e Sobremesas', '/images/Fatia_de_Torta.webp', FALSE),
 ('Cupcakes', 'Ninho com Mousse de Matcha Chocolate dobrado Geleia de morango com Ninho com Mousse de Frutas vermelhas', 13.90, 'Doces e Sobremesas', '/images/Cupcakes.webp', FALSE),
 ('Docinhos ブリガデイロ', '-Brigadeiro de Ninho com Nutella -Brigadeiro meio amargo -Brigadeiro de cheesecake com framboesa - Brigadeiro de Pistache - Brigadeiro de matcha com pistache', 4.90, 'Doces e Sobremesas', '/images/Docinhos.webp', FALSE),

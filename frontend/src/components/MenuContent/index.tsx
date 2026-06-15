@@ -22,6 +22,8 @@ interface MenuContentProps {
   headerActions?: React.ReactNode;
   children?: React.ReactNode;
   emptyMessage?: string;
+  /** Exibe os cards em destaque (imagem maior, grade mais larga). */
+  featured?: boolean;
 }
 
 export function MenuContent({
@@ -40,6 +42,7 @@ export function MenuContent({
   headerActions,
   children,
   emptyMessage = "Nenhuma delícia encontrada :(",
+  featured = false,
 }: MenuContentProps) {
   const groupedProducts = useMemo(() => {
     return filteredProducts.reduce(
@@ -98,7 +101,9 @@ export function MenuContent({
             categoriesToShow.map((cat) => (
               <section key={cat} className={styles.categorySection}>
                 <h2 className={styles.categorySubtitle}>{cat}</h2>
-                <main className={styles.grid}>
+                <main
+                  className={`${styles.grid} ${featured ? styles.gridFeatured : ""}`}
+                >
                   {groupedProducts[cat].map((produto) => (
                     <ProdutoCard
                       key={produto.id}
@@ -107,6 +112,7 @@ export function MenuContent({
                       onEdit={onEdit}
                       onDelete={onDelete}
                       onToggleVisibility={onToggleVisibility}
+                      featured={featured}
                     />
                   ))}
                 </main>
