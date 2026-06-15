@@ -4,14 +4,25 @@ import styles from "./styles.module.css";
 import type { Produto } from "../../types/Produto";
 import { formatCurrency } from "../../utils/formatadores";
 import { useCarrinho } from "../../hooks/useCarrinho";
+import { StarIcon } from "../../assets/icons/StarIcon";
 
 interface ProdutoDetalhesModalProps {
   produto: Produto;
   isOpen: boolean;
   onClose: () => void;
+  hasLiked?: boolean;
+  onLike?: () => void;
+  likesCount?: number;
 }
 
-export function ProdutoDetalhesModal({ produto, isOpen, onClose }: ProdutoDetalhesModalProps) {
+export function ProdutoDetalhesModal({ 
+  produto, 
+  isOpen, 
+  onClose,
+  hasLiked = false,
+  onLike,
+  likesCount = 0
+}: ProdutoDetalhesModalProps) {
   const { adicionarProduto } = useCarrinho();
 
   if (!isOpen) return null;
@@ -53,7 +64,31 @@ export function ProdutoDetalhesModal({ produto, isOpen, onClose }: ProdutoDetalh
         </div>
 
         <div className={styles.infoContainer}>
-          <h2 className={styles.title}>{produto.nome}</h2>
+          <div className={styles.titleRow}>
+            <h2 className={styles.title}>{produto.nome}</h2>
+            {onLike && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onLike();
+                }}
+                className={`${styles.likeButton} ${hasLiked ? styles.liked : ""}`}
+                aria-label={hasLiked ? "Descurtir" : "Curtir"}
+                title={hasLiked ? "Descurtir" : "Curtir"}
+              >
+                <span className={styles.likesCountText}>{likesCount}</span>
+                <StarIcon
+                  width="18"
+                  height="18"
+                  fill={hasLiked ? "currentColor" : "none"}
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </button>
+            )}
+          </div>
           
           <span className={styles.price}>{precoFormatado}</span>
 

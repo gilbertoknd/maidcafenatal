@@ -317,45 +317,111 @@
 }
 
 /* ===== Layout em destaque (cardápio com poucos itens) =====
-   Imagem grande, sem corte (contain) e sobre um fundo suave, para
-   valorizar as fotos em PNG sem fundo, como adesivos fofos. */
+   Imagem grande, sem corte (contain) e transparente, para
+   valorizar as fotos em PNG sem fundo, estilo Pastéis de Belém. */
+.card.featured {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem 1rem;
+}
+
+.card.featured:hover {
+  transform: translateY(-8px) !important;
+  box-shadow: none !important;
+}
+
+.featuredHeader {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  width: 100%;
+  cursor: pointer;
+}
+
+.featuredHeader .title {
+  font-family: var(--font-title);
+  font-size: var(--font-size-2xl-plus);
+  color: var(--color-wine);
+  margin: 0 0 0.25rem 0;
+  font-weight: var(--font-weight-regular);
+  transition: color 0.2s;
+  line-height: 1.2;
+}
+
+.card.featured:hover .featuredHeader .title {
+  color: var(--color-primary-dark);
+}
+
+.dottedDivider {
+  color: var(--color-primary-border);
+  font-size: var(--font-size-xl);
+  letter-spacing: 4px;
+  line-height: 1;
+  margin-top: -0.25rem;
+  opacity: 0.8;
+}
+
 .featured .imageContainer {
-  height: 230px;
-  background: linear-gradient(160deg, var(--color-rose-light), var(--color-cream));
+  height: 280px;
+  background: transparent !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1rem;
 }
 
 .featured .image {
   object-fit: contain;
-  padding: 0.75rem;
-  box-sizing: border-box;
+  padding: 0;
+  max-height: 100%;
+  max-width: 100%;
+  filter: drop-shadow(0 8px 16px rgba(169, 29, 34, 0.06));
+  transition: transform 0.3s ease;
+}
+
+.card.featured:hover .image {
+  transform: scale(1.05);
 }
 
 .featured .content {
-  padding: 0.85rem 0.9rem 0.9rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
-.featured .title {
-  font-size: var(--font-size-lg);
-  margin-bottom: 0.4rem;
+.featured .footer {
+  justify-content: center;
+  width: 100%;
+  margin-top: 0;
 }
 
-.featured .description {
-  font-size: var(--font-size-sm);
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  margin-bottom: 0.75rem;
+.featured .priceContainer {
+  align-items: center;
 }
 
-/* Em telas menores reduz a altura para caber 2 colunas confortavelmente */
+.featured .price {
+  font-size: var(--font-size-xl);
+  color: var(--color-text);
+  font-family: var(--font-general);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Em telas menores reduz a altura para caber confortavelmente */
 @media (max-width: 768px) {
+  .featuredHeader .title {
+    font-size: var(--font-size-xl);
+  }
   .featured .imageContainer {
-    height: 165px;
+    height: 220px;
+    margin-bottom: 0.75rem;
   }
-  .featured .image {
-    padding: 0.5rem;
-  }
-  .featured .title {
-    font-size: var(--font-size-md);
+  .featuredHeader {
+    margin-bottom: 1rem;
   }
 }
 

@@ -178,3 +178,43 @@
     height: 200px;
   }
 }
+
+.titleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.likeButton {
+  background: var(--color-white);
+  border: 1.5px solid var(--color-primary-border);
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: var(--radius-button);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, background 0.2s ease;
+  color: var(--color-icon-inactive);
+}
+
+.likeButton:hover {
+  transform: scale(1.05);
+  border-color: var(--color-primary);
+}
+
+.liked {
+  color: var(--color-star-active);
+  border-color: var(--color-star-active);
+  background-color: rgba(255, 243, 176, 0.15);
+}
+
+.likesCountText {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+}

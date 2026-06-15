@@ -33,7 +33,8 @@ const CardImage = ({
   hasLiked, 
   handleLike, 
   likesExibicao,
-  onClick 
+  onClick,
+  isFeatured = false
 }: { 
   produto: Produto; 
   isAdmin: boolean; 
@@ -41,6 +42,7 @@ const CardImage = ({
   handleLike: () => void;
   likesExibicao: number;
   onClick: () => void;
+  isFeatured?: boolean;
 }) => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
   const fullImageUrl = `${backendUrl}${produto.imagem_url}`;
@@ -62,7 +64,7 @@ const CardImage = ({
         </div>
       )}
 
-      {!isAdmin && (
+      {!isAdmin && !isFeatured && (
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -204,6 +206,15 @@ export function ProdutoCard({
 
   return (
     <article className={`${styles.card} ${variantClass}`}>
+      {variant === "featured" && (
+        <div className={styles.featuredHeader} onClick={handleOpenDetails}>
+          <h3 className={`${styles.title} ${styles.clickable}`}>
+            {produto.nome}
+          </h3>
+          <div className={styles.dottedDivider}>•••••</div>
+        </div>
+      )}
+
       <CardImage
         produto={produto} 
         isAdmin={isAdmin} 
@@ -211,13 +222,17 @@ export function ProdutoCard({
         handleLike={handleLikeClick} 
         likesExibicao={likesContagem}
         onClick={handleOpenDetails}
+        isFeatured={variant === "featured"}
       />
 
       <div className={styles.content}>
-        <h3 className={`${styles.title} ${styles.clickable}`} onClick={handleOpenDetails}>
-          {produto.nome}
-        </h3>
-        <p className={styles.description}>{produto.descricao}</p>
+        {variant !== "featured" && (
+          <h3 className={`${styles.title} ${styles.clickable}`} onClick={handleOpenDetails}>
+            {produto.nome}
+          </h3>
+        )}
+        
+        {variant !== "featured" && <p className={styles.description}>{produto.descricao}</p>}
 
         <div className={styles.footer}>
           <div className={styles.priceContainer}>
@@ -237,10 +252,12 @@ export function ProdutoCard({
               onToggleVisibility={onToggleVisibility} 
             />
           ) : (
-            <CardPublicActions 
-              produto={produto} 
-              onAdd={adicionarProduto} 
-            />
+            variant !== "featured" && (
+              <CardPublicActions 
+                produto={produto} 
+                onAdd={adicionarProduto} 
+              />
+            )
           )}
         </div>
       </div>
@@ -249,6 +266,9 @@ export function ProdutoCard({
         produto={produto} 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
+        hasLiked={hasLiked}
+        onLike={handleLikeClick}
+        likesCount={likesContagem}
       />
     </article>
   );
