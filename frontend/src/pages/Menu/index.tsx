@@ -11,7 +11,7 @@ export function MenuPage() {
   return (
     <>
       <Header />
-      <MenuContent {...productData} featured />
+      <MenuContent {...productData} variant="featured" />
       <Footer />
     </>
   );

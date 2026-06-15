@@ -11,7 +11,13 @@ export function Mangas() {
   return (
     <>
       <Header />
-      <MenuContent {...dadosProdutos} title="Mangás 📚" emptyMessage="Nenhum mangá encontrado :(" />
+      <MenuContent
+        {...dadosProdutos}
+        title="Mangás 📚"
+        emptyMessage="Nenhum mangá encontrado :("
+        variant="manga"
+        sortable
+      />
       <Footer />
     </>
   );

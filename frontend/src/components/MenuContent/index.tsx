@@ -1,7 +1,10 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { SlidersHorizontal } from "lucide-react";
 import { ProdutoCard } from "../ProdutoCard";
 import { Search } from "../Search";
 import { CategoryFilter } from "../CategoryFilter";
+import { SortDropdown } from "../SortDropdown";
+import { ordenarProdutos, type SortKey } from "../../utils/ordenarProdutos";
 import styles from "./styles.module.css";
 import type { Produto } from "../../types/Produto";
 
@@ -22,8 +25,15 @@ interface MenuContentProps {
   headerActions?: React.ReactNode;
   children?: React.ReactNode;
   emptyMessage?: string;
-  /** Exibe os cards em destaque (imagem maior, grade mais larga). */
-  featured?: boolean;
+  /**
+   * Variante visual dos cards:
+   * - "default": compacto (padrão).
+   * - "featured": imagem maior e sem corte (cardápio com poucos itens).
+   * - "manga": capa inteira em proporção de pôster.
+   */
+  variant?: "default" | "featured" | "manga";
+  /** Exibe o dropdown de ordenação e o botão de esconder filtros. */
+  sortable?: boolean;
 }
 
 export function MenuContent({
@@ -42,10 +52,19 @@ export function MenuContent({
   headerActions,
   children,
   emptyMessage = "Nenhuma delícia encontrada :(",
-  featured = false,
+  variant = "default",
+  sortable = false,
 }: MenuContentProps) {
+  const [sortKey, setSortKey] = useState<SortKey>("recommended");
+  const [filtersVisible, setFiltersVisible] = useState(true);
+
+  const sortedProducts = useMemo(
+    () => (sortable ? ordenarProdutos(filteredProducts, sortKey) : filteredProducts),
+    [filteredProducts, sortKey, sortable],
+  );
+
   const groupedProducts = useMemo(() => {
-    return filteredProducts.reduce(
+    return sortedProducts.reduce(
       (acc, produto) => {
         const cat = produto.categoria || "Outros";
         if (!acc[cat]) acc[cat] = [];
@@ -54,12 +73,19 @@ export function MenuContent({
       },
       {} as Record<string, Produto[]>,
     );
-  }, [filteredProducts]);
+  }, [sortedProducts]);
 
   const categoriesToShow = useMemo(
     () => Object.keys(groupedProducts),
     [groupedProducts],
   );
+
+  const gridVariantClass =
+    variant === "featured"
+      ? styles.gridFeatured
+      : variant === "manga"
+        ? styles.gridManga
+        : "";
 
   return (
     <div className={styles.container}>
@@ -85,11 +111,28 @@ export function MenuContent({
 
       {children}
 
-      <CategoryFilter
-        categories={categories}
-        selectedCategory={selectedCategory}
-        onSelectCategory={setSelectedCategory}
-      />
+      {sortable && (
+        <div className={styles.controlsBar}>
+          <button
+            type="button"
+            className={styles.toggleFiltersBtn}
+            onClick={() => setFiltersVisible((v) => !v)}
+            aria-pressed={!filtersVisible}
+          >
+            <SlidersHorizontal size={16} />
+            {filtersVisible ? "Esconder filtros" : "Mostrar filtros"}
+          </button>
+          <SortDropdown value={sortKey} onChange={setSortKey} />
+        </div>
+      )}
+
+      {filtersVisible && (
+        <CategoryFilter
+          categories={categories}
+          selectedCategory={selectedCategory}
+          onSelectCategory={setSelectedCategory}
+        />
+      )}
 
       <Search value={searchTerm} onChange={setSearchTerm} />
 
@@ -101,9 +144,7 @@ export function MenuContent({
             categoriesToShow.map((cat) => (
               <section key={cat} className={styles.categorySection}>
                 <h2 className={styles.categorySubtitle}>{cat}</h2>
-                <main
-                  className={`${styles.grid} ${featured ? styles.gridFeatured : ""}`}
-                >
+                <main className={`${styles.grid} ${gridVariantClass}`}>
                   {groupedProducts[cat].map((produto) => (
                     <ProdutoCard
                       key={produto.id}
@@ -112,7 +153,7 @@ export function MenuContent({
                       onEdit={onEdit}
                       onDelete={onDelete}
                       onToggleVisibility={onToggleVisibility}
-                      featured={featured}
+                      variant={variant}
                     />
                   ))}
                 </main>

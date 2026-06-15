@@ -15,8 +15,13 @@ interface ProdutoCardProps {
   onEdit?: (produto: Produto) => void;
   onDelete?: (id: number) => void;
   onToggleVisibility?: (id: number) => void;
-  /** Layout em destaque: imagem maior e sem corte, ideal para cardápios com poucos itens. */
-  featured?: boolean;
+  /**
+   * Variante visual do card:
+   * - "default": compacto (padrão).
+   * - "featured": imagem maior e sem corte, para cardápios com poucos itens.
+   * - "manga": exibe a capa inteira (proporção de pôster, sem corte).
+   */
+  variant?: "default" | "featured" | "manga";
 }
 
 /**
@@ -155,7 +160,7 @@ export function ProdutoCard({
   onEdit,
   onDelete,
   onToggleVisibility,
-  featured = false,
+  variant = "default",
 }: ProdutoCardProps) {
   const { adicionarProduto } = useCarrinho();
   const navigate = useNavigate();
@@ -190,8 +195,15 @@ export function ProdutoCard({
     }
   };
 
+  const variantClass =
+    variant === "featured"
+      ? styles.featured
+      : variant === "manga"
+        ? styles.manga
+        : "";
+
   return (
-    <article className={`${styles.card} ${featured ? styles.featured : ""}`}>
+    <article className={`${styles.card} ${variantClass}`}>
       <CardImage
         produto={produto} 
         isAdmin={isAdmin} 

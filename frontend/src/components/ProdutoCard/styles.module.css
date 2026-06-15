@@ -358,3 +358,25 @@
     font-size: var(--font-size-md);
   }
 }
+
+/* ===== Variante mangá: capa inteira (proporção de pôster) =====
+   A capa é exibida por completo, sem corte, em fundo claro de loja. */
+.manga .imageContainer {
+  height: auto;
+  aspect-ratio: 2 / 3;
+  background: var(--color-white);
+}
+
+.manga .image {
+  object-fit: contain;
+}
+
+/* O título pode ocupar até 2 linhas sem cortar o card */
+.manga .title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.4em;
+}
