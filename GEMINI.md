@@ -1070,9 +1070,9 @@ A paleta legada rosa pastel foi **unificada** com a do redesign: os tokens legad
 | --- | --- | --- |
 | `--color-wine` (= `--color-primary`) | `#a91d22` | Cardinal Red — heros, footer, bordas de card, CTAs |
 | `--color-wine-dark` / `--color-wine-deep` | `#8a171c` / `#6b1115` | Hover, contornos e sombras projetadas |
-| `--color-cream` (= `--color-background`) | `#f4ebe1` | Parchment — fundo de seções claras |
-| `--color-parchment` / `--color-ivory` | `#f9f3ec` / `#fdf8f3` | Cards/relevos claros e texto sobre cardinal |
-| `--color-rose` / `--color-rose-light` / `--color-rose-soft` | `#e8c3ba` / `#f2ddd7` / `#ecd0c8` | Blush Mochi — marcador de texto, chips e fundos suaves |
+| `--color-cream` (= `--color-background`) | `#FAF7F2` | Bege Clarinho — fundo de seções claras e wallpaper |
+| `--color-parchment` / `--color-ivory` | `#FDFBF8` / `#fdf8f3` | Cards/relevos claros e texto sobre cardinal |
+| `--color-rose` / `--color-rose-light` / `--color-rose-soft` | `#F0C4BA` / `#F9EAE6` / `#F2D5CE` | Rosa Pastel — marcador de texto, chips e fundos suaves |
 | `--color-mint-pill` (+`-border`) | `#b8e6c8` / `#7fcf9c` | Pills de status (estilo da referência) |
 | `--color-ink` (= `--color-text`) | `#242121` | Sacristy Charcoal — títulos display sobre parchment |
 | `--shadow-sticker` (+`-sm`, `-dark`) | offset duro cardinal | Sombra "adesivo" dos cards/botões |

@@ -26,8 +26,8 @@ describe("Design Tokens - Paleta de Cores 2026", () => {
     expect(cssContent).toMatch(/--color-primary-dark:\s*#[0-9a-fA-F]{6}/);
   });
 
-  it("deve ter --color-background como Parchment (#F4EBE1)", () => {
-    expect(cssContent).toMatch(/--color-background:\s*#f4ebe1/i);
+  it("deve ter --color-background como Bege Clarinho (#FAF7F2)", () => {
+    expect(cssContent).toMatch(/--color-background:\s*#FAF7F2/i);
   });
 
   it("deve ter --color-text como Sacristy Charcoal (#242121)", () => {
@@ -44,8 +44,8 @@ describe("Design Tokens - Paleta de Cores 2026", () => {
   });
 
   // ─── Blush Mochi (Kawaii Softener) ───
-  it("deve ter --color-rose como Blush Mochi (#E8C3BA)", () => {
-    expect(cssContent).toMatch(/--color-rose:\s*#e8c3ba/i);
+  it("deve ter --color-rose como Rosa Pastel (#F0C4BA)", () => {
+    expect(cssContent).toMatch(/--color-rose:\s*#F0C4BA/i);
   });
 
   // ─── Cores Redesign 2026 ───
@@ -53,8 +53,8 @@ describe("Design Tokens - Paleta de Cores 2026", () => {
     expect(cssContent).toMatch(/--color-wine:\s*#a91d22/i);
   });
 
-  it("deve ter --color-cream como Parchment (#F4EBE1)", () => {
-    expect(cssContent).toMatch(/--color-cream:\s*#f4ebe1/i);
+  it("deve ter --color-cream como Bege Clarinho (#FAF7F2)", () => {
+    expect(cssContent).toMatch(/--color-cream:\s*#FAF7F2/i);
   });
 
   it("deve ter --color-ink como Sacristy Charcoal (#242121)", () => {

@@ -19,14 +19,18 @@
   /* ═══ Paleta Principal ═══ */
   --color-primary: #a91d22; /* Cardinal Red — Logo, botões e títulos */
   --color-primary-dark: #8a171c; /* Cardinal escuro (hover) */
-  --color-primary-light: #f4ebe1; /* Parchment claro (fundos suaves) */
+  /* --color-primary-light: #f4ebe1; Parchment claro (fundos suaves) */
+  --color-primary-light: #FAF7F2; /* Bege clarinho / Light Parchment */
   --color-primary-border: #d4a59e; /* Borda blush derivada da paleta */
   --color-secondary-border: #c49088; /* Borda blush secundária */
 
   /* ═══ Cores Base ═══ */
-  --color-background: #f4ebe1; /* Parchment — Fundo principal */
-  --color-secondary-background: #ede2d6; /* Parchment médio — Fundos de seção e cards */
-  --color-tertiary-background: #f9f3ec; /* Parchment claro — Fundo terciário suave */
+  /* --color-background: #f4ebe1; Parchment — Fundo principal */
+  --color-background: #FAF7F2; /* Bege bem clarinho (próximo do branco) para wallpaper */
+  /* --color-secondary-background: #ede2d6; Parchment médio — Fundos de seção e cards */
+  --color-secondary-background: #F3EBE0; /* Bege pastel médio */
+  /* --color-tertiary-background: #f9f3ec; Parchment claro — Fundo terciário suave */
+  --color-tertiary-background: #FDFBF8; /* Bege ultra claro */
   --color-white: #ffffff; /* Branco Neve — Cards e modais (relevo) */
 
   /* ═══ Cores de Destaque ═══ */
@@ -54,15 +58,21 @@
   --color-wine-soft: rgba(169, 29, 34, 0.08); /* Véu cardinal sobre parchment */
 
   /* ── Parchment (superfícies claras) ── */
-  --color-cream: #f4ebe1; /* Parchment — fundo de seções claras */
-  --color-cream-dark: #e8ddd1; /* Parchment médio — faixas alternadas */
-  --color-parchment: #f9f3ec; /* Parchment claro — cards e relevos */
+  /* --color-cream: #f4ebe1; Parchment — fundo de seções claras */
+  --color-cream: #FAF7F2; /* Bege bem clarinho (próximo do branco) */
+  /* --color-cream-dark: #e8ddd1; Parchment médio — faixas alternadas */
+  --color-cream-dark: #EFE4D7; /* Bege pastel para alternância */
+  /* --color-parchment: #f9f3ec; Parchment claro — cards e relevos */
+  --color-parchment: #FDFBF8; /* Bege ultra claro */
   --color-ivory: #fdf8f3; /* Marfim quente — texto sobre cardinal, cards */
 
   /* ── Blush Mochi (Kawaii Softener) ── */
-  --color-rose: #e8c3ba; /* Blush Mochi — marcador de texto e detalhes */
-  --color-rose-light: #f2ddd7; /* Blush Mochi claro — fundos suaves */
-  --color-rose-soft: #ecd0c8; /* Blush Mochi médio — chips e bordas */
+  /* --color-rose: #e8c3ba; Blush Mochi — marcador de texto e detalhes */
+  --color-rose: #F0C4BA; /* Rosa pastel suave */
+  /* --color-rose-light: #f2ddd7; Blush Mochi claro — fundos suaves */
+  --color-rose-light: #F9EAE6; /* Rosa pastel clarinho */
+  /* --color-rose-soft: #ecd0c8; Blush Mochi médio — chips e bordas */
+  --color-rose-soft: #F2D5CE; /* Rosa pastel médio */
 
   /* ── Apoio ── */
   --color-mint-pill: #b8e6c8; /* Verde menta — pills de status */
