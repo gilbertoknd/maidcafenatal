@@ -8,29 +8,33 @@ import { HowItWorksSection } from "../../components/HowItWorksSection";
 import { AboutSection } from "../../components/AboutSection";
 import { InstagramSection } from "../../components/InstagramSection";
 import { ClubeMewSection } from "../../components/ClubeMewSection";
+import { useSecoesHome } from "../../hooks/useSecoesHome";
 
 /**
  * Landing page do Mew Mew Café (redesign 2026 — vinho · bege · rosa).
  * Estrutura: Header (sticky) → Banner (vídeo/imagem da home) → Hero (boas-vindas) →
  * Como funciona → Carrossel de Maids → Eventos → Sobre nós →
  * Instagram → Clube Mew (cupom via WhatsApp) → Footer.
+ *
+ * Seções podem ser ocultadas pelo admin via /admin → Seções da Home.
  */
 export function Home() {
+  const { secoes } = useSecoesHome();
+
   return (
     <>
       <Header />
       <main>
-        <Banner pagina="home" />
-        <HeroSection />
-        <HowItWorksSection />
-        <MaidCarousel />
-        <EventsSection />
-        <AboutSection />
-        <InstagramSection />
-        <ClubeMewSection />
+        {secoes.secao_home_banner && <Banner pagina="home" />}
+        {secoes.secao_home_hero && <HeroSection />}
+        {secoes.secao_home_como_funciona && <HowItWorksSection />}
+        {secoes.secao_home_maids && <MaidCarousel />}
+        {secoes.secao_home_eventos && <EventsSection />}
+        {secoes.secao_home_sobre && <AboutSection />}
+        {secoes.secao_home_instagram && <InstagramSection />}
+        {secoes.secao_home_clube_mew && <ClubeMewSection />}
       </main>
       <Footer />
     </>
   );
 }
-

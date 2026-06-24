@@ -15,6 +15,15 @@ const CHAVES_VALIDAS = [
   "fonte_geral",
   // Conteúdo da seção de eventos da home (JSON serializado)
   "home_eventos",
+  // Visibilidade das seções da homepage
+  "secao_home_banner",
+  "secao_home_hero",
+  "secao_home_como_funciona",
+  "secao_home_maids",
+  "secao_home_eventos",
+  "secao_home_sobre",
+  "secao_home_instagram",
+  "secao_home_clube_mew",
 ];
 
 export class ConfiguracaoController {

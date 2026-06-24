@@ -220,6 +220,7 @@ FRONTEND_URL=http://localhost:5174
 │       │   ├── useProductLike.ts       # Gerencia curtidas otimistas por produto
 │       │   ├── useBanners.ts           # Fetch de banners (TanStack Query)
 │       │   ├── useConfiguracoesGlobais.ts # Carrega config ativa, injeta @font-face e tokens CSS
+│       │   ├── useSecoesHome.ts           # Visibilidade das seções da homepage (consome configuracoes)
 │       │   └── useDebugTela.ts         # Debug de dimensões de tela (NÃO usar em produção)
 │       ├── pages/
 │       │   ├── Home/             # Landing page
@@ -263,6 +264,7 @@ FRONTEND_URL=http://localhost:5174
 │       │   ├── AdminPedidos/     # Gerenciamento de pedidos
 │       │   ├── AdminFontes/      # Gerenciamento de fontes customizadas
 │       │   ├── AdminCupons/      # Gerenciamento de cupons
+│       │   ├── AdminSecoesHome/  # Controle de visibilidade das seções da homepage
 │       │   └── AdminInstagram/   # Gerenciamento de posts do Instagram
 │       ├── utils/
 │       └── tests/                # Testes do frontend (Vitest + RTL)
@@ -471,7 +473,8 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 
 ### Components & UI Adicionais (Admin Dashboard)
 
-- A aba `/admin` inclui sub-rotas/tabs renderizando os paineis `AdminProdutos`, `AdminLoja`, `AdminPedidos`, `AdminEventos`, `AdminBanners`, `AdminFontes` e `AdminInstagram`.
+- A aba `/admin` inclui sub-rotas/tabs renderizando os paineis `AdminProdutos`, `AdminLoja`, `AdminPedidos`, `AdminEventos`, `AdminBanners`, `AdminFontes`, `AdminSecoesHome` e `AdminInstagram`.
+- **Admin Seções da Home:** Permite ocultar/exibir seções da homepage via checkboxes. Usa chaves `secao_home_*` na tabela `configuracoes`. Default: todas visíveis.
 - **Admin Banners:** Adicionado suporte para mídias `.mp4` e `.webm` com limite estendido para 50MB e textos opcionais. A API de Banners reflete globalmente qual componente deve ser exibido por página.
 - **Formulários Dinâmicos:** O `ProdutoForm` e outros painéis contam com inputs fluídos que extraem "Categorias" e "Tags" já salvas em cache local (via TanStack Query) para preenchimento de Autocomplete Inteligente ilimitado, criando padronização nas listagens públicas.
 - Padrão **FormGrid**: Para manutenção da unidade visual, novos componentes adotam `.formContainer` em CSS grid respeitando padding e limitações `--container-max-width`.

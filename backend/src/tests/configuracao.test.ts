@@ -124,6 +124,47 @@ describe("Configuracao Routes", () => {
 
       expect(response.status).toBe(400);
     });
+
+    it("deve aceitar chaves secao_home_* para visibilidade de seções", async () => {
+      (jwt.verify as any).mockReturnValue({ id: 1 });
+
+      const mockClient = {
+        query: vi.fn().mockResolvedValue({ rows: [] }),
+        release: vi.fn(),
+      };
+      (pool.connect as any).mockResolvedValue(mockClient);
+
+      const response = await request(app)
+        .put("/api/configuracoes")
+        .set("Authorization", validToken)
+        .send({
+          secao_home_hero: "false",
+          secao_home_instagram: "false",
+          secao_home_banner: "true",
+        });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty("message");
+      expect(response.body.configuracoes).toHaveProperty("secao_home_hero", "false");
+      expect(response.body.configuracoes).toHaveProperty("secao_home_instagram", "false");
+      expect(response.body.configuracoes).toHaveProperty("secao_home_banner", "true");
+      expect(mockClient.query).toHaveBeenCalled();
+    });
+
+    it("deve filtrar chaves secao_home inválidas", async () => {
+      (jwt.verify as any).mockReturnValue({ id: 1 });
+
+      const response = await request(app)
+        .put("/api/configuracoes")
+        .set("Authorization", validToken)
+        .send({
+          secao_home_inexistente: "false",
+          chave_invalida: "true",
+        });
+
+      // Todas as chaves são inválidas, deve retornar 400
+      expect(response.status).toBe(400);
+    });
   });
 
   // ═══ POST /api/configuracoes/fontes (Upload - Protegido) ═══

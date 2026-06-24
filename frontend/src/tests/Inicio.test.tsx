@@ -3,6 +3,8 @@ import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { Home } from "../pages/Home";
 import { BrowserRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { ReactNode } from "react";
 
 /**
  * Mocks dos componentes filhos para isolar a composição da Home
@@ -39,14 +41,28 @@ vi.mock("../components/ClubeMewSection", () => ({
 vi.mock("../components/Banner", () => ({
   Banner: () => <div>Home Banner</div>,
 }));
+// Mock da API de configurações (necessário para useSecoesHome)
+vi.mock("../services/api", () => ({
+  buscarConfiguracoes: vi.fn().mockResolvedValue({
+    configuracoes: {},
+    fontes_customizadas: [],
+  }),
+}));
+
+function criarWrapper() {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  return ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>{children}</BrowserRouter>
+    </QueryClientProvider>
+  );
+}
 
 describe("Página Inicial", () => {
   it("deve renderizar todas as seções do redesign", () => {
-    render(
-      <BrowserRouter>
-        <Home />
-      </BrowserRouter>
-    );
+    render(<Home />, { wrapper: criarWrapper() });
 
     expect(screen.getByText("Header")).toBeInTheDocument();
     expect(screen.getByText("Home Banner")).toBeInTheDocument();
