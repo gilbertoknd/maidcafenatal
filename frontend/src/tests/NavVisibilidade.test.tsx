@@ -14,6 +14,16 @@ vi.mock("../hooks/useNavVisibilidade", () => ({
 import { useNavVisibilidade } from "../hooks/useNavVisibilidade";
 const mockUseNavVisibilidade = vi.mocked(useNavVisibilidade);
 
+/** Retorno padrão: todas as páginas visíveis. */
+const MOCK_TUDO_VISIVEL = {
+  loja: true,
+  mangas: true,
+  eventos: true,
+  cupons: true,
+  agendar: true,
+  isLoading: false,
+};
+
 function criarQueryClient() {
   return new QueryClient({
     defaultOptions: { queries: { retry: false } },
@@ -38,12 +48,8 @@ describe("Visibilidade de abas na NavBar", () => {
     vi.clearAllMocks();
   });
 
-  it("deve exibir 'Loja Online' e 'Mangás' quando ambos têm produtos visíveis", () => {
-    mockUseNavVisibilidade.mockReturnValue({
-      temLoja: true,
-      temMangas: true,
-      isLoading: false,
-    });
+  it("deve exibir 'Loja Online' e 'Mangás' quando ambos estão habilitados", () => {
+    mockUseNavVisibilidade.mockReturnValue(MOCK_TUDO_VISIVEL);
 
     renderHeader();
 
@@ -51,11 +57,10 @@ describe("Visibilidade de abas na NavBar", () => {
     expect(screen.getByText("Mangás")).toBeInTheDocument();
   });
 
-  it("deve ocultar 'Loja Online' quando não há produtos de loja visíveis", () => {
+  it("deve ocultar 'Loja Online' quando desabilitada", () => {
     mockUseNavVisibilidade.mockReturnValue({
-      temLoja: false,
-      temMangas: true,
-      isLoading: false,
+      ...MOCK_TUDO_VISIVEL,
+      loja: false,
     });
 
     renderHeader();
@@ -64,11 +69,10 @@ describe("Visibilidade de abas na NavBar", () => {
     expect(screen.getByText("Mangás")).toBeInTheDocument();
   });
 
-  it("deve ocultar 'Mangás' quando não há produtos de manga visíveis", () => {
+  it("deve ocultar 'Mangás' quando desabilitado", () => {
     mockUseNavVisibilidade.mockReturnValue({
-      temLoja: true,
-      temMangas: false,
-      isLoading: false,
+      ...MOCK_TUDO_VISIVEL,
+      mangas: false,
     });
 
     renderHeader();
@@ -77,11 +81,11 @@ describe("Visibilidade de abas na NavBar", () => {
     expect(screen.queryByText("Mangás")).not.toBeInTheDocument();
   });
 
-  it("deve ocultar ambos quando nenhum tem produtos visíveis", () => {
+  it("deve ocultar ambos quando desabilitados", () => {
     mockUseNavVisibilidade.mockReturnValue({
-      temLoja: false,
-      temMangas: false,
-      isLoading: false,
+      ...MOCK_TUDO_VISIVEL,
+      loja: false,
+      mangas: false,
     });
 
     renderHeader();
@@ -90,31 +94,63 @@ describe("Visibilidade de abas na NavBar", () => {
     expect(screen.queryByText("Mangás")).not.toBeInTheDocument();
   });
 
-  it("deve ocultar ambos enquanto os dados estão carregando", () => {
+  it("deve ocultar links enquanto os dados estão carregando", () => {
     mockUseNavVisibilidade.mockReturnValue({
-      temLoja: false,
-      temMangas: false,
+      loja: false,
+      mangas: false,
+      eventos: false,
+      cupons: false,
+      agendar: false,
       isLoading: true,
     });
 
     renderHeader();
 
-    // Enquanto carrega, os links não aparecem para evitar flash
     expect(screen.queryByText("Loja Online")).not.toBeInTheDocument();
     expect(screen.queryByText("Mangás")).not.toBeInTheDocument();
   });
 
-  it("deve sempre exibir os links permanentes (Início, Cardápio, Eventos, Cupons)", () => {
+  it("deve sempre exibir os links permanentes (Início, Cardápio)", () => {
     mockUseNavVisibilidade.mockReturnValue({
-      temLoja: false,
-      temMangas: false,
+      loja: false,
+      mangas: false,
+      eventos: false,
+      cupons: false,
+      agendar: false,
       isLoading: false,
     });
 
     renderHeader();
 
+    // Início e Cardápio são sempre visíveis, independentemente das configurações
     expect(screen.getByText("Início")).toBeInTheDocument();
     expect(screen.getByText("Cardápio")).toBeInTheDocument();
+  });
+
+  it("deve ocultar Eventos, Cupons e Agendar quando admin desabilita", () => {
+    mockUseNavVisibilidade.mockReturnValue({
+      ...MOCK_TUDO_VISIVEL,
+      eventos: false,
+      cupons: false,
+      agendar: false,
+    });
+
+    renderHeader();
+
+    expect(screen.queryByText("Eventos")).not.toBeInTheDocument();
+    expect(screen.queryByText("Cupons")).not.toBeInTheDocument();
+    expect(screen.queryByText("Agendar evento")).not.toBeInTheDocument();
+  });
+
+  it("deve exibir todas as páginas quando tudo habilitado", () => {
+    mockUseNavVisibilidade.mockReturnValue(MOCK_TUDO_VISIVEL);
+
+    renderHeader();
+
+    expect(screen.getByText("Início")).toBeInTheDocument();
+    expect(screen.getByText("Cardápio")).toBeInTheDocument();
+    expect(screen.getByText("Loja Online")).toBeInTheDocument();
+    expect(screen.getByText("Mangás")).toBeInTheDocument();
     expect(screen.getByText("Eventos")).toBeInTheDocument();
     expect(screen.getByText("Cupons")).toBeInTheDocument();
     expect(screen.getByText("Agendar evento")).toBeInTheDocument();

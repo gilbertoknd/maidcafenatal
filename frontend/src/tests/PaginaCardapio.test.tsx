@@ -40,6 +40,7 @@ const mockProducts: Produto[] = [
 vi.mock("../services/api", () => ({
   buscarProdutos: vi.fn(() => Promise.resolve(mockProducts)),
   alternarCurtidaProduto: vi.fn(),
+  buscarConfiguracoes: vi.fn(() => Promise.resolve({ configuracoes: {}, fontes_customizadas: [] })),
 }));
 
 // Mock child components that are not focus of this test to simplify

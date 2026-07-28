@@ -17,7 +17,7 @@ const LIMITE_SCROLL_BANNER = 50;
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isBannerVisible, setIsBannerVisible] = useState(true);
-  const { temLoja, temMangas } = useNavVisibilidade();
+  const { loja, mangas, eventos, cupons, agendar } = useNavVisibilidade();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -103,7 +103,7 @@ export function Header() {
           >
             Cardápio
           </Link>
-          {temLoja && (
+          {loja && (
             <Link
               to="/loja"
               onClick={closeMenu}
@@ -114,7 +114,7 @@ export function Header() {
               Loja Online
             </Link>
           )}
-          {temMangas && (
+          {mangas && (
             <Link
               to="/mangas"
               onClick={closeMenu}
@@ -125,28 +125,34 @@ export function Header() {
               Mangás
             </Link>
           )}
-          <Link
-            to="/eventos"
-            onClick={closeMenu}
-            className={`${styles.navLink} ${
-              location.pathname === "/eventos" ? styles.active : ""
-            }`}
-          >
-            Eventos
-          </Link>
-          <Link
-            to="/cupons"
-            onClick={closeMenu}
-            className={`${styles.navLink} ${
-              location.pathname === "/cupons" ? styles.active : ""
-            }`}
-          >
-            Cupons
-          </Link>
+          {eventos && (
+            <Link
+              to="/eventos"
+              onClick={closeMenu}
+              className={`${styles.navLink} ${
+                location.pathname === "/eventos" ? styles.active : ""
+              }`}
+            >
+              Eventos
+            </Link>
+          )}
+          {cupons && (
+            <Link
+              to="/cupons"
+              onClick={closeMenu}
+              className={`${styles.navLink} ${
+                location.pathname === "/cupons" ? styles.active : ""
+              }`}
+            >
+              Cupons
+            </Link>
+          )}
 
-          <Link to="/agendar" className={styles.cta} onClick={closeMenu}>
-            Agendar evento
-          </Link>
+          {agendar && (
+            <Link to="/agendar" className={styles.cta} onClick={closeMenu}>
+              Agendar evento
+            </Link>
+          )}
         </nav>
       </div>
     </header>

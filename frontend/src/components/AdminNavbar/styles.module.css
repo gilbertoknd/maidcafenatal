@@ -1,0 +1,215 @@
+/* ─── AdminNavbar ─── */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--color-wine);
+}
+
+.titulo {
+  font-family: var(--font-display);
+  font-size: var(--font-size-xl);
+  color: var(--color-wine);
+  margin: 0;
+}
+
+.descricao {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted, #6b6360);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ─── Lista de toggles ─── */
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  background-color: var(--color-white);
+  border: 2px solid var(--color-wine);
+  border-radius: var(--radius-card);
+  cursor: pointer;
+  transition: var(--transition-default);
+  box-shadow: var(--shadow-sticker-sm);
+}
+
+.item:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-sticker);
+  background-color: var(--color-rose-light, #f9f0ed);
+}
+
+.itemOculto {
+  opacity: 0.55;
+  border-style: dashed;
+  background-color: var(--color-cream);
+  box-shadow: none;
+}
+
+.itemOculto:hover {
+  opacity: 0.8;
+  box-shadow: var(--shadow-sticker-sm);
+}
+
+/* ─── Info (ícone + label) ─── */
+.itemInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.iconVisivel {
+  color: var(--color-wine);
+}
+
+.iconOculto {
+  color: var(--color-text-muted, #999);
+}
+
+.itemLabel {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+/* ─── Toggle (checkbox estilizado) ─── */
+.toggleWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkbox {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 44px;
+  height: 24px;
+  background-color: var(--color-rose, #E8C3BA);
+  border-radius: 999px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+  border: 2px solid var(--color-wine);
+  flex-shrink: 0;
+}
+
+.checkbox::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background-color: var(--color-white);
+  border-radius: 50%;
+  transition: transform 0.25s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.checkbox:checked {
+  background-color: var(--color-wine);
+}
+
+.checkbox:checked::after {
+  transform: translateX(20px);
+}
+
+.checkbox:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+/* ─── Spinners ─── */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 3rem;
+  color: var(--color-wine);
+  font-size: var(--font-size-base);
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+.spinnerMini {
+  animation: spin 0.8s linear infinite;
+  color: var(--color-wine);
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Toast ─── */
+.toast {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-button);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  animation: slideIn 0.3s ease;
+}
+
+.toastSucesso {
+  background-color: var(--color-mint-light, #d8f5e3);
+  color: var(--color-mint-dark, #1a7a3a);
+  border: 2px solid var(--color-mint, #4caf79);
+}
+
+.toastErro {
+  background-color: #fde8e8;
+  color: #c62828;
+  border: 2px solid #ef5350;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── Responsivo ─── */
+@media (max-width: 480px) {
+  .item {
+    padding: 0.7rem 0.8rem;
+  }
+
+  .itemLabel {
+    font-size: var(--font-size-sm);
+  }
+
+  .checkbox {
+    width: 38px;
+    height: 20px;
+  }
+
+  .checkbox::after {
+    width: 12px;
+    height: 12px;
+  }
+
+  .checkbox:checked::after {
+    transform: translateX(18px);
+  }
+}

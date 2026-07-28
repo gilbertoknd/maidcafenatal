@@ -24,6 +24,12 @@ const CHAVES_VALIDAS = [
   "secao_home_sobre",
   "secao_home_instagram",
   "secao_home_clube_mew",
+  // Visibilidade das páginas na navbar
+  "nav_loja",
+  "nav_mangas",
+  "nav_eventos",
+  "nav_cupons",
+  "nav_agendar",
 ];
 
 export class ConfiguracaoController {

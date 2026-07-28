@@ -265,6 +265,7 @@ FRONTEND_URL=http://localhost:5174
 │       │   ├── AdminFontes/      # Gerenciamento de fontes customizadas
 │       │   ├── AdminCupons/      # Gerenciamento de cupons
 │       │   ├── AdminSecoesHome/  # Controle de visibilidade das seções da homepage
+│       │   ├── AdminNavbar/      # Controle de visibilidade dos links da Navbar
 │       │   └── AdminInstagram/   # Gerenciamento de posts do Instagram
 │       ├── utils/
 │       └── tests/                # Testes do frontend (Vitest + RTL)
@@ -283,6 +284,11 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 | `chave`         | `VARCHAR(100) PK` | Chave da configuração (ex: fonte) |
 | `valor`         | `VARCHAR(255)`    | Valor associado à chave           |
 | `atualizado_em` | `TIMESTAMP`       | Data da última atualização        |
+
+> **Chaves de Configuração conhecidas:**
+> - `fonte_corpo`, `fonte_titulos`, `fonte_decorativa` (Usadas para fontes customizadas)
+> - `secao_home_*` (Controlam visibilidade de seções na Home)
+> - `nav_loja`, `nav_mangas`, `nav_eventos`, `nav_cupons`, `nav_agendar` (Controlam visibilidade de itens na Navbar, valores boolean stringificados: `'true'` ou `'false'`)
 
 ### `fontes_customizadas`
 

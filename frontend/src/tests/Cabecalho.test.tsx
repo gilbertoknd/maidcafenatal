@@ -7,7 +7,7 @@ import { CarrinhoProvider } from "../hooks/useCarrinho";
 
 // Mock do hook de visibilidade — sempre visível para os testes existentes
 vi.mock("../hooks/useNavVisibilidade", () => ({
-  useNavVisibilidade: () => ({ temLoja: true, temMangas: true, isLoading: false }),
+  useNavVisibilidade: () => ({ loja: true, mangas: true, eventos: true, cupons: true, agendar: true, isLoading: false }),
 }));
 
 function renderHeader() {

@@ -165,6 +165,51 @@ describe("Configuracao Routes", () => {
       // Todas as chaves são inválidas, deve retornar 400
       expect(response.status).toBe(400);
     });
+
+    it("deve aceitar chaves nav_* para visibilidade da navbar", async () => {
+      (jwt.verify as any).mockReturnValue({ id: 1 });
+
+      const mockClient = {
+        query: vi.fn().mockResolvedValue({ rows: [] }),
+        release: vi.fn(),
+      };
+      (pool.connect as any).mockResolvedValue(mockClient);
+
+      const response = await request(app)
+        .put("/api/configuracoes")
+        .set("Authorization", validToken)
+        .send({
+          nav_loja: "false",
+          nav_mangas: "true",
+          nav_eventos: "false",
+          nav_cupons: "true",
+          nav_agendar: "false",
+        });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty("message");
+      expect(response.body.configuracoes).toHaveProperty("nav_loja", "false");
+      expect(response.body.configuracoes).toHaveProperty("nav_mangas", "true");
+      expect(response.body.configuracoes).toHaveProperty("nav_eventos", "false");
+      expect(response.body.configuracoes).toHaveProperty("nav_cupons", "true");
+      expect(response.body.configuracoes).toHaveProperty("nav_agendar", "false");
+      expect(mockClient.query).toHaveBeenCalled();
+    });
+
+    it("deve filtrar chaves nav_ inválidas", async () => {
+      (jwt.verify as any).mockReturnValue({ id: 1 });
+
+      const response = await request(app)
+        .put("/api/configuracoes")
+        .set("Authorization", validToken)
+        .send({
+          nav_inexistente: "false",
+          nav_outra_invalida: "true",
+        });
+
+      // Todas as chaves são inválidas, deve retornar 400
+      expect(response.status).toBe(400);
+    });
   });
 
   // ═══ POST /api/configuracoes/fontes (Upload - Protegido) ═══

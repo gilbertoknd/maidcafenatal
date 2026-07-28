@@ -65,3 +65,29 @@ export const SECOES_HOME_LABELS: Record<SecaoHomeChave, string> = {
   secao_home_clube_mew: "Clube Mew",
 };
 
+/** Chaves de visibilidade das páginas na navbar. */
+export type NavChave =
+  | "nav_loja"
+  | "nav_mangas"
+  | "nav_eventos"
+  | "nav_cupons"
+  | "nav_agendar";
+
+/** Lista ordenada das páginas da navbar (ordem de exibição). */
+export const NAV_PAGINAS_ORDEM: NavChave[] = [
+  "nav_loja",
+  "nav_mangas",
+  "nav_eventos",
+  "nav_cupons",
+  "nav_agendar",
+];
+
+/** Mapa de label amigável para cada página da navbar. */
+export const NAV_PAGINAS_LABELS: Record<NavChave, string> = {
+  nav_loja: "Loja Online",
+  nav_mangas: "Mangás",
+  nav_eventos: "Eventos",
+  nav_cupons: "Cupons",
+  nav_agendar: "Agendar Evento",
+};
+
