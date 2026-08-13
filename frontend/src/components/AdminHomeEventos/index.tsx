@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Save,
@@ -44,11 +44,15 @@ export function AdminHomeEventos() {
     queryFn: buscarConfiguracoes,
   });
 
-  useEffect(() => {
-    if (data) {
-      setConfig(parseHomeEventos(data.configuracoes?.home_eventos));
-    }
-  }, [data]);
+  // Dado já aplicado ao formulário — re-semeia quando a query devolve dados
+  // novos. Ajuste durante o render, não em useEffect (viola
+  // react-hooks/set-state-in-effect).
+  const [dadoOrigem, setDadoOrigem] = useState<typeof data>(undefined);
+
+  if (data && data !== dadoOrigem) {
+    setDadoOrigem(data);
+    setConfig(parseHomeEventos(data.configuracoes?.home_eventos));
+  }
 
   const mutationSalvar = useMutation({
     mutationFn: atualizarConfiguracoes,

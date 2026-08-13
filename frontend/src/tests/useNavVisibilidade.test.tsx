@@ -11,6 +11,26 @@ vi.mock("../services/api", () => ({
 }));
 
 import { buscarProdutos, buscarConfiguracoes } from "../services/api";
+import type { Produto } from "../types/Produto";
+
+/**
+ * Fixture mínima de Produto — este hook só lê `is_loja` e `is_manga`,
+ * mas o tipo exige o registro completo. Preenche o resto com valores neutros.
+ */
+function criarProduto(parcial: Partial<Produto> & { id: number }): Produto {
+  return {
+    nome: `Produto ${parcial.id}`,
+    descricao: null,
+    preco: "10.00",
+    imagem_url: "/images/teste.webp",
+    categoria: "Cafés",
+    promocao: false,
+    curtidas: 0,
+    is_loja: false,
+    is_manga: false,
+    ...parcial,
+  };
+}
 
 function criarWrapper() {
   const queryClient = new QueryClient({
@@ -23,11 +43,11 @@ function criarWrapper() {
 
 describe("useNavVisibilidade", () => {
   it("deve retornar true para todos quando não há configurações e há produtos", async () => {
-    (buscarProdutos as any).mockResolvedValue([
-      { id: 1, is_loja: true, is_manga: false },
-      { id: 2, is_loja: false, is_manga: true },
+    vi.mocked(buscarProdutos).mockResolvedValue([
+      criarProduto({ id: 1, is_loja: true, is_manga: false }),
+      criarProduto({ id: 2, is_loja: false, is_manga: true }),
     ]);
-    (buscarConfiguracoes as any).mockResolvedValue({
+    vi.mocked(buscarConfiguracoes).mockResolvedValue({
       configuracoes: {},
       fontes_customizadas: [],
     });
@@ -49,11 +69,11 @@ describe("useNavVisibilidade", () => {
   });
 
   it("deve retornar false para loja/mangás quando admin desabilita via nav_*", async () => {
-    (buscarProdutos as any).mockResolvedValue([
-      { id: 1, is_loja: true, is_manga: false },
-      { id: 2, is_loja: false, is_manga: true },
+    vi.mocked(buscarProdutos).mockResolvedValue([
+      criarProduto({ id: 1, is_loja: true, is_manga: false }),
+      criarProduto({ id: 2, is_loja: false, is_manga: true }),
     ]);
-    (buscarConfiguracoes as any).mockResolvedValue({
+    vi.mocked(buscarConfiguracoes).mockResolvedValue({
       configuracoes: {
         nav_loja: "false",
         nav_mangas: "false",
@@ -79,10 +99,10 @@ describe("useNavVisibilidade", () => {
   });
 
   it("deve retornar false para loja quando não há produtos is_loja, mesmo com admin habilitado", async () => {
-    (buscarProdutos as any).mockResolvedValue([
-      { id: 1, is_loja: false, is_manga: true },
+    vi.mocked(buscarProdutos).mockResolvedValue([
+      criarProduto({ id: 1, is_loja: false, is_manga: true }),
     ]);
-    (buscarConfiguracoes as any).mockResolvedValue({
+    vi.mocked(buscarConfiguracoes).mockResolvedValue({
       configuracoes: {
         nav_loja: "true",
         nav_mangas: "true",
@@ -106,8 +126,8 @@ describe("useNavVisibilidade", () => {
   });
 
   it("deve retornar false para eventos/cupons/agendar quando admin desabilita", async () => {
-    (buscarProdutos as any).mockResolvedValue([]);
-    (buscarConfiguracoes as any).mockResolvedValue({
+    vi.mocked(buscarProdutos).mockResolvedValue([]);
+    vi.mocked(buscarConfiguracoes).mockResolvedValue({
       configuracoes: {
         nav_eventos: "false",
         nav_cupons: "false",

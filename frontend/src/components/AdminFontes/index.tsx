@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   buscarConfiguracoes,
@@ -40,11 +40,17 @@ export default function AdminFontes() {
     queryFn: buscarConfiguracoes,
   });
 
-  useEffect(() => {
-    if (data?.configuracoes) {
-      setFormData(data.configuracoes);
-    }
-  }, [data]);
+  // Configuração já aplicada ao formulário — re-semeia quando a query devolve
+  // dados novos. Ajuste durante o render, não em useEffect (viola
+  // react-hooks/set-state-in-effect e gera um render extra com o form vazio).
+  const [configOrigem, setConfigOrigem] = useState<
+    Record<string, string> | undefined
+  >(undefined);
+
+  if (data?.configuracoes && data.configuracoes !== configOrigem) {
+    setConfigOrigem(data.configuracoes);
+    setFormData(data.configuracoes);
+  }
 
   const mutationSalvar = useMutation({
     mutationFn: atualizarConfiguracoes,
@@ -52,7 +58,7 @@ export default function AdminFontes() {
       queryClient.invalidateQueries({ queryKey: ["configuracoes"] });
       alert("Configurações salvas com sucesso!");
     },
-    onError: (err: any) => {
+    onError: (err: Error) => {
       setErrorMsg(err.message || "Erro ao salvar configurações");
     },
   });
@@ -68,7 +74,7 @@ export default function AdminFontes() {
       if (fileInput) fileInput.value = "";
       alert("Fonte enviada com sucesso!");
     },
-    onError: (err: any) => {
+    onError: (err: Error) => {
       setErrorMsg(err.message || "Erro ao fazer upload da fonte");
     },
   });
@@ -78,7 +84,7 @@ export default function AdminFontes() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["configuracoes"] });
     },
-    onError: (err: any) => {
+    onError: (err: Error) => {
       setErrorMsg(err.message || "Erro ao deletar a fonte");
     },
   });

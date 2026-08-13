@@ -69,7 +69,7 @@ export function CuponsPage() {
         setWhatsapp("");
         setCampanhaSelecionada(null);
       },
-      onError: (err: any) => {
+      onError: (err: Error) => {
         setErrorMsg(err.message || "Erro ao resgatar cupom");
       }
     });

@@ -12,7 +12,7 @@ export const StorageProvider = {
   async deleteFile(filePath: string | null) {
     if (!filePath) return;
 
-    let absolutePath = "";
+    let absolutePath: string;
 
     // Se o caminho começa com /, assume que é a URL relativa do banco (/images/...)
     if (filePath.startsWith("/")) {

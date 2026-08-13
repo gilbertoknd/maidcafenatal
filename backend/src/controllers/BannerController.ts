@@ -17,7 +17,7 @@ export const BannerController = {
       throw new AppError("Tipo de banner inválido. Deve ser 'video' ou 'image'.", 400);
     }
 
-    let url = "";
+    let url: string;
 
     // Se houve envio de arquivo
     if (req.file) {

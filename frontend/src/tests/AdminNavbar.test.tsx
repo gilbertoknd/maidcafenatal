@@ -29,7 +29,7 @@ describe("AdminNavbar", () => {
   });
 
   it("deve renderizar todos os toggles de páginas da navbar", async () => {
-    (buscarConfiguracoes as any).mockResolvedValue({
+    vi.mocked(buscarConfiguracoes).mockResolvedValue({
       configuracoes: {},
       fontes_customizadas: [],
     });
@@ -45,7 +45,7 @@ describe("AdminNavbar", () => {
   });
 
   it("deve exibir todos os toggles como marcados quando não há configuração", async () => {
-    (buscarConfiguracoes as any).mockResolvedValue({
+    vi.mocked(buscarConfiguracoes).mockResolvedValue({
       configuracoes: {},
       fontes_customizadas: [],
     });
@@ -61,7 +61,7 @@ describe("AdminNavbar", () => {
   });
 
   it("deve exibir toggle desmarcado quando configuração é 'false'", async () => {
-    (buscarConfiguracoes as any).mockResolvedValue({
+    vi.mocked(buscarConfiguracoes).mockResolvedValue({
       configuracoes: {
         nav_loja: "false",
         nav_mangas: "false",
@@ -80,11 +80,11 @@ describe("AdminNavbar", () => {
   });
 
   it("deve chamar API ao clicar em um toggle", async () => {
-    (buscarConfiguracoes as any).mockResolvedValue({
+    vi.mocked(buscarConfiguracoes).mockResolvedValue({
       configuracoes: {},
       fontes_customizadas: [],
     });
-    (atualizarConfiguracoes as any).mockResolvedValue({
+    vi.mocked(atualizarConfiguracoes).mockResolvedValue({
       message: "ok",
       configuracoes: { nav_loja: "false" },
     });

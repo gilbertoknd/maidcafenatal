@@ -24,7 +24,7 @@ describe("useConfiguracoesGlobais", () => {
   });
 
   it("deve aplicar as variáveis CSS globais no :root quando os dados chegarem", async () => {
-    (api.buscarConfiguracoes as any).mockResolvedValue({
+    vi.mocked(api.buscarConfiguracoes).mockResolvedValue({
       configuracoes: {
         fonte_titulo_site: "Times New Roman",
         fonte_navbar: "Pacifico",

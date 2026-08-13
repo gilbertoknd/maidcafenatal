@@ -22,7 +22,7 @@ describe("AdminFontes", () => {
   beforeEach(() => {
     queryClient.clear();
     vi.clearAllMocks();
-    (api.buscarConfiguracoes as any).mockResolvedValue({
+    vi.mocked(api.buscarConfiguracoes).mockResolvedValue({
       configuracoes: {
         fonte_titulo_site: "Sweet Apricot",
         fonte_navbar: "Inter",
@@ -36,9 +36,12 @@ describe("AdminFontes", () => {
         { id: 1, nome: "MinhaFonte", arquivo_url: "/fonts/minhafonte.woff2" },
       ],
     });
-    (api.atualizarConfiguracoes as any).mockResolvedValue({ message: "Sucesso" });
-    (api.uploadFonteCustomizada as any).mockResolvedValue({ id: 2, nome: "Nova", arquivo_url: "/fonts/nova.woff2" });
-    (api.deletarFonteCustomizada as any).mockResolvedValue({ message: "Deletado" });
+    vi.mocked(api.atualizarConfiguracoes).mockResolvedValue({
+      message: "Sucesso",
+      configuracoes: {},
+    });
+    vi.mocked(api.uploadFonteCustomizada).mockResolvedValue({ id: 2, nome: "Nova", arquivo_url: "/fonts/nova.woff2" });
+    vi.mocked(api.deletarFonteCustomizada).mockResolvedValue({ message: "Deletado" });
     vi.spyOn(window, "alert").mockImplementation(() => {});
   });
 
@@ -86,7 +89,7 @@ describe("AdminFontes", () => {
   });
 
   it("deve chamar a api de upload ao enviar um arquivo", async () => {
-    (api.uploadFonteCustomizada as any).mockResolvedValue({
+    vi.mocked(api.uploadFonteCustomizada).mockResolvedValue({
       id: 2,
       nome: "Nova Fonte",
       arquivo_url: "/fonts/nova.woff2",

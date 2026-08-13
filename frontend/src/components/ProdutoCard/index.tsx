@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
 import type { Produto } from "../../types/Produto";
@@ -169,11 +169,16 @@ export function ProdutoCard({
   const { hasLiked, handleLike } = useProductLike(produto.id);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [likesContagem, setLikesContagem] = useState(produto.curtidas);
+  const [curtidasAnterior, setCurtidasAnterior] = useState(produto.curtidas);
 
-  // Sincroniza com a prop caso o cache global mude (ex: vindo do servidor)
-  useEffect(() => {
+  // Sincroniza com a prop caso o cache global mude (ex: vindo do servidor).
+  // Ajuste durante o render (padrão oficial do React para "resetar estado
+  // quando a prop muda") — em useEffect isso viola react-hooks/set-state-in-effect
+  // e ainda causa um render extra com o valor defasado.
+  if (produto.curtidas !== curtidasAnterior) {
+    setCurtidasAnterior(produto.curtidas);
     setLikesContagem(produto.curtidas);
-  }, [produto.curtidas]);
+  }
 
   const handleLikeClick = async () => {
     // UI Otimista Local
@@ -182,7 +187,7 @@ export function ProdutoCard({
 
     try {
       await handleLike();
-    } catch (err) {
+    } catch {
       // O rollback global do TanStack Query cuidará da prop produto futuramente,
       // mas precisamos reverter o estado local imediatamente se houver erro direto.
       setLikesContagem(produto.curtidas);

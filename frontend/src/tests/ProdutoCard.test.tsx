@@ -57,7 +57,7 @@ describe("Componente ProdutoCard", () => {
 
   it("deve alternar a curtida e realizar rollback se a API falhar", async () => {
     // Mock falha na API
-    (alternarCurtidaProduto as any).mockRejectedValueOnce(new Error("API Fail"));
+    vi.mocked(alternarCurtidaProduto).mockRejectedValueOnce(new Error("API Fail"));
 
     render(<ProdutoCard produto={mockProduct} />, { wrapper: createWrapper() });
 

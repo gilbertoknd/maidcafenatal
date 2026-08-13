@@ -22,7 +22,7 @@ function criarWrapper() {
 
 describe("useSecoesHome", () => {
   it("deve retornar true para todas as seções quando nenhuma configuração existe", async () => {
-    (buscarConfiguracoes as any).mockResolvedValue({
+    vi.mocked(buscarConfiguracoes).mockResolvedValue({
       configuracoes: {},
       fontes_customizadas: [],
     });
@@ -43,7 +43,7 @@ describe("useSecoesHome", () => {
   });
 
   it("deve retornar false para seções com valor 'false' no banco", async () => {
-    (buscarConfiguracoes as any).mockResolvedValue({
+    vi.mocked(buscarConfiguracoes).mockResolvedValue({
       configuracoes: {
         secao_home_hero: "false",
         secao_home_instagram: "false",

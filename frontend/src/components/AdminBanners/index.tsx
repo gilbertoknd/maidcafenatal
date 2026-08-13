@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Save, Image as ImageIcon, Video as VideoIcon } from "lucide-react";
 import styles from "./styles.module.css";
 import { useBanners, useAdminBanners } from "../../hooks/useBanners";
@@ -18,30 +18,40 @@ export function AdminBanners() {
     arquivo: null as File | null,
   });
 
-  useEffect(() => {
-    if (banners) {
-      const bannerPage = banners.find((b) => b.pagina === pagina);
-      if (bannerPage) {
-        setFormData({
-          tipo: bannerPage.tipo,
-          url: bannerPage.url,
-          titulo: bannerPage.titulo || "",
-          texto_botao: bannerPage.texto_botao || "",
-          link_botao: bannerPage.link_botao || "",
-          arquivo: null,
-        });
-      } else {
-        setFormData((prev) => ({
-          ...prev,
-          url: "",
-          titulo: "",
-          texto_botao: "",
-          link_botao: "",
-          arquivo: null,
-        }));
-      }
+  // Origem já aplicada ao formulário. Re-semeia quando o admin troca de página
+  // ou quando a query devolve banners novos (refetch/invalidate).
+  const [origem, setOrigem] = useState<{
+    pagina: string;
+    banners: typeof banners;
+  }>({ pagina, banners: undefined });
+
+  // Ajuste durante o render — em useEffect isso viola
+  // react-hooks/set-state-in-effect e pinta o formulário com o valor antigo
+  // por um frame antes de corrigir.
+  if (banners && (origem.pagina !== pagina || origem.banners !== banners)) {
+    setOrigem({ pagina, banners });
+
+    const bannerPage = banners.find((b) => b.pagina === pagina);
+    if (bannerPage) {
+      setFormData({
+        tipo: bannerPage.tipo,
+        url: bannerPage.url,
+        titulo: bannerPage.titulo || "",
+        texto_botao: bannerPage.texto_botao || "",
+        link_botao: bannerPage.link_botao || "",
+        arquivo: null,
+      });
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        url: "",
+        titulo: "",
+        texto_botao: "",
+        link_botao: "",
+        arquivo: null,
+      }));
     }
-  }, [pagina, banners]);
+  }
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,

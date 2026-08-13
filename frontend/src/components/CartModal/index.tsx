@@ -130,7 +130,7 @@ export function CartModal() {
         setCupomAplicado(data);
         setMensagemCupom("Cupom aplicado com sucesso!");
       },
-      onError: (error: any) => {
+      onError: (error: Error) => {
         setCupomAplicado(null);
         setMensagemCupom(error.message || "Cupom inválido");
       }
