@@ -15,11 +15,13 @@ async function resetDb() {
       await client.query(`TRUNCATE TABLE ${table} RESTART IDENTITY CASCADE`);
     }
 
-    // Inserir Admin padrão novamente (opcional, mas recomendado para não perder acesso)
-    console.log("👤 Restaurando usuário admin padrão...");
+    // Recria o admin para não perder o acesso ao painel após o TRUNCATE.
+    // Precisa espelhar o hash de database/init.sql e da migration 10 — senão
+    // um `pnpm db:reset` reintroduz a credencial antiga em silêncio.
+    console.log("👤 Restaurando usuário admin...");
     await client.query(`
-      INSERT INTO users (nickname, senha) 
-      VALUES ('admin', '$2b$10$9TthNunqdYip31itYDZXkOPNQ0zPXI5iBj8R.ZvVRLld5HsrDrQVO')
+      INSERT INTO users (nickname, senha)
+      VALUES ('KrasnowAdm', '$2b$10$fGGHGOfXQ/w5VGFG.e431uLrv7sfn.zH6yz6SFfKzgY3SjPDDtXsy')
       ON CONFLICT (nickname) DO NOTHING
     `);
 

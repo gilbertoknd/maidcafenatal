@@ -6,7 +6,7 @@
 - **Gerenciador de Pacotes:** Utilize EXCLUSIVAMENTE o `pnpm` (nunca use `npm` ou `yarn`).
 - **Infraestrutura Local (Docker):** Utilizamos o `docker-compose.yml` na raiz do projeto para orquestrar todos os containers: `db` (PostgreSQL 15), `backend` (Node/Express), `frontend` (Vite/React) e `tunnel` (Cloudflare).
 - **Controle de Versão:** O `.gitignore` raiz ignora `node_modules`, `.env` de todos os níveis, pastas de build (`dist/`, `build/`), coverage, dados do PostgreSQL (`pgdata/`, `postgres_data/`) e arquivos de OS/IDE.
-- **Contexto:** Use SEMPRE o `GEMINI.md` como a fonte da verdade para as regras de negócio, arquitetura e contexto. Atualize este documento constantemente com novas regras, dependências e soluções de erros.
+- **Contexto:** Use SEMPRE o `GEMINI.md` como a fonte da verdade para as regras de negócio, arquitetura e contexto. Atualize este documento constantemente com novas regras, dependências e soluções de erros. O `CLAUDE.md` da raiz é um resumo operacional que **importa** este arquivo (`@GEMINI.md`) — ao mudar uma regra aqui, verifique se o resumo do `CLAUDE.md` continua verdadeiro.
 - **Resolução de Erros:** Sempre que houver um erro, é mandatório ler integralmente o output do terminal para analisar de verdade qual é o problema ANTES de prosseguir.
 - **Padronização CSS:** Sempre utilize as variáveis CSS definidas em `frontend/src/index.css` (`:root`). Se necessário criar um novo token (cor, tamanho, espaçamento), adicione-o lá. Nunca use valores hard-coded repetidos.
 - **Idioma do Código:** Nomes de tabelas, colunas, variáveis de banco e endpoints da API estão em **português** (ex: `produtos`, `pedidos`, `eventos`). Comentários e mensagens de erro também em português.
@@ -16,8 +16,8 @@
 - **Responsividade** Quero que você foque bastante na responsividade e funcionalidades do site para dispositivos móveis, de forma que funcione bem em celulares, que é o foco principal.
 - **Hurdle** Adicione common Hurdles que você encontrar durante o desenvolvimento, com as soluções para que você não cometa os mesmos erros novamente.
 - **Ambiente de Trabalho**: Sempre que abrir o projeto, execute `pnpm install` nas pastas `frontend` e `backend` para garantir que todas as dependências e tipagens (`@types/*`) estejam sincronizadas com o código mais recente.
-- **Identidade Visual:** O site deve seguir uma estética "fofa" (Kawaii/Maid Café), com a paleta **Parchment · Cardinal · Blush Mochi · Charcoal** (`#F4EBE1`, `#A91D22`, `#E8C3BA`, `#242121`). Tipografia cursiva decorativa **Sweet Apricot** exclusivamente em **títulos de páginas, nomes de categorias, títulos de itens e Navbar** (via `var(--font-title)`), e fonte **Inter** (via `var(--font-main)`) para corpo de texto, descrições, preços, botões e demais elementos de UI. Crucialmente, botões e elementos com cantos muito arredondados (`var(--radius-button)` para botões e `var(--radius-card)` para cards/modais). O background da página principal é parchment (`#F4EBE1`), mantendo o branco puro (`#FFFFFF`) apenas para elementos elevados em relevo, como os cards.
-- **Paleta Unificada 2026 (Parchment · Cardinal · Blush Mochi · Charcoal):** A paleta do site foi **unificada** em Junho/2026. Os tokens `--color-primary` e `--color-wine` agora apontam para **Cardinal Red** (`#A91D22`), `--color-background`/`--color-cream` para **Parchment** (`#F4EBE1`), `--color-rose` para **Blush Mochi** (`#E8C3BA`) e `--color-text`/`--color-ink` para **Sacristy Charcoal** (`#242121`). Cards brancos com bordas cardinal e "sombra sticker" (offset duro, `--shadow-sticker`), pills verde-menta para status e a fonte display arredondada **Fredoka** (`var(--font-display)`) para os títulos chunky. Os testes em `design-tokens.test.ts` validam esta paleta.
+- **Identidade Visual:** O site deve seguir uma estética "fofa" (Kawaii/Maid Café), com a paleta **Parchment · Cardinal · Blush Mochi · Charcoal** (`#FAF7F2`, `#A91D22`, `#F0C4BA`, `#242121`). Tipografia cursiva decorativa **Sweet Apricot** exclusivamente em **títulos de páginas, nomes de categorias, títulos de itens e Navbar** (via `var(--font-title)`), e fonte **Inter** (via `var(--font-main)`) para corpo de texto, descrições, preços, botões e demais elementos de UI. Crucialmente, botões e elementos com cantos muito arredondados (`var(--radius-button)` para botões e `var(--radius-card)` para cards/modais). O background da página principal é o bege clarinho (`#FAF7F2`), mantendo o branco puro (`#FFFFFF`) apenas para elementos elevados em relevo, como os cards.
+- **Paleta Unificada 2026 (Parchment · Cardinal · Blush Mochi · Charcoal):** A paleta do site foi **unificada** em Junho/2026. Os tokens `--color-primary` e `--color-wine` apontam para **Cardinal Red** (`#A91D22`), `--color-background`/`--color-cream` para o **Bege Clarinho** (`#FAF7F2`), `--color-rose` para **Rosa Pastel / Blush Mochi** (`#F0C4BA`) e `--color-text`/`--color-ink` para **Sacristy Charcoal** (`#242121`). Cards brancos com bordas cardinal e "sombra sticker" (offset duro, `--shadow-sticker`), pills verde-menta para status e a fonte display arredondada **Fredoka** (`var(--font-display)`) para os títulos chunky. Os testes em `design-tokens.test.ts` validam esta paleta — **ele é o árbitro**: ao mudar um hex no `:root`, atualize o teste e a seção 8 juntos.
 
 ---
 
@@ -67,7 +67,7 @@ Website para o **Mew Mew Café** (Maid Café) localizado em Natal/RN. O sistema 
 - **Testes:** Vitest + `@testing-library/react` + `@testing-library/jest-dom` + `jsdom`
 - **Linting:** ESLint 9 + `eslint-plugin-react-hooks` + `eslint-plugin-react-refresh` + `typescript-eslint` + `globals`
 - **Validação de Schemas:** `zod`
-- **Tipografia:** **Sweet Apricot** (fonte local `.woff2` em `public/fonts/`) para títulos (`--font-title`) + **Inter** (Google Fonts) para corpo/UI (`--font-main`)
+- **Tipografia:** **Sweet Apricot** (fonte local `.woff2` em `public/fonts/`) para títulos (`--font-title`) + **Inter** (Google Fonts) para corpo/UI (`--font-main`) + **Fredoka** (Google Fonts) para títulos display chunky (`--font-display`)
 
 ### Backend
 
@@ -148,6 +148,8 @@ FRONTEND_URL=http://localhost:5174
 ├── .gitignore
 ├── docker-compose.yml            # Orquestração de containers
 ├── GEMINI.md                     # ESTE ARQUIVO — fonte da verdade
+├── CLAUDE.md                     # Resumo operacional p/ Claude Code (importa @GEMINI.md)
+├── scripts/backup.ps1            # Backup diário → Cloudflare R2 (ver seção 25)
 │
 ├── database/
 │   └── init.sql                  # Schema DDL + seed data (roda no init do container)
@@ -157,42 +159,43 @@ FRONTEND_URL=http://localhost:5174
 │   ├── package.json
 │   ├── tsconfig.json / tsconfig.build.json
 │   ├── vitest.config.ts
-│   ├── migrate_db.ts             # Script de migrations manuais
-│   ├── migrations/               # Migrations incrementais (.ts)
+│   ├── migrate_db.ts             # Runner das migrations (`pnpm db:migrate`)
+│   ├── migrations/               # Migrations incrementais (.ts, prefixadas 01_, 02_, ...)
+│   ├── scripts/reset_db.ts       # Reset do banco em dev (`pnpm db:reset`)
 │   ├── public/images/            # Imagens dos produtos/eventos (serving estático)
+│   ├── public/fonts/             # Fontes customizadas .woff2 (serving estático)
 │   └── src/
 │       ├── server.ts             # Entry point (listen)
 │       ├── app.ts                # Express app (middlewares + rotas)
 │       ├── config/
 │       │   ├── db.ts             # Pool de conexão PostgreSQL (pg)
 │       │   ├── corsOptions.ts    # Configuração de CORS
-│       │   └── upload.ts         # Configuração do Multer (disco)
+│       │   ├── upload.ts         # Multer para imagens/vídeos (disco, 50MB)
+│       │   └── uploadFonte.ts    # Multer para fontes .woff2
 │       ├── controllers/
 │       │   ├── AutenticacaoController.ts
 │       │   ├── ProdutoController.ts
 │       │   ├── PedidoController.ts
-│       │   └── EventoController.ts
-│       ├── models/
-│       │   ├── AutenticacaoModel.ts
-│       │   ├── ProdutoModel.ts
-│       │   ├── PedidoModel.ts
-│       │   └── EventoModel.ts
-│       ├── routes/
-│       │   ├── AutenticacaoRoutes.ts
-│       │   ├── ProdutoRoutes.ts
-│       │   ├── PedidoRoutes.ts
-│       │   ├── EventoRoutes.ts
+│       │   ├── EventoController.ts
+│       │   ├── BannerController.ts
+│       │   ├── ConfiguracaoController.ts
+│       │   ├── CupomController.ts
+│       │   └── InstagramController.ts
+│       ├── models/               # Um Model por Controller (mesmos nomes)
+│       ├── routes/               # Uma Route por Controller (mesmos nomes)
 │       ├── middlewares/
 │       │   ├── autenticacaoMiddleware.ts  # Verificação JWT
 │       │   └── gerenciadorErros.ts        # Gerenciador de erros centralizado (AppError)
 │       ├── services/
-│       ├── errors/               # Classe AppError customizada
-│       ├── types/                # Tipos TypeScript
-│       │   ├── AutenticacaoTypes.ts
-│       │   ├── ProdutoTypes.ts
-│       │   └── EventoTypes.ts
+│       │   └── ProdutoService.ts
+│       ├── errors/
+│       │   └── AppError.ts       # Classe de erro customizada (statusCode)
+│       ├── types/                # AutenticacaoTypes.d.ts, ProdutoTypes.ts,
+│       │                         # EventoTypes.ts, InstagramTypes.ts
 │       ├── utils/
-│       └── tests/                # Testes do backend (Vitest + Supertest)
+│       │   ├── StorageProvider.ts # Abstração de deleção de arquivo físico
+│       │   └── formatadores.ts
+│       └── tests/                # Testes do backend (Vitest + Supertest) — ver seção 14
 │
 ├── frontend/
 │   ├── Dockerfile
@@ -207,9 +210,11 @@ FRONTEND_URL=http://localhost:5174
 │       ├── index.css             # Design tokens (variáveis CSS globais)
 │       ├── App.css               # Estilos globais do App
 │       ├── setupTests.ts         # Config dos testes (@testing-library)
-│       ├── types/
-│       │   ├── Produto.ts        # Interface Produto
-│       │   └── Evento.ts         # Interface Evento + DadosFormEvento
+│       ├── types/                # Produto.ts, Evento.ts, Banner.ts, Cupom.ts,
+│       │                         # Instagram.ts, Configuracao.ts, global.d.ts
+│       ├── data/
+│       │   ├── maidsData.ts      # Perfis das maids (estático, alimenta /maids/:id)
+│       │   └── parceirosData.ts  # Parceiros (estático, alimenta a Home e /parceiros)
 │       ├── services/
 │       │   └── api.ts            # Todas as chamadas HTTP ao backend
 │       ├── hooks/
@@ -217,11 +222,17 @@ FRONTEND_URL=http://localhost:5174
 │       │   ├── useCarrinho.tsx         # Carrinho de compras (Context API)
 │       │   ├── useProdutos.ts          # Fetch de produtos (público, TanStack Query)
 │       │   ├── useAdminProdutos.ts     # CRUD de produtos (admin)
+│       │   ├── useAdminInstagram.ts    # CRUD de posts do Instagram (admin)
 │       │   ├── useProductLike.ts       # Gerencia curtidas otimistas por produto
 │       │   ├── useBanners.ts           # Fetch de banners (TanStack Query)
-│       │   ├── useConfiguracoesGlobais.ts # Carrega config ativa, injeta @font-face e tokens CSS
-│       │   ├── useSecoesHome.ts           # Visibilidade das seções da homepage (consome configuracoes)
+│       │   ├── useCupons.ts            # Campanhas e resgate de cupons
+│       │   ├── useConfiguracoes.ts     # Exporta useConfiguracoesGlobais(): carrega config ativa,
+│       │   │                           # injeta @font-face e tokens CSS (chamado no App.tsx)
+│       │   ├── useSecoesHome.ts        # Visibilidade das seções da homepage (chaves secao_home_*)
+│       │   ├── useNavVisibilidade.ts   # Visibilidade dos links da Navbar (chaves nav_*)
 │       │   └── useDebugTela.ts         # Debug de dimensões de tela (NÃO usar em produção)
+│       ├── utils/                # analytics.ts, contato.ts, formatadores.ts,
+│       │                         # homeEventos.ts, ordenarProdutos.ts, scroll.ts
 │       ├── pages/
 │       │   ├── Home/             # Landing page
 │       │   ├── Menu/             # Cardápio com filtros por categoria
@@ -232,6 +243,8 @@ FRONTEND_URL=http://localhost:5174
 │       │   ├── Mangas/           # Seção de mangás (is_manga=TRUE)
 │       │   ├── MaidDetalhes/     # Perfil detalhado de maid (dados em src/data/)
 │       │   ├── Cupons/           # Página de cupons de desconto
+│       │   ├── Parceiros/        # Página pública de parceiros (dados estáticos)
+│       │   ├── Agendar/          # Formulário de agendamento → WhatsApp (ver seção 31.2)
 │       │   └── Admin/            # Painel administrativo (protegido por JWT)
 │       ├── components/           # Componentes reutilizáveis
 │       │   ├── Header/           # Navegação principal (sticky, mobile slide-in)
@@ -247,28 +260,33 @@ FRONTEND_URL=http://localhost:5174
 │       │   ├── MenuContent/      # Conteúdo do cardápio
 │       │   ├── EventoCard/       # Card de evento
 │       │   ├── CalendarioEventos/ # Calendário de eventos
-│       │   ├── HeroSection/      # [Redesign] Boas-vindas (Hero) da Home — mascote + CTAs
-│       │   ├── HighlightsSection/ # [Redesign] Destaques do maid café (grade de 4 cards)
-│       │   ├── MaidCarousel/     # [Redesign] Carrossel de maids (avatares seletores + card destaque)
-│       │   ├── HowItWorksSection/ # [Redesign] "Como funciona um maid café" (4 passos, âncora #como-funciona)
-│       │   ├── AboutSection/     # [Redesign] "Nossa História" / Sobre nós na Home
-│       │   ├── InstagramSection/ # Seção de posts do Instagram (não usada na Home pós-redesign)
-│       │   ├── NewArrivalsSection/ # Novidades (não usada na Home pós-redesign)
-│       │   ├── PopularSection/   # Populares (não usada na Home pós-redesign)
-│       │   ├── AddressMapModal/  # Modal com mapa (Leaflet)
+│       │   ├── SortDropdown/     # Ordenação de produtos (usa utils/ordenarProdutos)
+│       │   ├── HeroSection/      # [Home] Boas-vindas (Hero) — mascote + CTAs
+│       │   ├── HowItWorksSection/ # [Home] "Como funciona" (4 passos, âncora #como-funciona)
+│       │   ├── MaidCarousel/     # [Home] Faixa de maids em fatias diagonais (Links p/ /maids/:id)
+│       │   ├── EventsSection/    # [Home] "Tem sempre algo fofo rolando" (agenda editável via admin)
+│       │   ├── AboutSection/     # [Home] "Magia japonesa na sua festa" / Sobre nós
+│       │   ├── InstagramSection/ # [Home] Mosaico do feed (5 posts + card do perfil)
+│       │   ├── ParceirosSection/ # [Home] Parceiros (grid 2 col + CTA "Ver todos")
+│       │   ├── ParceiroCard/     # Card de parceiro (logo com fallback de monograma)
+│       │   ├── ClubeMewSection/  # [Home] Clube Mew — cupom via WhatsApp
+│       │   ├── HighlightsSection/ # ÓRFÃO — removido da Home no redesign de Jun/2026
+│       │   ├── NewArrivalsSection/ # ÓRFÃO — não usado na Home pós-redesign
+│       │   ├── PopularSection/   # ÓRFÃO — não usado na Home pós-redesign
+│       │   ├── AddressMapModal/  # Modal com mapa (Leaflet) — busca de endereço no checkout
 │       │   ├── ScrollToTop/      # Auto-scroll ao navegar
 │       │   ├── LoginModal/       # Modal de login
-│       │   ├── AdminDashboard/   # Dashboard admin principal
+│       │   ├── AdminDashboard/   # Shell do admin (sidebar + abas, array `gruposDeTabs`)
 │       │   ├── AdminBanners/     # Gerenciamento de banners por página
 │       │   ├── AdminEventos/     # Gerenciamento de eventos
+│       │   ├── AdminHomeEventos/ # Edição da agenda fixa exibida no EventsSection
 │       │   ├── AdminPedidos/     # Gerenciamento de pedidos
 │       │   ├── AdminFontes/      # Gerenciamento de fontes customizadas
 │       │   ├── AdminCupons/      # Gerenciamento de cupons
 │       │   ├── AdminSecoesHome/  # Controle de visibilidade das seções da homepage
 │       │   ├── AdminNavbar/      # Controle de visibilidade dos links da Navbar
 │       │   └── AdminInstagram/   # Gerenciamento de posts do Instagram
-│       ├── utils/
-│       └── tests/                # Testes do frontend (Vitest + RTL)
+│       └── tests/                # Testes do frontend (Vitest + RTL) — ver seção 14
 ```
 
 ---
@@ -285,10 +303,25 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 | `valor`         | `VARCHAR(255)`    | Valor associado à chave           |
 | `atualizado_em` | `TIMESTAMP`       | Data da última atualização        |
 
-> **Chaves de Configuração conhecidas:**
-> - `fonte_corpo`, `fonte_titulos`, `fonte_decorativa` (Usadas para fontes customizadas)
-> - `secao_home_*` (Controlam visibilidade de seções na Home)
-> - `nav_loja`, `nav_mangas`, `nav_eventos`, `nav_cupons`, `nav_agendar` (Controlam visibilidade de itens na Navbar, valores boolean stringificados: `'true'` ou `'false'`)
+> **Chaves de Configuração conhecidas** (fonte canônica: `frontend/src/types/Configuracao.ts`):
+> - Fontes customizadas (7 categorias parametrizáveis — ver seção 23).
+> - **Seções da Home** (`SECOES_HOME_ORDEM`, na ordem de exibição): `secao_home_banner`, `secao_home_hero`, `secao_home_como_funciona`, `secao_home_maids`, `secao_home_eventos`, `secao_home_sobre`, `secao_home_instagram`, `secao_home_parceiros`, `secao_home_clube_mew`.
+> - **Navbar** (`NAV_PAGINAS_ORDEM`): `nav_loja`, `nav_mangas`, `nav_eventos`, `nav_cupons`, `nav_parceiros`, `nav_agendar`.
+> - **Agenda da Home:** conteúdo editável do `EventsSection` (`HomeEventosConfig` — título, subtítulo, cards e CTAs).
+>
+> Valores booleanos são strings (`'true'` / `'false'`). **Default: chave ausente = visível** (`useSecoesHome` só oculta quando o valor é literalmente `"false"`).
+
+> ⚠️ **Ao criar uma chave de configuração nova, são DOIS lugares — esqueceu um, quebra em produção sem teste nenhum acusar.**
+> 1. `frontend/src/types/Configuracao.ts` — união de tipo + array de ordem + mapa de labels.
+> 2. `backend/src/controllers/ConfiguracaoController.ts` → array **`CHAVES_VALIDAS`**. O `PUT /api/configuracoes` filtra por esse whitelist e, se sobrar zero chave válida, responde **400**. Como `AdminNavbar` e `AdminSecoesHome` enviam **uma chave por vez**, a chave nova sozinha vira `400` → o admin clica no toggle e recebe "Erro ao salvar".
+>
+> A suíte de frontend inteira passa verde nesse cenário, porque nenhum teste de frontend chega no backend. A rede que pega isso é um teste em `backend/src/tests/configuracao.test.ts` enviando **a chave nova isoladamente** (payload misto passaria mesmo com o whitelist quebrado, mascarando o bug).
+>
+> `CHAVES_VALIDAS` duplica manualmente o que já está em `Configuracao.ts` — backend e frontend são pacotes separados, sem código compartilhado, então a duplicação não some sem tooling novo.
+>
+> **O que some é o silêncio:** `frontend/src/tests/contrato-configuracoes.test.ts` lê os **dois** arquivos via `fs` (mesmo padrão do `design-tokens.test.ts`) e falha apontando a chave exata que ficou de fora, nos dois sentidos — chave só no frontend (quebra o admin) e chave órfã no backend (sobra de seção removida). O teste tem guardas contra passar vacuamente: se o regex deixar de casar e devolver lista vazia, ele acusa.
+>
+> Validar por padrão (`/^secao_home_.+$/`) foi descartado de propósito: aceitaria `secao_home_typo` em silêncio, e existe teste em `configuracao.test.ts` exigindo que chave desconhecida seja rejeitada.
 
 ### `fontes_customizadas`
 
@@ -351,6 +384,14 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 | `nickname`  | `VARCHAR(50) UNIQUE` | Login do admin       |
 | `senha`     | `VARCHAR(255)`       | Hash bcrypt da senha |
 | `criado_em` | `TIMESTAMP`          | Data de criação      |
+
+> **Credenciais do admin (Agosto/2026):** o seed legado `admin`/`admin` foi
+> substituído. O `database/init.sql` traz o usuário novo com hash bcrypt custo 10,
+> e `backend/migrations/10_credenciais_admin.ts` atualiza bancos **já existentes**
+> — o `init.sql` só roda em volume novo, então **sem rodar a migration a produção
+> continua com a credencial antiga**. A senha em claro não é versionada em lugar
+> nenhum: para trocar, gere o hash com `bcryptjs` (custo 10), atualize o `init.sql`
+> e crie uma migration nova.
 
 ### `pedidos`
 
@@ -454,6 +495,17 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 | `PUT`    | `/:id`   | ✅    | Atualiza post                    |
 | `DELETE` | `/:id`   | ✅    | Deleta post e remove imagem      |
 
+### Cupons (`/api/cupons`)
+
+| Método | Rota                 | Auth? | Descrição                                    |
+| ------ | -------------------- | ----- | -------------------------------------------- |
+| `GET`  | `/campanhas-ativas`  | ❌    | Lista campanhas de cupom ativas              |
+| `POST` | `/resgatar`          | ❌    | Resgata um cupom de uma campanha             |
+| `POST` | `/validar`           | ❌    | Valida um código de cupom                    |
+| `GET`  | `/admin/campanhas`   | ✅    | Lista todas as campanhas (admin)             |
+| `POST` | `/admin/campanhas`   | ✅    | Cria campanha de cupom                       |
+| `GET`  | `/admin/cupons`      | ✅    | Lista todos os cupons resgatados (admin)     |
+
 ### Regras de Exibição (Homepage)
 
 - A seção do Instagram na Home exibe um grid de 6 cards.
@@ -464,7 +516,7 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 
 | Path                | Componente            | Descrição                                          |
 | ------------------- | --------------------- | -------------------------------------------------- |
-| `/`                 | `Home`                | Landing page redesenhada (Header → Hero → Destaques → Carrossel de Maids → Como funciona → Sobre nós → Footer). Ver seção 28 |
+| `/`                 | `Home`                | Landing page redesenhada (Header → Banner → Hero → Como funciona → Maids → Eventos → Sobre → Instagram → Clube Mew → Footer). Cada seção do `main` é condicionada por `useSecoesHome()`. Ver seção 30 |
 | `/home`             | redirect → `/`        | Redirect para Home                                 |
 | `/cardapio`         | `MenuPage`            | Cardápio completo com filtros e busca              |
 | `/loja`             | `LojaOnline`          | Loja de produtos importados/artesanais             |
@@ -474,12 +526,17 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 | `/eventos/:id`      | `EventoDetalhes`      | Detalhes de evento individual                      |
 | `/maids/:id`        | `MaidDetalhes`        | Perfil detalhado das maids (dados estáticos em `src/data/`) |
 | `/cupons`           | `CuponsPage`          | Página de cupons de desconto                       |
-| `/agendar`          | `AgendarPage`         | Formulário de agendamento de eventos/encomendas → redireciona para o WhatsApp com mensagem pré-preenchida. Ver seção 29 |
+| `/parceiros`        | `ParceirosPage`       | Parceiros do café (dados estáticos em `src/data/parceirosData.ts`). Link na Navbar via `nav_parceiros`. Ver seção 33 |
+| `/agendar`          | `AgendarPage`         | Formulário de agendamento de eventos/encomendas → redireciona para o WhatsApp com mensagem pré-preenchida. Ver seção 31 |
 | `/admin`            | `Admin`               | Painel administrativo (protegido por login JWT)    |
 
 ### Components & UI Adicionais (Admin Dashboard)
 
-- A aba `/admin` inclui sub-rotas/tabs renderizando os paineis `AdminProdutos`, `AdminLoja`, `AdminPedidos`, `AdminEventos`, `AdminBanners`, `AdminFontes`, `AdminSecoesHome` e `AdminInstagram`.
+- A página `/admin` renderiza o `AdminDashboard`, cujas abas vivem no array `gruposDeTabs` ([AdminDashboard/index.tsx](frontend/src/components/AdminDashboard/index.tsx)) — **é lá que novas abas devem ser adicionadas** (id + label + ícone lucide). Grupos e ids atuais:
+  - **Operação:** `pedidos` (Pedidos), `cupons` (Cupons)
+  - **Catálogo:** `produtos` (Cardápio), `loja` (Loja), `mangas` (Mangás)
+  - **Conteúdo:** `eventos` (Eventos), `agenda_home` (Agenda da Home), `banners` (Banners), `instagram` (Instagram)
+  - **Aparência:** `secoes_home` (Seções da Home), `navbar` (Navbar), `fontes` (Fontes)
 - **Admin Seções da Home:** Permite ocultar/exibir seções da homepage via checkboxes. Usa chaves `secao_home_*` na tabela `configuracoes`. Default: todas visíveis.
 - **Admin Banners:** Adicionado suporte para mídias `.mp4` e `.webm` com limite estendido para 50MB e textos opcionais. A API de Banners reflete globalmente qual componente deve ser exibido por página.
 - **Formulários Dinâmicos:** O `ProdutoForm` e outros painéis contam com inputs fluídos que extraem "Categorias" e "Tags" já salvas em cache local (via TanStack Query) para preenchimento de Autocomplete Inteligente ilimitado, criando padronização nas listagens públicas.
@@ -493,15 +550,21 @@ Todos os tokens de design estão centralizados em `frontend/src/index.css`:
 
 ### Paleta de Cores — Unificada 2026 (Parchment · Cardinal · Blush Mochi · Charcoal)
 
+> Os valores abaixo espelham o `:root` real do `index.css`. Os hexes marcados são validados por `design-tokens.test.ts` — mudou aqui, muda lá.
+
 | Estilo    | Nome da Cor           | Hexadecimal | Variável CSS                                 | Uso Recomendado                        |
 | --------- | --------------------- | ----------- | -------------------------------------------- | -------------------------------------- |
 | Principal | Cardinal Red          | `#A91D22`   | `--color-primary`, `--color-wine`            | Logo, botões principais e títulos      |
 | Principal | Cardinal Red Escuro   | `#8A171C`   | `--color-primary-dark`, `--color-wine-dark`  | Hover de botões principais             |
-| Base      | Parchment             | `#F4EBE1`   | `--color-background`, `--color-cream`        | Fundo principal                        |
+| Principal | Cardinal Profundo     | `#6B1115`   | `--color-wine-deep`                          | Contornos e sombras projetadas         |
+| Base      | Bege Clarinho         | `#FAF7F2`   | `--color-background`, `--color-cream`        | Fundo principal / wallpaper            |
 | Base      | Branco Neve           | `#FFFFFF`   | `--color-white`                              | Cards e áreas de relevo                |
-| Base      | Parchment Médio       | `#EDE2D6`   | `--color-secondary-background`               | Fundos de seção e modais               |
-| Softener  | Blush Mochi           | `#E8C3BA`   | `--color-rose`                               | Marcadores de texto e detalhes suaves  |
-| Destaque  | Verde Menta           | `#A8E6CF`   | `--color-accent-mint`                        | Botões de "Comprar" ou ícones, sucesso |
+| Base      | Bege Pastel Médio     | `#F3EBE0`   | `--color-secondary-background`               | Fundos de seção e modais               |
+| Base      | Bege Ultra Claro      | `#FDFBF8`   | `--color-tertiary-background`, `--color-parchment` | Cards e relevos claros           |
+| Base      | Marfim Quente         | `#FDF8F3`   | `--color-ivory`                              | Texto sobre cardinal                   |
+| Softener  | Rosa Pastel           | `#F0C4BA`   | `--color-rose`                               | Marcadores de texto e detalhes suaves  |
+| Destaque  | Verde Menta           | `#A8E6CF`   | `--color-accent-mint`, `--color-success`     | Botões de "Comprar" ou ícones, sucesso |
+| Destaque  | Verde Menta (pill)    | `#B8E6C8`   | `--color-mint-pill`                          | Pills de status                        |
 | Destaque  | Amarelo Estelar       | `#FFF3B0`   | `--color-star-active`, `--color-accent-star` | Ofertas, estrelas e novidades          |
 | Apoio     | Lilás Místico         | `#D1C4E9`   | `--color-accent-lilac`                       | Bordas e detalhes decorativos          |
 | Contraste | Sacristy Charcoal     | `#242121`   | `--color-text`, `--color-ink`                | Textos longos e leitura principal      |
@@ -510,29 +573,31 @@ Todos os tokens de design estão centralizados em `frontend/src/index.css`:
 /* ═══ Paleta Principal ═══ */
 --color-primary: #a91d22; /* Cardinal Red */
 --color-primary-dark: #8a171c; /* Cardinal escuro (hover) */
---color-primary-light: #f4ebe1; /* Parchment claro */
+--color-primary-light: #faf7f2; /* Bege clarinho */
 --color-primary-border: #d4a59e; /* Borda blush derivada */
 --color-secondary-border: #c49088; /* Borda blush secundária */
 
 /* ═══ Cores Base ═══ */
---color-background: #f4ebe1; /* Parchment — Fundo da página */
---color-secondary-background: #ede2d6; /* Parchment médio */
---color-tertiary-background: #f9f3ec; /* Parchment claro */
+--color-background: #faf7f2; /* Bege clarinho — Fundo da página */
+--color-secondary-background: #f3ebe0; /* Bege pastel médio */
+--color-tertiary-background: #fdfbf8; /* Bege ultra claro */
 --color-white: #ffffff; /* Branco Neve — Cards e relevos */
 
 /* ═══ Cardinal Red (tokens semânticos) ═══ */
 --color-wine: #a91d22; /* Cardinal Red */
 --color-wine-dark: #8a171c;
 --color-wine-deep: #6b1115;
+--color-wine-soft: rgba(169, 29, 34, 0.08); /* Véu cardinal */
 
-/* ═══ Blush Mochi (Kawaii Softener) ═══ */
---color-rose: #e8c3ba; /* Blush Mochi */
---color-rose-light: #f2ddd7;
---color-rose-soft: #ecd0c8;
+/* ═══ Rosa Pastel / Blush Mochi (Kawaii Softener) ═══ */
+--color-rose: #f0c4ba;
+--color-rose-light: #f9eae6;
+--color-rose-soft: #f2d5ce;
 
-/* ═══ Parchment (superfícies) ═══ */
---color-cream: #f4ebe1;
---color-parchment: #f9f3ec;
+/* ═══ Superfícies claras ═══ */
+--color-cream: #faf7f2;
+--color-cream-dark: #efe4d7; /* Faixas alternadas */
+--color-parchment: #fdfbf8;
 --color-ivory: #fdf8f3;
 
 /* ═══ Texto ═══ */
@@ -545,16 +610,27 @@ Todos os tokens de design estão centralizados em `frontend/src/index.css`:
 --color-warning: #fff3b0; /* Amarelo Estelar */
 --color-error: #ef4444;
 --color-info: #6366f1;
+--color-whatsapp: #25d366;
+--color-btn-edit: #007bff;
 ```
 
-### Layout
+### Layout e sombras
 
 ```css
 --container-max-width: 1200px;
 --radius-card: 20px;
 --radius-button: 50px;
---shadow-card: 0 4px 6px rgba(232, 77, 138, 0.25);
+--radius-circle: 50%;
 --transition-default: all 0.3s ease;
+
+--color-shadow: rgba(169, 29, 34, 0.2); /* Derivada do Cardinal Red */
+--shadow-card: 0 4px 6px var(--color-shadow);
+--shadow-card-hover: 0 6px 12px var(--color-shadow);
+
+/* Sombra "sticker" — offset duro, estética kawaii */
+--shadow-sticker: 4px 4px 0 var(--color-wine);
+--shadow-sticker-sm: 3px 3px 0 var(--color-wine);
+--shadow-sticker-dark: 5px 5px 0 var(--color-wine-deep);
 ```
 
 ### Tipografia
@@ -565,17 +641,27 @@ Todos os tokens de design estão centralizados em `frontend/src/index.css`:
   "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 /* Fonte decorativa (títulos de páginas, nomes de categorias, títulos de itens) */
 --font-title: "Sweet Apricot", cursive, sans-serif;
+/* Fonte display arredondada (títulos chunky do redesign) */
+--font-display: "Fredoka", "Inter", sans-serif;
+
+/* Fontes dinâmicas — sobrescritas em runtime pelo admin (useConfiguracoesGlobais) */
+--font-title-site / --font-navbar / --font-category / --font-title-item
+  / --font-description / --font-button / --font-general
+
+--font-size-xs: 0.75rem;
 --font-size-sm: 0.9rem;
 --font-size-md: 1rem;
 --font-size-lg: 1.1rem;
 --font-size-xl: 1.2rem;
 --font-size-2xl: 1.4rem;
+--font-size-2xl-plus: 1.6rem;
 --font-size-3xl: 1.8rem;
 --font-size-4xl: 2rem;
 --font-size-5xl: 2.5rem;
 --font-weight-regular: 400;
 --font-weight-medium: 600;
 --font-weight-bold: 700;
+--font-weight-extrabold: 800;
 ```
 
 > **REGRA:** Jamais use cores, fontes ou tamanhos fixos repetidos fora do `:root`. Sempre referencie via `var(--token)`.
@@ -588,7 +674,7 @@ Todos os tokens de design estão centralizados em `frontend/src/index.css`:
 
 - **Models** (`models/`): Queries SQL puras usando `pool.query()` do `pg`. Retornam dados brutos.
 - **Controllers** (`controllers/`): Recebem `req/res`, chamam Models, tratam validações e formatam a resposta HTTP. Exportados como objetos `const`.
-- **Routes** (`routes/`): Mapeiam endpoints para Controllers, aplicam middlewares (`autenticacaoMiddleware`, `uploadConfig`). A config de Upload (`Multer`) hoje **permite Imagens e Vídeos até 50MB**.
+- **Routes** (`routes/`): Mapeiam endpoints para Controllers, aplicam middlewares (`autenticacaoMiddleware`, `uploadConfig`). A config de Upload (`config/upload.ts`) permite **imagens e vídeos até 50MB** (`jpeg|jpg|png|gif|webp|mp4|webm|mov`, validando mimetype **e** extensão). Fontes têm um Multer próprio (`config/uploadFonte.ts`).
 - **Erros:** Classe customizada `AppError` com `statusCode`, capturada pelo `gerenciadorErros` centralizado.
 - **Storage:** Utilitário `StorageProvider` (`utils/StorageProvider.ts`) abstrai a deleção de arquivos físicos, permitindo trocar o storage local por nuvem (S3/GCS) facilmente.
 
@@ -603,7 +689,7 @@ Todos os tokens de design estão centralizados em `frontend/src/index.css`:
 ### Autenticação
 
 - **Backend:** JWT assinado com `JWT_SECRET`. Token enviado no header `Authorization: Bearer <token>`.
-- **Frontend:** Token armazenado no `localStorage`. Hook `useAuth` gerencia login/logout e verificação.
+- **Frontend:** Token armazenado no `localStorage`. Hook `useAutenticacao` (`hooks/useAutenticacao.ts`) gerencia login/logout e verificação.
 - **Admin único:** Apenas um usuário `admin` existe no banco (seed no `init.sql`).
 
 ---
@@ -784,39 +870,55 @@ pnpm lint        # eslint
 **Causa:** A nova versão do React/linter (`react-hooks/set-state-in-effect`) não permite chamadas síncronas de `setState` diretamente dentro do corpo do `useEffect`. Isso se aplica mesmo para funções de refresh encapsuladas em hooks e chamadas lá dentro.
 **Solução:** 1. Utilize derivação de estado (_derived state_) síncrono durante o próprio `render` para evitar `useState` extra. 2. Inicializadores locais podem usar a sintaxe callback/lazy no `useState(() => getLocalItem)`. 3. Utilize um `setTimeout(..., 0)` para jogar o setState fora da _stack_ síncrona do useEffect. 4. Em último caso, use a flag `// eslint-disable-next-line react-hooks/set-state-in-effect` se for assíncrono garantido.
 
+**Receita para o caso mais comum do projeto — "semear formulário com dado do servidor" (Agosto/2026).**
+Painéis admin faziam `useEffect(() => { if (data) setForm(data) }, [data])`. Isso é o padrão oficial do React de **ajuste durante o render**: guarde a origem já aplicada num state e compare por referência.
+
+```tsx
+const [form, setForm] = useState(PADRAO);
+const [origem, setOrigem] = useState<typeof data>(undefined);
+
+if (data && data !== origem) {   // no corpo do componente, NÃO em useEffect
+  setOrigem(data);
+  setForm(mapear(data));
+}
+```
+
+O React descarta o render em andamento e refaz imediatamente com o estado novo — não há flash nem render extra visível, ao contrário do `useEffect`, que pinta o formulário vazio por um frame antes de corrigir. Aplicado em `AdminBanners` (compara `pagina` **e** `banners`), `AdminFontes`, `AdminHomeEventos` e `ProdutoCard` (sincroniza `curtidas` da prop).
+
+> Não confunda com `setState` no render **incondicional** — isso é loop infinito. A comparação com a origem é o que torna o ajuste convergente.
+
 ---
 
 ## 14. Testes
 
 O projeto mantém testes unitários e de integração em ambos os lados:
 
+> **Nomenclatura:** os testes do frontend usam **nomes em português** (`Cabecalho`, `Rodape`, `Inicio`, `Busca`, `PaginaCardapio`…), mesmo quando o componente testado tem nome em inglês. Não crie `Header.test.tsx` — confira a lista antes de adicionar arquivo novo.
+
 ### Backend (`backend/src/tests/`)
 
-- `sanity.test.ts` — Test de sanidade
+- `sanity.test.ts` — Teste de sanidade
 - `autenticacao.test.ts` — Autenticação
+- `autenticacaoMiddleware.test.ts` — Guard JWT
 - `produtos.test.ts` — CRUD de produtos
 - `pedidos.test.ts` — CRUD de pedidos
 - `EventoRoutes.test.ts` — CRUD de eventos
 - `instagram.test.ts` — CRUD de posts do Instagram
-- `formatters.test.ts` — Funções utilitárias
+- `configuracao.test.ts` — Configurações e fontes customizadas
+- `cupons.test.ts` — Campanhas e cupons
+- `formatadores.test.ts` — Funções utilitárias
 
 ### Frontend (`frontend/src/tests/`)
 
-- `sanity.test.ts` — Test de sanidade
-- `Home.test.tsx` — Página Home
-- `Header.test.tsx` — Componente Header
-- `Footer.test.tsx` — Componente Footer
-- `MenuPage.test.tsx` — Página do Cardápio
-- `ProdutoCard.test.tsx` — Card de produto
-- `CartModal.test.tsx` — Modal do carrinho
-- `useCarrinho.test.tsx` — Hook de carrinho
-- `Search.test.tsx` — Componente de busca
-- `EventoCard.test.tsx` — Card de evento
-- `CalendarioEventos.test.tsx` — Calendário de eventos
-- `AdminEventos.test.tsx` — CRUD admin de eventos
-- `MaidCarousel.test.tsx` — Carrossel de Maids (Home)
-- `MaidDetalhes.test.tsx` — Página de perfil da Maid
-- `formatters.test.ts` — Funções utilitárias
+**Sanidade e utilitários:** `sanity.test.ts`, `formatadores.test.ts`, `ordenarProdutos.test.ts`, `design-tokens.test.ts` (valida a paleta do `:root`).
+
+**Páginas:** `Inicio.test.tsx` (Home), `PaginaCardapio.test.tsx`, `PaginaEventos.test.tsx`, `EventoDetalhes.test.tsx`, `MaidDetalhes.test.tsx`, `Agendar.test.tsx`, `Parceiros.test.tsx`.
+
+**Componentes públicos:** `Cabecalho.test.tsx` (Header), `Rodape.test.tsx` (Footer), `HeroSection.test.tsx`, `HowItWorksSection.test.tsx`, `AboutSection.test.tsx`, `MaidCarousel.test.tsx`, `InstagramSection.test.tsx`, `ParceirosSection.test.tsx`, `ProdutoCard.test.tsx`, `EventoCard.test.tsx`, `CalendarioEventos.test.tsx`, `Busca.test.tsx` (Search), `CartModal.test.tsx`, `AddressMapModal.test.tsx`, `MenuContentEmptyState.test.tsx`, `MenuSeparation.test.tsx`.
+
+**Admin:** `AdminRestrito.test.tsx` (LoginModal na ausência de token), `AdminEventos.test.tsx`, `AdminCupons.test.tsx`, `AdminFontes.test.tsx`, `AdminInstagram.test.tsx`, `AdminNavbar.test.tsx`, `AdminSecoesHome.test.tsx`.
+
+**Hooks e visibilidade:** `useCarrinho.test.tsx`, `useConfiguracoes.test.tsx`, `useSecoesHome.test.tsx`, `useNavVisibilidade.test.tsx`, `NavVisibilidade.test.tsx`.
 
 > **Regra:** Após qualquer alteração, rode `pnpm test:ci` no módulo afetado para garantir que nada quebrou.
 
@@ -830,8 +932,9 @@ O projeto mantém testes unitários e de integração em ambos os lados:
 - [ ] A feature funciona tanto localmente quanto via Docker?
 - [ ] Se criou nova tabela/coluna, o `init.sql` foi atualizado?
 - [ ] Se criou nova rota, ela segue o padrão existente (Model → Controller → Route)?
-- [ ] Se é rota admin, o `authMiddleware` foi aplicado?
+- [ ] Se é rota admin, o `autenticacaoMiddleware` foi aplicado?
 - [ ] Loading e Error states estão sendo tratados na UI?
+- [ ] Se criou nova aba no admin, ela foi adicionada ao array `gruposDeTabs`?
 - [ ] O `GEMINI.md` foi atualizado com as novas informações?
 
 ---
@@ -840,11 +943,11 @@ O projeto mantém testes unitários e de integração em ambos os lados:
 
 Ao longo das otimizações dos testes e padronização contínua do Maid Café, estas convenções de código tornaram-se vitais:
 
-15. **Cobertura Mínima de Testes (TDD):**
-    Ao estruturar as APIs do servidor (como Middlewares guardiões), **não deixe código vital de segurança com linhas não-cobertas**. Assegure que as rotinas de verificação do `AppError` dentro de chaves (`catch`) ou retornos de transação bloqueiam e recebem mockups apropriados (`vi.spyOn(jwt, 'verify')`). Todas as rotas administrativas (`/admin`, POSTs, PUTs, DELETEs) devem ter simulação de status válidos (200, 201) e inválidos (404, 500) usando `supertest` no framework Backend.
-    **Catálogo Backend TDD (`vitest --coverage > 85%`)**: `EventoRoutes.test.ts` (Teste de Cleanup de Imagens falho via `fs.unlink`), `produtos.test.ts` (Painel Amin de Produtos e Delete), `pedidos.test.ts` (Update de Status) e `autenticacaoMiddleware.test.ts` (Guard JWT).
+1. **Cobertura Mínima de Testes (TDD):**
+   Ao estruturar as APIs do servidor (como Middlewares guardiões), **não deixe código vital de segurança com linhas não-cobertas**. Assegure que as rotinas de verificação do `AppError` dentro de blocos `catch` ou retornos de transação bloqueiam e recebem mocks apropriados (`vi.spyOn(jwt, 'verify')`). Todas as rotas administrativas (`/admin`, POSTs, PUTs, DELETEs) devem ter simulação de status válidos (200, 201) e inválidos (404, 500) usando `supertest` no Backend.
+   **Catálogo Backend TDD (`vitest --coverage > 85%`)**: `EventoRoutes.test.ts` (cleanup de imagens falho via `fs.unlink`), `produtos.test.ts` (painel admin de produtos e delete), `pedidos.test.ts` (update de status) e `autenticacaoMiddleware.test.ts` (guard JWT).
 
-Isso se repete para o Frontend. Rotas Privadas React devem ter suas amarras cobertas por `AdminRestrito.test.tsx` provando que o LoginModal acende na ausência de Token (`localStorage.getItem("token")`). Use `vi.mock` extensivamente para desviar componentes-filhos indesejados nas baterias curtas. Componentes dependentes de `useNavigate` precisam sempre ser renderizados dentor do Wrapper `<BrowserRouter>`.
+   Isso se repete para o Frontend. Rotas privadas do React devem ter suas amarras cobertas por `AdminRestrito.test.tsx`, provando que o `LoginModal` acende na ausência de token (`localStorage.getItem("token")`). Use `vi.mock` extensivamente para desviar componentes-filhos indesejados nas baterias curtas. Componentes que dependem de `useNavigate` precisam sempre ser renderizados dentro do wrapper `<BrowserRouter>`.
 
 2. **Laços de Mockamento Assíncronos (Vitest + pg):**
    Quando mockamos o método `pool.query` ou assemelhados e o controlador testado faz buscas em cadeia (como um `.map` executando `buscarItens` em cada pedido listado), deve-se enfileirar chamadas com `mQuery.mockResolvedValueOnce()` adequadas para suprir tanto a listagem primária _quanto_ os iteradores secundários, ou o teste sofrerá colapso por array vazia acidental.
@@ -857,7 +960,7 @@ Isso se repete para o Frontend. Rotas Privadas React devem ter suas amarras cobe
 
 ---
 
-### 17. Gerenciamento de Estado Assíncrono (TanStack Query)
+## 17. Gerenciamento de Estado Assíncrono (TanStack Query)
 
 - **Regra de Requisições:** Todas as requisições GET para consumo de dados públicos do projeto (Produtos, Eventos) devem ser encapsuladas por hooks do `@tanstack/react-query` (ex: `useQuery`).
 - **Testes com TanStack Query:** Todo e qualquer teste de componente React que renderize indiretamente um hook como `useProdutos` **obrigatoriamente** precisa ter seu Wrapper englobado por um `<QueryClientProvider client={queryClient}>`. Caso contrário, os testes do Vitest falharão com o erro `No QueryClient set`.
@@ -875,7 +978,7 @@ Isso se repete para o Frontend. Rotas Privadas React devem ter suas amarras cobe
   );
   ```
 
-### 18. Passos Exatos de Deploy e Atualização (Docker)
+## 18. Passos Exatos de Deploy e Atualização (Docker)
 
 Quando for realizar o deploy ou atualizar a aplicação em produção com novos códigos, utilize a seguinte sequência:
 
@@ -885,20 +988,21 @@ Quando for realizar o deploy ou atualizar a aplicação em produção com novos 
    `docker compose build --no-cache`
 4. Recrie e suba os containers sem afetar os volumes persistentes:
    `docker compose up -d`
-5. (Apenas em primeira execução ou grandes mudanças no schema) Entre no bash do backend e rode as migrations:
-   `docker exec -it maid_backend pnpm tsx scripts/migrate_db.ts`
+5. (Apenas em primeira execução ou grandes mudanças no schema) Rode as migrations dentro do container do backend:
+   `docker exec -it maid_backend pnpm db:migrate`
+   > O script real é `backend/migrate_db.ts` (raiz do backend, **não** em `scripts/`). Já `backend/scripts/reset_db.ts` é o `pnpm db:reset` — nunca rode em produção.
 
-### 19. Padrões de Variáveis em Build de Frontend
+## 19. Padrões de Variáveis em Build de Frontend
 
 - O Nginx serve arquivos estáticos já construídos (build phase). Diferente do backend, o container do frontend não lê o `.env` em tempo de execução (runtime). Todas as variáveis de ambiente necessárias (ex: `VITE_BACKEND_URL`) devem estar presentes no momento do `docker compose build`.
 
 ---
 
-### 20. 🛡️ Vulnerabilidades Corrigidas
+## 20. 🛡️ Vulnerabilidades Corrigidas
 
 1. **Upload de Arquivos Sem Restrição (Crítico):**
    - **Brecha:** O servidor aceitava qualquer tipo de arquivo, permitindo que atacantes subissem scripts maliciosos (RCE).
-   - **Correção:** Implementei um `fileFilter` no Multer para aceitar apenas imagens (JPEG, PNG, GIF, WEBP) e adicionei um limite de tamanho de 50MB (para imagens de alta qualidade).
+   - **Correção:** `fileFilter` no Multer restringindo a **imagens e vídeos** (`jpeg|jpg|png|gif|webp|mp4|webm|mov`), validando **mimetype e extensão** juntos, com limite de 50MB. O nome do arquivo salvo é randomizado (`crypto.randomBytes(16)`) para evitar path traversal e colisão. Uploads de fonte usam um filtro separado em `config/uploadFonte.ts` (.woff2).
 
 2. **Segredo JWT Inseguro (Médio):**
    - **Brecha:** Havia um valor padrão ("segredo") caso a variável de ambiente não fosse carregada, o que facilitaria ataques de força bruta.
@@ -908,26 +1012,26 @@ Quando for realizar o deploy ou atualizar a aplicação em produção com novos 
    - **Brecha:** O código não verificava se o header de autorização seguia o padrão `Bearer <token>`, podendo causar erros inesperados.
    - **Correção:** Adicionei uma validação estrita do formato do header antes do processamento.
 
-### 21. Gerenciamento Dinâmico de Banners
+## 21. Gerenciamento Dinâmico de Banners
 
-> ⚠️ **Status pós-redesign 2026:** o componente `Banner` foi **removido de todas as páginas públicas** (Home, Cardápio, Loja, Mangás, Eventos). A API, a tabela `banners` e a aba Admin → Banners seguem funcionais, mas sem consumo no site público.
+> ⚠️ **Status pós-redesign 2026:** o `Banner` foi removido de **Cardápio, Loja, Mangás e Eventos**. A **Home ainda o renderiza** como primeira seção do `main` (`<Banner pagina="home" />`), condicionado à chave `secao_home_banner`. A API, a tabela `banners` e a aba Admin → Banners seguem plenamente em uso.
 
 - **Chave de Página:** Os banners são atrelados a uma `pagina` (ex: 'home', 'cardapio', 'eventos', 'loja').
 - **Fallback Automático:** Caso uma página não tenha banner definido, o sistema busca obrigatoriamente a entrada com `pagina = 'padrao'`.
 - **Mídia Suportada:** Imagens (JPEG, PNG, WEBP) e Vídeos (MP4, WEBM) até 50MB.
 
-### 22. Autocomplete Inteligente (Admin)
+## 22. Autocomplete Inteligente (Admin)
 
 - **Categorias e Tags:** O `ProdutoForm` realiza extração automática de todas as categorias e tags já existentes no banco de dados para sugerir ao administrador durante o cadastro.
 
-### 23. Gerenciamento Dinâmico de Fontes
+## 23. Gerenciamento Dinâmico de Fontes
 
 - **7 Categorias Parametrizáveis:** Permite configurar independentemente a tipografia de: Títulos do Site, Navbar, Categorias, Títulos de Itens, Descrições, Botões e Texto Geral.
 - **Hook Global:** O hook `useConfiguracoesGlobais()` chamado no `App.tsx` busca as configurações ativas, injeta `@font-face` dinâmico caso seja fonte customizada, e solicita Google Fonts automaticamente para fontes padrão built-in, além de injetar os tokens CSS globais.
 - **Segurança de Deleção:** Impede exclusão de arquivos de fontes em uso via Backend, varrendo todas as chaves da tabela de configurações para confirmar inexistência de dependência antes de deletar fisicamente da pasta `public/fonts/`.
 - **Scroll Infinito:** Dropdowns de sugestão não possuem limite de exibição e utilizam `max-height` com scroll interno para manter a usabilidade.
 
-### 23. Padronização de Layout Admin (UI/UX)
+## 24. Padronização de Layout Admin (UI/UX)
 
 - **Estrutura (redesign 2026):** O `AdminDashboard` usa layout de **sidebar + conteúdo**: header sticky parchment com wordmark + selo "Painel Admin" + botão Sair (cardinal), e à esquerda uma sidebar card (sticker) com as abas **agrupadas por área**: _Operação_ (Pedidos, Cupons), _Catálogo_ (Cardápio, Loja, Mangás), _Conteúdo_ (Eventos, Banners, Instagram) e _Aparência_ (Fontes). Os grupos são definidos no array `gruposDeTabs` em `AdminDashboard/index.tsx` — novas abas devem ser adicionadas lá (id + label + ícone lucide). Em mobile (≤900px) a sidebar vira blocos empilhados acima do conteúdo.
 - **Troca de aba:** usar `handleTabChange()` (limpa o form de edição de forma event-driven). NÃO reintroduzir `useEffect` com `setState` síncrono para isso (regra do linter React 19).
@@ -935,7 +1039,7 @@ Quando for realizar o deploy ou atualizar a aplicação em produção com novos 
 - **Identidade Visual:** Botões de ação seguem `--color-success` (verde/salvar) e `--color-warning` (amarelo/editar) para rápida identificação funcional; ações primárias do shell admin (Sair, login) seguem o padrão cardinal/sticker do redesign.
 - **LoginModal:** convertido de inline styles para CSS Module (`LoginModal/styles.module.css`) no padrão sticker.
 
-### 24. Backup e Manutenção (Mini PC)
+## 25. Backup e Manutenção (Mini PC)
 
 Para garantir a integridade dos dados do Mew Mew Café, existe um sistema de backup automatizado configurado para o ambiente de produção rodando nativamente no host Windows.
 
@@ -957,7 +1061,7 @@ Para garantir a integridade dos dados do Mew Mew Café, existe um sistema de bac
 
 ---
 
-### 25. SEO e Indexação (Google Search)
+## 26. SEO e Indexação (Google Search)
 
 O site possui configurações completas de SEO para ser encontrado em buscas como "mew mew", "mew mew cafe natal", "maid cafe natal", etc.
 
@@ -998,13 +1102,19 @@ TODO - **Imagem OG dedicada:** Substituir o `Logo.svg` por uma imagem PNG/JPG de
 
 ---
 
-### 26. Padrões de Estrutura do Frontend
+## 27. Padrões de Estrutura do Frontend
 
 #### Ordenação de Seções nas Páginas Públicas
 
-Desde o redesign 2026, **nenhuma página pública usa o componente `Banner` dinâmico**. A estrutura padrão é: `Header` (sticky, no topo) → `main` → `Footer`. Na Home, o `main` contém `HeroSection` (boas-vindas), `HighlightsSection`, `MaidCarousel`, `HowItWorksSection` e `AboutSection`; nas demais páginas, o conteúdo abre direto abaixo do Header. Ver seção 28.
+A estrutura padrão é: `Header` (sticky, no topo) → `main` → `Footer`.
 
-> **Nota:** O componente `Banner`, a tabela `banners` e a aba Admin → Banners continuam existindo no código/banco, mas não são mais renderizados nas páginas públicas. Avaliar remoção completa numa limpeza futura.
+Na **Home**, o `main` contém, nesta ordem, cada seção condicionada por `useSecoesHome()`:
+
+`Banner` (`pagina="home"`) → `HeroSection` → `HowItWorksSection` → `MaidCarousel` → `EventsSection` → `AboutSection` → `InstagramSection` → `ParceirosSection` → `ClubeMewSection`
+
+Nas **demais páginas públicas** o conteúdo abre direto abaixo do Header, sem `Banner`. Ver seção 30.
+
+> **Nota:** `HighlightsSection`, `NewArrivalsSection` e `PopularSection` continuam no código mas **não são renderizados em lugar nenhum** (órfãos do redesign de Jun/2026). Avaliar remoção numa limpeza futura.
 
 #### Padrão CSS Module
 
@@ -1020,7 +1130,7 @@ Testes do frontend ficam em `frontend/src/tests/`. O padrão é `NomeComponente.
 
 ---
 
-### 27. Problemas de CSS Identificados (Backlog de Refatoração)
+## 28. Problemas de CSS Identificados (Backlog de Refatoração)
 
 #### ✅ Corrigidos
 
@@ -1038,7 +1148,7 @@ Testes do frontend ficam em `frontend/src/tests/`. O padrão é `NomeComponente.
 
 ---
 
-### 26. Esteira de CI/CD (GitHub Actions)
+## 29. Esteira de CI/CD (GitHub Actions)
 
 Para deploy automático e testes contínuos antes de ir para produção, foi criada uma pipeline no GitHub Actions (`.github/workflows/ci-cd.yml`).
 
@@ -1067,11 +1177,11 @@ Antes do deploy de amanhã, adicione as seguintes chaves em **Settings > Secrets
 
 ---
 
-## 28. Redesign do Frontend 2026 ("Parchment · Cardinal · Blush Mochi")
+## 30. Redesign do Frontend 2026 ("Parchment · Cardinal · Blush Mochi")
 
 Remodelagem do frontend iniciada pela **Home** e **estendida a todas as páginas públicas**, seguindo a referência visual `frontend/public/claude.jpg`. A estética é a de um maid & mangá café aconchegante: **cardinal red**, **parchment/bege** e **blush mochi (rosa)**, com cards brancos de borda cardinal e "sombra sticker" (offset duro), pills verde-menta e títulos chunky na fonte **Fredoka**.
 
-### 28.1. Tokens no `index.css` (paleta unificada)
+### 30.1. Tokens no `index.css` (paleta unificada)
 
 A paleta legada rosa pastel foi **unificada** com a do redesign: os tokens legados (`--color-primary`, `--color-background`, etc.) agora apontam para os valores Cardinal/Parchment, e os tokens semânticos do redesign (`--color-wine`, `--color-cream`, etc.) usam os mesmos valores. `design-tokens.test.ts` valida a paleta vigente — mantenha o teste e o `:root` sempre em sincronia.
 
@@ -1087,7 +1197,7 @@ A paleta legada rosa pastel foi **unificada** com a do redesign: os tokens legad
 | `--shadow-sticker` (+`-sm`, `-dark`) | offset duro cardinal | Sombra "adesivo" dos cards/botões |
 | `--font-display` | `"Fredoka", "Inter", sans-serif` | Títulos chunky arredondados (import do Google Fonts no topo do `index.css`) |
 
-### 28.1b. Aplicação nas demais páginas públicas
+### 30.1b. Aplicação nas demais páginas públicas
 
 O padrão visual foi propagado para **Cardápio, Loja Online, Mangás, Eventos, EventoDetalhes, MaidDetalhes, Cupons e ProdutoDetalhesLoja** via:
 
@@ -1096,44 +1206,59 @@ O padrão visual foi propagado para **Cardápio, Loja Online, Mangás, Eventos, 
 - **Receita do botão primário:** `background: var(--color-wine); color: var(--color-ivory); border: 2px solid var(--color-wine-deep); border-radius: var(--radius-button); box-shadow: var(--shadow-sticker-sm);`.
 - **`ProdutoDetalhesLoja`** foi convertida de inline styles hard-coded (`#ff69b4`) para CSS Module (`styles.module.css`) usando exclusivamente tokens — siga sempre esse padrão.
 
-### 28.2. Estrutura da Home
+### 30.2. Estrutura da Home
 
-> ⚠️ Atualizada pelo pivô de Junho/2026 — ver seção 29.
+> ⚠️ Atualizada pelo pivô de Junho/2026 — ver seção 31.
 
-`Header` (sticky, com rolling banner marquee no topo + wordmark + CTA "Agendar evento" → `/agendar`) → `main`:
-`HeroSection` (boas-vindas com mascote, highlight rosa em "invocadx", CTAs e tags de serviços) → `HighlightsSection` (4 destaques) → `MaidCarousel` (fundo vinho; painéis diagonais clicáveis) → `HowItWorksSection` (4 passos; alvo da âncora `#como-funciona`; o 4º card é CTA para `/agendar`) → `AboutSection` ("Magia japonesa na sua festa", âncora `#sobre`) → `InstagramSection` (mosaico do feed: 1º post em destaque 2x2 + 4 posts + card "Seguir @mewmewnatal"; some se a API não retornar posts) → `Footer` (vinho, colunas Cardápio / O café + sociais).
+`Header` (sticky, com rolling banner marquee no topo + wordmark + CTA "Agendar evento" → `/agendar`) → `main` → `Footer` (vinho, colunas Cardápio / O café + sociais).
 
-### 28.3. Assets e fontes
+**Cada seção do `main` é condicionada por `useSecoesHome()`** — se a chave estiver `"false"` na tabela `configuracoes`, ela não renderiza. Ordem real ([pages/Home/index.tsx](frontend/src/pages/Home/index.tsx)):
+
+| # | Componente | Chave | Observações |
+| - | ---------- | ----- | ----------- |
+| 1 | `Banner pagina="home"` | `secao_home_banner` | Vídeo/imagem gerenciado pelo Admin → Banners |
+| 2 | `HeroSection` | `secao_home_hero` | Mascote, highlight rosa em "invocadx", CTAs e tags de serviços |
+| 3 | `HowItWorksSection` | `secao_home_como_funciona` | 4 passos; âncora `#como-funciona`; 4º card é CTA para `/agendar` |
+| 4 | `MaidCarousel` | `secao_home_maids` | Fundo vinho; painéis diagonais clicáveis |
+| 5 | `EventsSection` | `secao_home_eventos` | Agenda fixa editável em Admin → Agenda da Home |
+| 6 | `AboutSection` | `secao_home_sobre` | "Magia japonesa na sua festa", âncora `#sobre` |
+| 7 | `InstagramSection` | `secao_home_instagram` | Mosaico padronizado: 5 posts + card do perfil; some se a API não retornar posts |
+| 8 | `ParceirosSection` | `secao_home_parceiros` | Grid 2 col de `ParceiroCard` + CTA "Ver todos" → `/parceiros`. Ver seção 33 |
+| 9 | `ClubeMewSection` | `secao_home_clube_mew` | Clube Mew — cupom via WhatsApp |
+
+> `HighlightsSection` **não faz mais parte da Home** (removida em Jun/2026); o componente segue no repositório como órfão.
+
+### 30.3. Assets e fontes
 
 - Imagens de referência ficam em `frontend/public/imgrefs/` (logos, wordmarks, `mascot.png`, maids). Para uso em produção, os arquivos necessários foram **copiados** para `frontend/public/`: `mascot.png`, `wordmark-cardinal.png` (Header, sobre bege), `wordmark-ivory.png` (Footer, sobre vinho), `logo-rose.png`.
 - A fonte display **Fredoka** é carregada via `@import` do Google Fonts no topo do `index.css`.
 
-### 28.4. Restrições de teste preservadas
+### 30.4. Restrições de teste preservadas
 
 - **`Cabecalho.test.tsx`:** o Header mantém o texto da marca `Mew Mew Café` (visualmente oculto via classe acessível), os 6 links (`Início`, `Cardápio`, `Loja Online`, `Mangás`, `Eventos`, `Cupons` → `/cupons`), o CTA "Agendar evento" → `/agendar` e o rolling banner (testes de marquee duplicado, ausência de local físico e esconder/reexibir no scroll).
 - **`Rodape.test.tsx`:** o Footer mantém o copyright iniciando por `© 2025 Mew Mew Maid Café`, os links sociais com `aria-label` "Siga nosso Instagram" / "Fale conosco no WhatsApp", e testes negativos garantindo ausência da coluna "Visite"/endereço físico. Os links de navegação do footer usam `<a href>` (não `<Link>`), pois o teste renderiza o `Footer` sem `BrowserRouter`.
-- **`MaidCarousel.test.tsx`:** todas as 6 maids são renderizadas como painéis diagonais — cada painel é um `<Link>` para `/maids/:id` com `img alt={nome}` e nome em overlay. Testes negativos garantem ausência do seletor de avatares, das setas e do card de destaque (design antigo).
+- **`MaidCarousel.test.tsx`:** todas as 5 maids de `data/maidsData.ts` (Sakura, Luna, Mint, Hana, Yuki) são renderizadas como painéis diagonais — cada painel é um `<Link>` para `/maids/:id` com `img alt={nome}` e nome em overlay. Testes negativos garantem ausência do seletor de avatares, das setas e do card de destaque (design antigo).
 - **`Inicio.test.tsx`** foi atualizado para a nova composição (mocka Header, Hero, Highlights, MaidCarousel, HowItWorks, About e Footer).
-- **`HeroSection.test.tsx` / `AboutSection.test.tsx` / `HowItWorksSection.test.tsx` / `Agendar.test.tsx`:** cobrem os textos do pivô para eventos (seção 29) e incluem testes negativos contra textos do modelo presencial — ao alterar copy dessas seções, atualize os testes junto.
+- **`HeroSection.test.tsx` / `AboutSection.test.tsx` / `HowItWorksSection.test.tsx` / `Agendar.test.tsx`:** cobrem os textos do pivô para eventos (seção 31) e incluem testes negativos contra textos do modelo presencial — ao alterar copy dessas seções, atualize os testes junto.
 
 > **Hurdle (screenshot local sem Playwright):** Para validar a Home visualmente sem dependências de browser automation, suba o dev server (`pnpm dev`, porta 5174) e use o Edge headless: `msedge --headless=new --disable-gpu --hide-scrollbars --virtual-time-budget=9000 --window-size=1440,3200 --screenshot=out.png http://localhost:5174/`. O `--virtual-time-budget` é necessário para dar tempo de render antes do print.
 
 ---
 
-## 29. Pivô do Negócio — Eventos, Encomendas e Delivery (Junho/2026)
+## 31. Pivô do Negócio — Eventos, Encomendas e Delivery (Junho/2026)
 
 O café **não opera mais presencialmente**. O negócio agora é: **eventos personalizados** (aniversários, formaturas, confraternizações), **kit festa**, **encomendas de doces/comidas** e **delivery**. Regra editorial: **nenhuma página pública pode referenciar local físico, mesa, visita presencial ou endereço** — ao criar/editar copy, foque na experiência levada até o cliente.
 
-### 29.1. Mudanças aplicadas no frontend
+### 31.1. Mudanças aplicadas no frontend
 
 - **Header:** a `.topBar` estática virou um **rolling banner (marquee)** com animação CSS pura (`@keyframes marqueeScroll`, track com o conteúdo duplicado animado até `translateX(-50%)` para loop contínuo; a cópia leva `aria-hidden`). O banner **some ao rolar** a página (`useEffect` + listener de scroll passivo; threshold de 50px em `LIMITE_SCROLL_BANNER`) com `translateY(-100%)` + colapso de `max-height`. Expõe `data-testid="rolling-banner"` e `data-visible` para os testes. Itens do banner em `ITENS_BANNER`. Pausa no hover e respeita `prefers-reduced-motion`. CTA do Header: `<Link to="/agendar">Agendar evento</Link>` (não há mais link direto pro WhatsApp).
 - **HeroSection:** badge "A experiência maid café mais mágica do Nordeste"; subtítulo focado em eventos/delivery/kit festa; tags com emoji (🎂 Aniversários temáticos / 🎓 Formaturas & eventos / 📦 Delivery & encomendas).
 - **HowItWorksSection:** eyebrow "✨ Conheça a experiência", título "Como funciona", 4 passos novos (Sparkles, Cake, PartyPopper, ArrowRight). O 4º passo ("Faça sua encomenda") é um `<Link to="/agendar">` com classe `.stepCta` (fundo wine, texto ivory); o `<li>` dele usa `display: contents` para o Link assumir a célula do grid.
-- **MaidCarousel:** redesign "team showcase" — 6 painéis com corte diagonal (`clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%)`) sobrepostos via `margin-left` negativo; cada painel é um `<Link>` para `/maids/:id` com nome em overlay de gradiente + barra de accent na cor da maid (`--maid-color`). Hover/focus-visible: `flex-grow: 1.7`, imagem mais vívida, nome destacado. Mobile (≤600px): **mantém as fatias diagonais**, apenas quebrando a faixa em linhas (3 fatias em cima + 2 embaixo p/ as 5 maids) via `flex-wrap` — ver seção 30. Tablets/desktop (>600px) seguem na faixa única. Sem avatares, setas ou card de destaque.
+- **MaidCarousel:** redesign "team showcase" — 5 painéis (um por maid em `data/maidsData.ts`) com corte diagonal (`clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%)`) sobrepostos via `margin-left` negativo; cada painel é um `<Link>` para `/maids/:id` com nome em overlay de gradiente + barra de accent na cor da maid (`--maid-color`). Hover/focus-visible: `flex-grow: 1.7`, imagem mais vívida, nome destacado. Mobile (≤600px): **mantém as fatias diagonais**, apenas quebrando a faixa em linhas (3 fatias em cima + 2 embaixo p/ as 5 maids) via `flex-wrap` — ver seção 32. Tablets/desktop (>600px) seguem na faixa única. Sem avatares, setas ou card de destaque.
 - **AboutSection:** título "Magia japonesa na sua festa", texto sobre a experiência de eventos, benefícios com emoji, CTA "Agende seu evento" → `/agendar`.
 - **Footer:** coluna "Visite" (endereço/telefone) **removida**; descrição focada em eventos/delivery; copyright © 2025.
 
-### 29.2. Página `/agendar` (`AgendarPage`)
+### 31.2. Página `/agendar` (`AgendarPage`)
 
 Formulário de agendamento que redireciona para o WhatsApp com mensagem pré-preenchida (mesmo padrão do `CartModal`: `window.open("https://wa.me/<numero>?text=" + encodeURIComponent(msg))`).
 
@@ -1143,11 +1268,11 @@ Formulário de agendamento que redireciona para o WhatsApp com mensagem pré-pre
 - **Estilo:** hero cream com dots pattern (`radial-gradient` cardinal a 8%), form em card sticker, cards de serviço selecionados ficam com `var(--color-rose-light)` + borda mais grossa, inputs com `var(--radius-card)` e borda cardinal no focus. Mobile-first (grid colapsa para 1 coluna).
 - **Testes:** `Agendar.test.tsx` — hero, radios, campos, mensagem decodificada do `window.open` mockado, e bloqueio de envio com erros zod visíveis.
 
-### 29.2b. Checkout do carrinho — busca de endereço no mapa
+### 31.2b. Checkout do carrinho — busca de endereço no mapa
 
 O `AddressMapModal` (usado pelo `CartModal` no checkout de delivery) tem **busca de endereço por texto com autocomplete** (Nominatim `/search`, `countrycodes=br` + viewbox priorizando Natal, debounce de 450ms a partir de 3 caracteres). Ao escolher uma sugestão, o componente `FlyToController` (filho com `useMap()`) executa `map.flyTo(coords, 17)` — o `center` do `MapContainer` só vale na montagem, então **toda recentralização pós-mount deve usar esse padrão** (o GPS inicial também usa). Arrastar o mapa segue funcionando para ajuste fino do pino, com reverse geocode no `moveend`. Testes em `AddressMapModal.test.tsx` mockam `react-leaflet` (`vi.hoisted` para o spy de `flyTo`) e o `fetch` do Nominatim.
 
-### 29.3. Hurdles desta fase
+### 31.3. Hurdles desta fase
 
 - **`getByLabelText` × `aria-label` do Footer:** em páginas que renderizam o `Footer`, `getByLabelText(/WhatsApp/i)` casa também com o ícone social ("Fale conosco no WhatsApp"). Use a string exata (`getByLabelText("WhatsApp")`) ou labels mais específicos.
 - **`getByText` com copy repetida:** textos que aparecem no parágrafo e num chip/benefício (ex: "Doces temáticos" no AboutSection) quebram `getByText` por match múltiplo — teste pelo texto exato do chip (com emoji) ou use `getAllByText`.
@@ -1157,11 +1282,11 @@ O `AddressMapModal` (usado pelo `CartModal` no checkout de delivery) tem **busca
 
 ---
 
-## 30. Densidade Mobile — Grids Multi-coluna (Junho/2026)
+## 32. Densidade Mobile — Grids Multi-coluna (Junho/2026)
 
 **Princípio (foco mobile-first, ver seção 0):** dispositivos móveis devem se parecer com o desktop em **densidade** — as "caixas" (cards, maids, passos) ficam **lado a lado em grade**, nunca empilhadas em coluna única. Coluna única só é aceitável para conteúdo intrinsecamente linear (formulários do admin, listas verticais como a agenda de eventos, painéis 2-em-1 do `ClubeMewSection`/`HeroSection` que separam texto e visual).
 
-### 30.1. Padrão de colapso de colunas (público)
+### 32.1. Padrão de colapso de colunas (público)
 
 Ao criar/editar uma grade de cards nas páginas públicas, siga esta escada de breakpoints (nunca caia para `1fr` num grid de cards homogêneos):
 
@@ -1171,16 +1296,118 @@ Ao criar/editar uma grade de cards nas páginas públicas, siga esta escada de b
 | Maids (`MaidCarousel`) | faixa única de 5 fatias diagonais | faixa única (até >600px) | **fatias diagonais quebradas em 3 em cima + 2 embaixo** |
 | Produtos (`MenuContent`, Loja, Mangás) | auto-fill | **3 col** | 3 col |
 | Instagram | 3 col | 3 col | 2 col |
+| Parceiros (`ParceirosSection`, `/parceiros`) | 2 col | 2 col | **2 col** (nunca empilha) |
 
-### 30.2. Ajustes aplicados nesta rodada
+### 32.2. Ajustes aplicados nesta rodada
 
 - **`HighlightsSection`** e **`HowItWorksSection`:** o breakpoint `≤520px` deixou de usar `grid-template-columns: 1fr` e agora mantém `repeat(2, 1fr)` (2x2), com `padding`/`font-size` levemente reduzidos para caber. O 4º passo CTA do `HowItWorks` (`.ctaItem { display: contents }`) participa normalmente do grid 2x2.
 - **`MaidCarousel`:** o **corte diagonal (`clip-path`) entre as maids é mantido no mobile** — não vira caixa por maid. No celular (`≤600px`) o `.strip` usa `flex-wrap: wrap` e cada `.panel` recebe `flex: 1 1 34%` (≈3 fatias por linha) + `row-gap`; a última linha cresce via `flex-grow` e preenche a largura, resultando em **3 fatias em cima e 2 (maiores) embaixo** para as 5 maids. A sobreposição diagonal (`.panel + .panel { margin-left: -overlap }`) é preservada dentro de cada linha; só a 1ª fatia de cada linha zera a sobreposição via `.panel:nth-child(3n + 1) { margin-left: 0 }` (regra geral: funciona p/ 6+ maids também, sempre 3 por linha). **Tablets/desktop (>600px) seguem na faixa única diagonal** (mais parecido com o PC). A estrutura JSX (Links + img + nome) é intacta, então `MaidCarousel.test.tsx` segue válido.
 - **Produtos:** já estavam corretos em 3 colunas no mobile (ver "Densidade Mobile" na seção 13) — não alterados.
 
-### 30.3. Hurdle — limitação dos testes para layout CSS
+### 32.3. Hurdle — limitação dos testes para layout CSS
 
 **Hurdle:** jsdom (Vitest) **não computa layout** (grid/flex), então não dá para asseverar "N colunas no mobile" via `getComputedStyle` nos testes. Mudanças de responsividade que só tocam CSS Module **não quebram** os testes estruturais existentes, mas também **não são cobertas** por eles.
-**Solução:** valide layout mobile visualmente com o Chrome/Edge headless em largura de phone — ex.: `chrome --headless=new --disable-gpu --hide-scrollbars --virtual-time-budget=9000 --window-size=390,8000 --screenshot=out.png http://localhost:5174/`. Ao mexer no CSS, **não altere a estrutura JSX** dos componentes com testes (especialmente `MaidCarousel`, `HeroSection`, `AboutSection`, `HowItWorksSection`) para preservar as asserções de conteúdo/links.
+**Solução:** valide layout mobile visualmente com o Chrome/Edge headless. Ao mexer no CSS, **não altere a estrutura JSX** dos componentes com testes (especialmente `MaidCarousel`, `HeroSection`, `AboutSection`, `HowItWorksSection`) para preservar as asserções de conteúdo/links.
 **Nota (Windows):** o Chrome headless costuma falhar na **primeira** execução com `--user-data-dir` novo (perfil ainda não inicializado); basta repetir o comando com o mesmo `--user-data-dir`.
 
+---
+
+### 32.4. Hurdle — `--window-size` MENTE abaixo de ~500px no Windows (Agosto/2026)
+
+**Hurdle:** `msedge --headless=new --window-size=390,8000 --screenshot=out.png` produz um PNG de 390px de largura que **parece mostrar overflow horizontal**: cards cortados na direita, textos truncados, rodapé estourando. É fácil concluir que o CSS quebrou no mobile. **É falso.**
+
+**Causa:** o Edge/Chrome headless no Windows aplica uma **largura mínima de janela** (~500px). Com `--window-size=390`, o viewport de layout continua ~500px e o screenshot captura apenas os 390px da **esquerda** — ou seja, um **recorte**, não um render de 390px. Todo conteúdo entre 390 e 500px aparece "cortado".
+
+**Como reconhecer:** capture uma página que você **não** alterou (ex.: `/cardapio`). Se ela também aparecer cortada — inclusive o `Footer`, que está em produção há meses — o problema é o método de captura, não o seu CSS.
+
+**Solução — iframe de largura exata.** Um `<iframe width="390">` tem viewport de layout real de 390px, independente do tamanho da janela. Crie um harness local e aponte o headless para ele com uma janela **maior** que 390:
+
+```html
+<!doctype html>
+<style>
+  html,body{margin:0;background:#222;}
+  .viewport{width:390px;margin:0 auto;overflow:hidden;outline:3px solid lime;}
+  iframe{width:390px;height:9000px;border:0;display:block;background:#fff;}
+</style>
+<div class="viewport"><iframe src="http://localhost:5174/"></iframe></div>
+```
+
+```bash
+msedge --headless=new --disable-gpu --hide-scrollbars --no-first-run \
+  --allow-file-access-from-files --user-data-dir=<perfil> \
+  --virtual-time-budget=12000 --window-size=520,5200 \
+  --screenshot=out.png "file:///C:/caminho/harness390.html"
+```
+
+A borda `lime` marca os 390px exatos — qualquer coisa que a ultrapasse é overflow **de verdade**. Para inspecionar um trecho específico de uma página longa (a Home passa de 7000px no mobile), envolva o iframe num contêiner com `overflow:hidden` e desloque com `position:absolute; top:-4600px`.
+
+
+---
+
+## 33. Parceiros (Agosto/2026)
+
+Vitrine dos negócios parceiros do Mew Mew Café, em **dois pontos de exibição**: a página pública `/parceiros` e uma seção na Home. Parceiros atuais: **ArtePsi** e **Jjang**.
+
+### 33.1. Dados — estáticos, sem banco
+
+`frontend/src/data/parceirosData.ts`, no mesmo padrão de `maidsData.ts`. **Não há tabela, rota de API nem CRUD no admin** — adicionar parceiro é editar esse arquivo e fazer deploy.
+
+```ts
+type TipoLinkParceiro = "site" | "instagram" | "whatsapp";
+interface LinkParceiro { tipo: TipoLinkParceiro; url: string; rotulo: string; }
+interface Parceiro {
+  id: string; nome: string; descricaoBreve: string;
+  logo: string;      // "/parceiros/artepsi.png"
+  iniciais: string;  // fallback do monograma
+  cor: string;       // accent, injetado como var --parceiro-cor
+  links: LinkParceiro[];
+}
+```
+
+A `cor` é **dado, não token** (igual `maidsData.ts`) — mas, diferente da cor das maids, ela recebe **texto por cima** no monograma, então precisa ter contraste suficiente com `--color-ink`.
+
+### 33.2. Componentes
+
+| Arquivo | Papel |
+| --- | --- |
+| `components/ParceiroCard/` | Card sticker compartilhado pelos dois consumidores. Pasta própria (não sub-componente) justamente por ter dois pais |
+| `components/ParceirosSection/` | Seção da Home — eyebrow + título + grid + CTA "Ver todos" → `/parceiros` |
+| `pages/Parceiros/` | Página pública, hero cream com dots + grid |
+
+**Logo com fallback de monograma.** `useState` + `onError` no `<img>` → iniciais sobre `--parceiro-cor`. O monograma tem acabamento próprio (borda sticker, `--font-display`) para parecer um estado deliberado, não imagem quebrada — ele aparece se o arquivo sumir ou ficar com o nome errado.
+
+> ⚠️ **O caminho em `parceirosData.ts` precisa bater com a extensão real do arquivo.** As logos vivem em `frontend/public/parceiros/` (hoje `artepsi.jpg` e `jjang.jpg`). Se o campo `logo` apontar para uma extensão que não existe, o **Vite devolve o `index.html` com status 200** (fallback de SPA), o `<img>` recebe HTML, o `onError` dispara e o card cai no monograma — sem 404 no console para denunciar. Sintoma: logo some sem erro aparente. Confira com `curl -o /dev/null -w '%{content_type}' <url>`: tem que responder `image/*`, não `text/html`.
+
+As logos usam `object-fit: contain` de propósito — `cover` preencheria o círculo, mas cortaria a marca do parceiro.
+
+> `onError` é event handler, não efeito — **não** cai na regra `react-hooks/set-state-in-effect`. Não tente "pré-verificar" a existência do arquivo num `useEffect`; isso sim quebraria o linter.
+
+### 33.3. Integração
+
+- **Chaves novas:** `nav_parceiros` (Navbar) e `secao_home_parceiros` (Home) — **lembre dos dois lugares**, incluindo `CHAVES_VALIDAS` no backend (ver aviso na seção 5).
+- `AdminNavbar` e `AdminSecoesHome` **se auto-estendem** a partir dos arrays de `Configuracao.ts` — nenhuma edição neles. Já `useNavVisibilidade` e `Header` têm o retorno/JSX escritos campo a campo e **exigem edição manual**.
+- Posição na Home: entre `InstagramSection` e `ClubeMewSection` — mesmo movimento de prova social do Instagram, e o Clube Mew segue sendo o último bloco por ser o único CTA de conversão da página.
+- `sitemap.xml` ganhou a entrada de `/parceiros`.
+
+### 33.4. Regra editorial
+
+A proibição de local físico do pivô de Junho/2026 (seção 31) vale para o **Mew Mew Café**, não para os parceiros. Descrever a Jjang como "mercado coreano em Natal/RN" é a identidade do parceiro e é permitido. O que **não** pode: linguagem de convite presencial ("visite", "passe lá", "venha conhecer") nem qualquer coisa que sugira atendimento presencial do café. `ParceirosSection.test.tsx` e `Parceiros.test.tsx` têm testes negativos travando isso.
+
+**As sinopses vieram das fontes oficiais** (site e bio do Instagram de cada parceiro) — não invente credenciais, tempo de mercado ou serviços não divulgados por eles.
+
+### 33.5. Testes e armadilhas
+
+Novos: `ParceirosSection.test.tsx`, `Parceiros.test.tsx` (esta precisa de `QueryClientProvider` **e** `BrowserRouter` — a página renderiza o `Header`, que chama `useNavVisibilidade` → TanStack Query).
+
+**O fallback do logo só é testável via `fireEvent.error(screen.getByAltText(...))`** — jsdom nunca carrega imagem de verdade, então `onError` jamais dispara sozinho.
+
+Quatro testes existentes precisaram de ajuste, e **dois deles falhavam de forma silenciosa**:
+
+| Teste | O que acontece |
+| --- | --- |
+| `AdminSecoesHome.test.tsx` | `toHaveLength(8)` → 9. Quebra barulhenta, fácil |
+| `NavVisibilidade.test.tsx` | Mocks de `useNavVisibilidade` ficam incompletos. **`pnpm test:ci` passa, mas `pnpm build` falha** — o `tsc -b` é quem pega |
+| `Cabecalho.test.tsx` | Mock sem a chave nova → `undefined` → falsy → **o link novo não renderiza e tudo passa verde escondendo isso** |
+| `Inicio.test.tsx` | Sem mockar a seção nova, o componente real renderiza e o nome do teste ("todas as seções") passa a mentir |
+
+> **Lição geral:** ao adicionar campo ao retorno de um hook mockado em teste, procure **todos** os mocks dele. Os que ficam incompletos não falham no `test:ci` — falham no `build`, ou pior, passam verde testando menos do que dizem.

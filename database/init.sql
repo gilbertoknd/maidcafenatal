@@ -123,8 +123,12 @@ CREATE INDEX IF NOT EXISTS idx_eventos_data_visivel ON eventos(data ASC, visivel
 -- TRUNCATE TABLE users RESTART IDENTITY CASCADE;
 
 -- Inserindo o Admin
+-- Hash bcrypt (custo 10). A senha em claro NÃO fica versionada — consulte o
+-- gestor de segredos do projeto. Para trocar, gere um hash novo e crie uma
+-- migration (ver backend/migrations/10_credenciais_admin.ts).
 INSERT INTO users (nickname, senha) VALUES
-('admin', '$2b$10$9TthNunqdYip31itYDZXkOPNQ0zPXI5iBj8R.ZvVRLld5HsrDrQVO'); -- senha hash para 'admin'
+('KrasnowAdm', '$2b$10$fGGHGOfXQ/w5VGFG.e431uLrv7sfn.zH6yz6SFfKzgY3SjPDDtXsy')
+ON CONFLICT (nickname) DO NOTHING;
 
 -- Inserindo os banners padrão
 INSERT INTO banners (pagina, tipo, url, titulo, subtitulo, texto_botao, link_botao) VALUES
