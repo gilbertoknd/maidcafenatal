@@ -4,8 +4,8 @@
   "description": "O primeiro Maid Café de Natal/RN. Cardápio temático, drinks exclusivos, eventos geek e uma experiência única.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FFF5F8",
-  "theme_color": "#FFB6C1",
+  "background_color": "#FAF7F2",
+  "theme_color": "#A91D22",
   "lang": "pt-BR",
   "icons": [
     {

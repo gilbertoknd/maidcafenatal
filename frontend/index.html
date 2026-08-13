@@ -24,7 +24,10 @@
 
     <!-- ====== Web App Manifest ====== -->
     <link rel="manifest" href="/manifest.webmanifest" />
-    <meta name="theme-color" content="#FFB6C1" />
+    <!-- Cardinal Red — precisa espelhar --color-primary do :root (index.css).
+         Meta tag não aceita var(), então o hex é duplicado aqui de propósito;
+         ao mudar a paleta, atualize também o manifest.webmanifest. -->
+    <meta name="theme-color" content="#A91D22" />
 
     <!-- ====== Open Graph (Facebook, WhatsApp, etc.) ====== -->
     <meta property="og:type" content="website" />
