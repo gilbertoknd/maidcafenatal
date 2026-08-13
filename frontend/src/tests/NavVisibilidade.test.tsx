@@ -20,6 +20,7 @@ const MOCK_TUDO_VISIVEL = {
   mangas: true,
   eventos: true,
   cupons: true,
+  parceiros: true,
   agendar: true,
   isLoading: false,
 };
@@ -100,6 +101,7 @@ describe("Visibilidade de abas na NavBar", () => {
       mangas: false,
       eventos: false,
       cupons: false,
+      parceiros: false,
       agendar: false,
       isLoading: true,
     });
@@ -116,6 +118,7 @@ describe("Visibilidade de abas na NavBar", () => {
       mangas: false,
       eventos: false,
       cupons: false,
+      parceiros: false,
       agendar: false,
       isLoading: false,
     });
@@ -127,11 +130,12 @@ describe("Visibilidade de abas na NavBar", () => {
     expect(screen.getByText("Cardápio")).toBeInTheDocument();
   });
 
-  it("deve ocultar Eventos, Cupons e Agendar quando admin desabilita", () => {
+  it("deve ocultar Eventos, Cupons, Parceiros e Agendar quando admin desabilita", () => {
     mockUseNavVisibilidade.mockReturnValue({
       ...MOCK_TUDO_VISIVEL,
       eventos: false,
       cupons: false,
+      parceiros: false,
       agendar: false,
     });
 
@@ -139,6 +143,7 @@ describe("Visibilidade de abas na NavBar", () => {
 
     expect(screen.queryByText("Eventos")).not.toBeInTheDocument();
     expect(screen.queryByText("Cupons")).not.toBeInTheDocument();
+    expect(screen.queryByText("Parceiros")).not.toBeInTheDocument();
     expect(screen.queryByText("Agendar evento")).not.toBeInTheDocument();
   });
 
@@ -153,6 +158,7 @@ describe("Visibilidade de abas na NavBar", () => {
     expect(screen.getByText("Mangás")).toBeInTheDocument();
     expect(screen.getByText("Eventos")).toBeInTheDocument();
     expect(screen.getByText("Cupons")).toBeInTheDocument();
+    expect(screen.getByText("Parceiros")).toBeInTheDocument();
     expect(screen.getByText("Agendar evento")).toBeInTheDocument();
   });
 });

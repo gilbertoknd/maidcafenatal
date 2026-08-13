@@ -151,6 +151,32 @@ describe("Configuracao Routes", () => {
       expect(mockClient.query).toHaveBeenCalled();
     });
 
+    it("deve aceitar a chave secao_home_parceiros enviada isoladamente", async () => {
+      (jwt.verify as any).mockReturnValue({ id: 1 });
+
+      const mockClient = {
+        query: vi.fn().mockResolvedValue({ rows: [] }),
+        release: vi.fn(),
+      };
+      (pool.connect as any).mockResolvedValue(mockClient);
+
+      // O AdminSecoesHome envia UMA chave por vez — se ela não estiver no
+      // whitelist CHAVES_VALIDAS, o filtro esvazia o payload e retorna 400.
+      const response = await request(app)
+        .put("/api/configuracoes")
+        .set("Authorization", validToken)
+        .send({ secao_home_parceiros: "false" });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty("message");
+      expect(response.body.configuracoes).toHaveProperty(
+        "secao_home_parceiros",
+        "false",
+      );
+      expect(mockClient.query).toHaveBeenCalled();
+      expect(mockClient.release).toHaveBeenCalled();
+    });
+
     it("deve filtrar chaves secao_home inválidas", async () => {
       (jwt.verify as any).mockReturnValue({ id: 1 });
 
@@ -194,6 +220,32 @@ describe("Configuracao Routes", () => {
       expect(response.body.configuracoes).toHaveProperty("nav_cupons", "true");
       expect(response.body.configuracoes).toHaveProperty("nav_agendar", "false");
       expect(mockClient.query).toHaveBeenCalled();
+    });
+
+    it("deve aceitar a chave nav_parceiros enviada isoladamente", async () => {
+      (jwt.verify as any).mockReturnValue({ id: 1 });
+
+      const mockClient = {
+        query: vi.fn().mockResolvedValue({ rows: [] }),
+        release: vi.fn(),
+      };
+      (pool.connect as any).mockResolvedValue(mockClient);
+
+      // O AdminNavbar envia UMA chave por vez — se ela não estiver no
+      // whitelist CHAVES_VALIDAS, o filtro esvazia o payload e retorna 400.
+      const response = await request(app)
+        .put("/api/configuracoes")
+        .set("Authorization", validToken)
+        .send({ nav_parceiros: "false" });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty("message");
+      expect(response.body.configuracoes).toHaveProperty(
+        "nav_parceiros",
+        "false",
+      );
+      expect(mockClient.query).toHaveBeenCalled();
+      expect(mockClient.release).toHaveBeenCalled();
     });
 
     it("deve filtrar chaves nav_ inválidas", async () => {

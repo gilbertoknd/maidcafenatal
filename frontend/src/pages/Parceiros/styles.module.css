@@ -1,0 +1,77 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-background);
+}
+
+.main {
+  flex: 1;
+  padding-bottom: 3rem;
+}
+
+/* Hero pequeno — cream com padrão de dots */
+.hero {
+  text-align: center;
+  padding: 3rem 1rem;
+  background-color: var(--color-cream);
+  background-image: radial-gradient(
+    rgba(169, 29, 34, 0.08) 1.4px,
+    transparent 1.4px
+  );
+  background-size: 22px 22px;
+  border-bottom: 3px solid var(--color-wine);
+  margin-bottom: 2rem;
+}
+
+.hero h1 {
+  font-family: var(--font-title-site);
+  color: var(--color-wine);
+  font-size: clamp(2.2rem, 6vw, 3rem);
+  margin-bottom: 0.4rem;
+}
+
+.hero p {
+  font-size: var(--font-size-lg);
+  color: var(--color-text);
+  margin: 0;
+}
+
+.content {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 1rem;
+  width: 100%;
+}
+
+/* ─── Grade de parceiros: 2 colunas em TODOS os breakpoints ─── */
+/* minmax(0, 1fr) — sem isso a coluna não encolhe abaixo do min-content
+   dos links (ex.: "artepsimonica.com") e a página estoura na horizontal. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+  max-width: 56rem;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 2.2rem 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .grid {
+    gap: 0.8rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .content {
+    padding: 0 0.7rem;
+  }
+
+  .grid {
+    gap: 0.6rem;
+  }
+}

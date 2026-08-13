@@ -7,7 +7,7 @@ import { CarrinhoProvider } from "../hooks/useCarrinho";
 
 // Mock do hook de visibilidade — sempre visível para os testes existentes
 vi.mock("../hooks/useNavVisibilidade", () => ({
-  useNavVisibilidade: () => ({ loja: true, mangas: true, eventos: true, cupons: true, agendar: true, isLoading: false }),
+  useNavVisibilidade: () => ({ loja: true, mangas: true, eventos: true, cupons: true, parceiros: true, agendar: true, isLoading: false }),
 }));
 
 function renderHeader() {
@@ -54,6 +54,7 @@ describe("Componente Header", () => {
     expect(screen.getByText("Mangás")).toBeInTheDocument();
     expect(screen.getByText("Eventos")).toBeInTheDocument();
     expect(screen.getByText("Cupons")).toBeInTheDocument();
+    expect(screen.getByText("Parceiros")).toBeInTheDocument();
   });
 
   it("deve destacar o link ativo", () => {
@@ -78,6 +79,12 @@ describe("Componente Header", () => {
     );
     const cuponsLink = screen.getByText("Cupons");
     expect(cuponsLink.closest("a")).toHaveAttribute("href", "/cupons");
+  });
+
+  it("deve ter o link de Parceiros apontando para /parceiros", () => {
+    renderHeader();
+    const parceirosLink = screen.getByText("Parceiros");
+    expect(parceirosLink.closest("a")).toHaveAttribute("href", "/parceiros");
   });
 
   it("deve ter o CTA 'Agendar evento' apontando para /agendar", () => {

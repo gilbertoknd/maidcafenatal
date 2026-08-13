@@ -9,7 +9,8 @@ import type { NavChave } from "../types/Configuracao";
  * Para Loja e Mangás: combina verificação de produtos existentes
  * com a configuração do admin (ambas precisam ser verdadeiras).
  *
- * Para Eventos, Cupons e Agendar: apenas verifica a configuração admin.
+ * Para Eventos, Cupons, Parceiros e Agendar: apenas verifica a configuração
+ * admin (são páginas de conteúdo estático ou sempre disponíveis).
  *
  * Default: todos visíveis quando a chave não existe no banco.
  */
@@ -43,6 +44,7 @@ export function useNavVisibilidade() {
     mangas: temProdutosMangas && isNavHabilitado("nav_mangas"),
     eventos: isNavHabilitado("nav_eventos"),
     cupons: isNavHabilitado("nav_cupons"),
+    parceiros: isNavHabilitado("nav_parceiros"),
     agendar: isNavHabilitado("nav_agendar"),
     isLoading: loadingProdutos || loadingConfig,
   };

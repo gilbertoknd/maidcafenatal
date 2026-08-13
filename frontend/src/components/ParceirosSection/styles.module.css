@@ -1,0 +1,128 @@
+.section {
+  background-color: var(--color-cream);
+  background-image: radial-gradient(
+    rgba(169, 29, 34, 0.07) 1.4px,
+    transparent 1.4px
+  );
+  background-size: 22px 22px;
+  padding: 4rem 1.5rem;
+  border-bottom: 3px solid var(--color-wine);
+}
+
+.container {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+}
+
+.head {
+  max-width: 42rem;
+  margin: 0 auto 2.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: var(--color-ivory);
+  color: var(--color-wine);
+  border: 2px solid var(--color-wine);
+  border-radius: var(--radius-button);
+  padding: 0.35rem 0.9rem;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-bold);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  color: var(--color-ink);
+  margin: 0;
+  line-height: 1.1;
+}
+
+.subtitle {
+  font-size: var(--font-size-md);
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* ─── Grade de parceiros: 2 colunas em TODOS os breakpoints ─── */
+/* minmax(0, 1fr) — sem isso a coluna não encolhe abaixo do min-content
+   dos links (ex.: "artepsimonica.com") e a página estoura na horizontal. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+  max-width: 56rem;
+  margin: 0 auto;
+}
+
+.acoes {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.75rem;
+  padding: 0.7rem 1.6rem;
+  background-color: var(--color-wine);
+  color: var(--color-ivory);
+  border: 2px solid var(--color-wine-deep);
+  border-radius: var(--radius-button);
+  box-shadow: var(--shadow-sticker-sm);
+  font-family: var(--font-button);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  text-decoration: none;
+  transition: var(--transition-default);
+}
+
+.cta:hover,
+.cta:focus-visible {
+  background-color: var(--color-wine-dark);
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-sticker-dark);
+}
+
+/* ─── Responsivo ─── */
+@media (max-width: 768px) {
+  .section {
+    padding: 3rem 1rem;
+  }
+
+  .grid {
+    gap: 0.8rem;
+  }
+}
+
+@media (max-width: 520px) {
+  /* padding lateral menor = coluna mais larga no grid 2x2, o suficiente
+     para o rótulo "artepsimonica.com" caber numa linha só */
+  .section {
+    padding: 2.5rem 0.7rem;
+  }
+
+  .head {
+    margin-bottom: 1.8rem;
+  }
+
+  .grid {
+    gap: 0.6rem;
+  }
+
+  .acoes {
+    margin-top: 1.5rem;
+  }
+}

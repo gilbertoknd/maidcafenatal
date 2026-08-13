@@ -1,4 +1,4 @@
-import "../setupTests";
+﻿import "../setupTests";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor, cleanup } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -12,6 +12,9 @@ vi.mock("../services/api", () => ({
 }));
 
 import { buscarConfiguracoes, atualizarConfiguracoes } from "../services/api";
+
+const mockBuscarConfiguracoes = vi.mocked(buscarConfiguracoes);
+const mockAtualizarConfiguracoes = vi.mocked(atualizarConfiguracoes);
 
 function criarWrapper() {
   const queryClient = new QueryClient({
@@ -29,7 +32,7 @@ describe("AdminSecoesHome", () => {
   });
 
   it("deve renderizar todas as checkboxes com labels corretas", async () => {
-    (buscarConfiguracoes as any).mockResolvedValue({
+    mockBuscarConfiguracoes.mockResolvedValue({
       configuracoes: {},
       fontes_customizadas: [],
     });
@@ -44,12 +47,13 @@ describe("AdminSecoesHome", () => {
       expect(screen.getByText("Eventos")).toBeInTheDocument();
       expect(screen.getByText("Sobre Nós")).toBeInTheDocument();
       expect(screen.getByText("Instagram")).toBeInTheDocument();
+      expect(screen.getByText("Parceiros")).toBeInTheDocument();
       expect(screen.getByText("Clube Mew")).toBeInTheDocument();
     });
   });
 
   it("checkboxes devem iniciar marcadas quando não há config (default true)", async () => {
-    (buscarConfiguracoes as any).mockResolvedValue({
+    mockBuscarConfiguracoes.mockResolvedValue({
       configuracoes: {},
       fontes_customizadas: [],
     });
@@ -58,7 +62,7 @@ describe("AdminSecoesHome", () => {
 
     await waitFor(() => {
       const checkboxes = screen.getAllByRole("checkbox");
-      expect(checkboxes).toHaveLength(8);
+      expect(checkboxes).toHaveLength(9);
       checkboxes.forEach((cb) => {
         expect(cb).toBeChecked();
       });
@@ -66,7 +70,7 @@ describe("AdminSecoesHome", () => {
   });
 
   it("checkboxes devem refletir valores do banco (false = desmarcada)", async () => {
-    (buscarConfiguracoes as any).mockResolvedValue({
+    mockBuscarConfiguracoes.mockResolvedValue({
       configuracoes: {
         secao_home_hero: "false",
         secao_home_instagram: "false",
@@ -88,11 +92,11 @@ describe("AdminSecoesHome", () => {
   });
 
   it("deve chamar atualizarConfiguracoes ao alternar checkbox", async () => {
-    (buscarConfiguracoes as any).mockResolvedValue({
+    mockBuscarConfiguracoes.mockResolvedValue({
       configuracoes: {},
       fontes_customizadas: [],
     });
-    (atualizarConfiguracoes as any).mockResolvedValue({
+    mockAtualizarConfiguracoes.mockResolvedValue({
       message: "Configurações atualizadas com sucesso!",
       configuracoes: { secao_home_hero: "false" },
     });

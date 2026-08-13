@@ -17,7 +17,8 @@ const LIMITE_SCROLL_BANNER = 50;
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isBannerVisible, setIsBannerVisible] = useState(true);
-  const { loja, mangas, eventos, cupons, agendar } = useNavVisibilidade();
+  const { loja, mangas, eventos, cupons, parceiros, agendar } =
+    useNavVisibilidade();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -145,6 +146,17 @@ export function Header() {
               }`}
             >
               Cupons
+            </Link>
+          )}
+          {parceiros && (
+            <Link
+              to="/parceiros"
+              onClick={closeMenu}
+              className={`${styles.navLink} ${
+                location.pathname === "/parceiros" ? styles.active : ""
+              }`}
+            >
+              Parceiros
             </Link>
           )}
 

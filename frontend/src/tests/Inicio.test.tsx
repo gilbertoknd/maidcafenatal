@@ -35,6 +35,9 @@ vi.mock("../components/AboutSection", () => ({
 vi.mock("../components/InstagramSection", () => ({
   InstagramSection: () => <div>Instagram Section</div>,
 }));
+vi.mock("../components/ParceirosSection", () => ({
+  ParceirosSection: () => <div>Parceiros Section</div>,
+}));
 vi.mock("../components/ClubeMewSection", () => ({
   ClubeMewSection: () => <div>Clube Mew Section</div>,
 }));
@@ -73,6 +76,7 @@ describe("Página Inicial", () => {
     expect(screen.getByText("Clube Mew Section")).toBeInTheDocument();
     expect(screen.getByText("About Section")).toBeInTheDocument();
     expect(screen.getByText("Instagram Section")).toBeInTheDocument();
+    expect(screen.getByText("Parceiros Section")).toBeInTheDocument();
     expect(screen.getByText("Footer")).toBeInTheDocument();
   });
 });

@@ -39,6 +39,7 @@ export type SecaoHomeChave =
   | "secao_home_eventos"
   | "secao_home_sobre"
   | "secao_home_instagram"
+  | "secao_home_parceiros"
   | "secao_home_clube_mew";
 
 /** Lista ordenada das seções (ordem de exibição na home). */
@@ -50,6 +51,7 @@ export const SECOES_HOME_ORDEM: SecaoHomeChave[] = [
   "secao_home_eventos",
   "secao_home_sobre",
   "secao_home_instagram",
+  "secao_home_parceiros",
   "secao_home_clube_mew",
 ];
 
@@ -62,6 +64,7 @@ export const SECOES_HOME_LABELS: Record<SecaoHomeChave, string> = {
   secao_home_eventos: "Eventos",
   secao_home_sobre: "Sobre Nós",
   secao_home_instagram: "Instagram",
+  secao_home_parceiros: "Parceiros",
   secao_home_clube_mew: "Clube Mew",
 };
 
@@ -71,6 +74,7 @@ export type NavChave =
   | "nav_mangas"
   | "nav_eventos"
   | "nav_cupons"
+  | "nav_parceiros"
   | "nav_agendar";
 
 /** Lista ordenada das páginas da navbar (ordem de exibição). */
@@ -79,6 +83,7 @@ export const NAV_PAGINAS_ORDEM: NavChave[] = [
   "nav_mangas",
   "nav_eventos",
   "nav_cupons",
+  "nav_parceiros",
   "nav_agendar",
 ];
 
@@ -88,6 +93,7 @@ export const NAV_PAGINAS_LABELS: Record<NavChave, string> = {
   nav_mangas: "Mangás",
   nav_eventos: "Eventos",
   nav_cupons: "Cupons",
+  nav_parceiros: "Parceiros",
   nav_agendar: "Agendar Evento",
 };
 
