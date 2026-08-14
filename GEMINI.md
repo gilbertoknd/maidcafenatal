@@ -111,11 +111,17 @@ DB_NAME=maid_cafe_db
 # Backend
 PORT=3000
 FRONTEND_URL=http://localhost:5174
-JWT_SECRET=seu_segredo_jwt
+JWT_SECRET=troque_por_um_valor_aleatorio_forte
 
 # Cloudflare Tunnel
 TUNNEL_TOKEN=seu_token_cloudflare
 ```
+
+> ⚠️ **`JWT_SECRET` — este é o `.env` que protege a PRODUÇÃO** (o Docker Compose injeta `JWT_SECRET: ${JWT_SECRET}` no container do backend). **Nunca** use os placeholders literais (`seu_segredo_jwt`, `segredo`) — são valores públicos e previsíveis, e com o segredo conhecido qualquer um forja um JWT de admin (achado #1 da seção 34). Gere um valor forte e aleatório:
+> ```bash
+> node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
+> ```
+> Desde a correção do fallback (seção 20, item 4), o backend **falha ao iniciar** se `JWT_SECRET` estiver ausente — de propósito. Trocar o segredo invalida os tokens já emitidos: o admin só precisa **logar de novo**.
 
 ### Frontend (`/frontend/.env`)
 
@@ -132,9 +138,11 @@ DB_USER=admin_maid
 DB_PASSWORD=sua_senha_segura
 DB_NAME=maid_cafe_db
 PORT=3000
-JWT_SECRET=segredo
+JWT_SECRET=troque_por_um_valor_aleatorio_forte
 FRONTEND_URL=http://localhost:5174
 ```
+
+> **Nota (`backend/.env`):** este arquivo só é lido no **dev local fora do Docker** (`pnpm dev` na pasta `backend/`). Não protege produção, mas **precisa existir e não ficar vazio** (o servidor não inicia sem `JWT_SECRET`). Pode ser um valor qualquer não-secreto para dev.
 
 > **Nota:** Dentro do Docker, o `DB_HOST` é `db` (nome do serviço). Fora do Docker (dev local), use `localhost` com a porta `DB_PORT_LOCAL` (5433).
 
