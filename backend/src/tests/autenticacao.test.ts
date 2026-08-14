@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import request from "supertest";
 import app from "../app.js";
 import bcrypt from "bcryptjs";
@@ -13,8 +13,15 @@ vi.mock("../config/db", () => ({
 import { pool } from "../config/db.js";
 
 describe("Rotas de Autenticação", () => {
+  const segredoOriginal = process.env.JWT_SECRET;
+
   beforeEach(() => {
     vi.clearAllMocks();
+    process.env.JWT_SECRET = "segredo";
+  });
+
+  afterEach(() => {
+    process.env.JWT_SECRET = segredoOriginal;
   });
 
   it("should return token on valid login", async () => {
@@ -55,5 +62,20 @@ describe("Rotas de Autenticação", () => {
 
     expect(response.status).toBe(401);
     expect(response.body).toEqual({ error: "Senha incorreta" });
+  });
+
+  it("deve retornar 500 (sem token) quando JWT_SECRET não está configurado", async () => {
+    delete process.env.JWT_SECRET;
+    const hashedPassword = await bcrypt.hash("senha123", 10);
+    const mockUser = { id: 1, nickname: "admin", senha: hashedPassword };
+
+    (pool.query as any).mockResolvedValue({ rows: [mockUser] });
+
+    const response = await request(app)
+      .post("/api/autenticacao/login")
+      .send({ nickname: "admin", senha: "senha123" });
+
+    expect(response.status).toBe(500);
+    expect(response.body).not.toHaveProperty("token");
   });
 });

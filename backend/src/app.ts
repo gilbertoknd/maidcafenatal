@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
 import produtoRoutes from "./routes/ProdutoRoutes.js";
 import pedidoRoutes from "./routes/PedidoRoutes.js";
 import { gerenciadorErros } from "./middlewares/gerenciadorErros.js";
@@ -17,6 +18,14 @@ const publicPath = path.join(process.cwd(), "public", "images");
 const fontsPath = path.join(process.cwd(), "public", "fonts");
 
 //Middlewares
+// helmet: cabeçalhos de segurança (nosniff, frameguard, remove x-powered-by, etc.).
+// CORP em "cross-origin" para que o SPA (outra origem) consiga carregar as imagens
+// e fontes servidas por /images e /fonts sem bloqueio do navegador.
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  }),
+);
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/images", express.static(publicPath));

@@ -118,5 +118,42 @@ describe("Cupons Routes", () => {
       console.log("Admin campanhas response body:", response.body);
       expect(response.body).toHaveLength(1);
     });
+
+    it("POST /api/cupons/admin/campanhas - deve rejeitar payload inválido (400)", async () => {
+      (jwt.verify as any).mockReturnValue({ id: 1 });
+
+      const response = await request(app)
+        .post("/api/cupons/admin/campanhas")
+        .set("Authorization", validToken)
+        .send({ nome: "X" }); // faltam campos obrigatórios e tipo_desconto inválido
+
+      expect(response.status).toBe(400);
+      // Não deve ter chegado ao banco
+      expect(mQuery).not.toHaveBeenCalled();
+    });
+
+    it("POST /api/cupons/admin/campanhas - deve criar campanha válida (201)", async () => {
+      (jwt.verify as any).mockReturnValue({ id: 1 });
+      mQuery.mockResolvedValueOnce({
+        rows: [{ id: 5, nome: "Bem-vindo", prefixo: "MEW" }],
+      });
+
+      const response = await request(app)
+        .post("/api/cupons/admin/campanhas")
+        .set("Authorization", validToken)
+        .send({
+          nome: "Bem-vindo",
+          descricao: "Cupom de boas-vindas",
+          prefixo: "MEW",
+          tipo_desconto: "percentual",
+          valor_desconto: 10,
+          limite_total: 100,
+          ativa: true,
+          validade: null,
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body.id).toBe(5);
+    });
   });
 });

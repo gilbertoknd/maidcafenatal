@@ -11,6 +11,18 @@ const resgateSchema = z.object({
   fingerprint_token: z.string().min(10, "Token de dispositivo inválido")
 });
 
+// Validação da criação de campanha (admin). Antes o req.body ia cru ao model.
+const campanhaSchema = z.object({
+  nome: z.string().min(2, "Nome da campanha deve ter no mínimo 2 caracteres"),
+  descricao: z.string().nullish(),
+  prefixo: z.string().min(1, "Prefixo obrigatório").max(20, "Prefixo muito longo"),
+  tipo_desconto: z.enum(["percentual", "fixo"]),
+  valor_desconto: z.coerce.number().positive("Valor de desconto deve ser positivo"),
+  limite_total: z.coerce.number().int().positive().nullish(),
+  ativa: z.boolean().optional().default(true),
+  validade: z.string().nullish(),
+});
+
 export class CupomController {
   // Public
   static async listarCampanhasAtivas(req: Request, res: Response, next: NextFunction) {
@@ -68,11 +80,15 @@ export class CupomController {
 
   static async criarCampanhaAdmin(req: Request, res: Response, next: NextFunction) {
     try {
-      // Minimal validation for admin creation (can be expanded later if needed)
-      const novaCampanha = await CupomModel.criarCampanha(req.body);
+      const dadosValidados = campanhaSchema.parse(req.body);
+      const novaCampanha = await CupomModel.criarCampanha(dadosValidados);
       res.status(201).json(novaCampanha);
     } catch (error) {
-      next(error);
+      if (error instanceof z.ZodError) {
+        next(new AppError(error.issues.map((e: z.ZodIssue) => e.message).join(", "), 400));
+      } else {
+        next(error);
+      }
     }
   }
 

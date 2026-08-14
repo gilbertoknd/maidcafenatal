@@ -4,8 +4,9 @@ services:
     image: postgres:15-alpine
     container_name: maid_postgres
     restart: always
-    ports:
-      - "${DB_PORT_LOCAL:-5432}:5432"
+    # Sem `ports` aqui de propósito: em produção o Postgres é acessível apenas
+    # pela rede interna `maid_network`, nunca publicado no host. A publicação
+    # para dev (localhost) fica só no docker-compose.override.yml.
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}

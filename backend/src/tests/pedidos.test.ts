@@ -43,6 +43,34 @@ describe("Pedido Routes", () => {
     });
   });
 
+  describe("Validação de status", () => {
+    it("PUT /api/pedidos/:id/status - deve rejeitar status fora do conjunto válido (400)", async () => {
+      (jwt.verify as any).mockReturnValue({ id: 1 });
+
+      const response = await request(app)
+        .put("/api/pedidos/1/status")
+        .set("Authorization", validToken)
+        .send({ status: "Status Inventado" });
+
+      expect(response.status).toBe(400);
+      // Não deve ter chamado o banco para atualizar
+      expect(mQuery).not.toHaveBeenCalled();
+    });
+
+    it("PUT /api/pedidos/:id/status - deve aceitar um status válido (200)", async () => {
+      (jwt.verify as any).mockReturnValue({ id: 1 });
+      mQuery.mockResolvedValueOnce({ rows: [{ id: 1, status: "Entregue" }] });
+
+      const response = await request(app)
+        .put("/api/pedidos/1/status")
+        .set("Authorization", validToken)
+        .send({ status: "Entregue" });
+
+      expect(response.status).toBe(200);
+      expect(response.body.status).toBe("Entregue");
+    });
+  });
+
   describe("Operations", () => {
     it("GET /api/pedidos - should get all orders with valid token", async () => {
       (jwt.verify as any).mockReturnValue({ id: 1 });
