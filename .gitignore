@@ -78,20 +78,14 @@ postgres_data/
 # ===========================
 backend/coverage*.txt
 frontend/coverage*.txt
-backend/public/images/1c1811333664fa6683258b8b2f0d646a-test.jpg
-backend/public/images/8ec87e101825d6c262c66f7128dd7b76-test.jpg
-backend/public/images/93e2d081862e121965da255f9d77f7b3-event.jpg
-backend/public/images/6451da24bd5400616d71593da9eb5d4a-event.jpg
-backend/public/images/1774982287761-test.jpg
-backend/public/images/1774982287763-event.jpg
-backend/public/images/1774982441154-event.jpg
-backend/public/images/1774982441166-test.jpg
-backend/public/images/1774982687226-test.jpg
-backend/public/images/1774982687238-event.jpg
-backend/public/images/1774983720871-test.jpg
-backend/public/images/1774983720872-event.jpg
-backend/public/images/d9e850096de7a68aa1156f8bcde2cac5-event.jpg
-backend/public/images/fcd329f3105f4625db80a8f1b34144ce-test.jpg
+# Artefatos de upload gerados pelas suítes de teste do backend: o multer grava
+# no diretório real (public/images e public/fonts). Ignorados por PADRÃO (não por
+# nome), pois cada `pnpm test:ci` cria novos arquivos com hash aleatório. Os nomes
+# batem com as fixtures dos testes: test.jpg / event.jpg / post.jpg / minha-fonte.woff2.
+backend/public/images/*-test.jpg
+backend/public/images/*-event.jpg
+backend/public/images/*-post.jpg
+backend/public/fonts/*-minha-fonte.woff2
 frontend/test_output_verbose.txt
 frontend/test_output.txt
 frontend/test_results.txt

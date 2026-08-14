@@ -1,0 +1,2 @@
+- [Delegação a subagentes indisponível](infra_delegacao_subagentes.md) — não há tool de dispatch; conduzir o trabalho diretamente com rigor de especialista
+- [Postura de segurança do backend](projeto_seguranca_baseline.md) — o que está sólido e os achados abertos da auditoria de Ago/2026
