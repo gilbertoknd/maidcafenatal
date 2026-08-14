@@ -898,14 +898,16 @@ O projeto mantém testes unitários e de integração em ambos os lados:
 ### Backend (`backend/src/tests/`)
 
 - `sanity.test.ts` — Teste de sanidade
-- `autenticacao.test.ts` — Autenticação
-- `autenticacaoMiddleware.test.ts` — Guard JWT
+- `autenticacao.test.ts` — Autenticação (inclui login sem `JWT_SECRET` → 500)
+- `autenticacaoMiddleware.test.ts` — Guard JWT (inclui 500 sem segredo configurado)
+- `limitadorTaxa.test.ts` — Rate limiting por IP (anti-força-bruta do login)
+- `seguranca.test.ts` — Cabeçalhos de segurança (helmet)
 - `produtos.test.ts` — CRUD de produtos
-- `pedidos.test.ts` — CRUD de pedidos
+- `pedidos.test.ts` — CRUD de pedidos (inclui validação de status por enum)
 - `EventoRoutes.test.ts` — CRUD de eventos
 - `instagram.test.ts` — CRUD de posts do Instagram
 - `configuracao.test.ts` — Configurações e fontes customizadas
-- `cupons.test.ts` — Campanhas e cupons
+- `cupons.test.ts` — Campanhas e cupons (inclui validação zod da criação de campanha)
 - `formatadores.test.ts` — Funções utilitárias
 
 ### Frontend (`frontend/src/tests/`)
@@ -1007,10 +1009,48 @@ Quando for realizar o deploy ou atualizar a aplicação em produção com novos 
 2. **Segredo JWT Inseguro (Médio):**
    - **Brecha:** Havia um valor padrão ("segredo") caso a variável de ambiente não fosse carregada, o que facilitaria ataques de força bruta.
    - **Correção:** Removi o fallback. Agora, se `JWT_SECRET` não estiver no `.env`, o servidor lança um erro interno, garantindo que nunca rode em modo inseguro.
+   - ⚠️ **Regressão detectada e recorrigida (Agosto/2026):** a auditoria (seção 34) encontrou o fallback `|| "segredo"` **de volta** em `autenticacaoMiddleware.ts` e `AutenticacaoController.ts` — a doc estava à frente do código. Ver item 4 abaixo para a correção definitiva e centralizada.
 
 3. **Validação de Header Fraca (Baixo):**
    - **Brecha:** O código não verificava se o header de autorização seguia o padrão `Bearer <token>`, podendo causar erros inesperados.
    - **Correção:** Adicionei uma validação estrita do formato do header antes do processamento.
+
+4. **Fallback de `JWT_SECRET` — correção definitiva (Crítico, Agosto/2026):**
+   - **Brecha:** `process.env.JWT_SECRET || "segredo"` duplicado no middleware e no controller. Com o segredo previsível, qualquer um forjaria um JWT de admin. (Achado #1 da seção 34.)
+   - **Correção:** Leitura do segredo **centralizada** em `backend/src/config/jwt.ts` → `obterSegredoJwt()`, que lança `AppError(500)` se a env estiver ausente. Sem fallback. O middleware chama a função **fora** do bloco `try` para que o 500 de configuração **não** seja mascarado como 401 "Token inválido". Nunca reintroduzir a leitura direta de `process.env.JWT_SECRET` fora desse módulo.
+   - **Testes (TDD):** `autenticacaoMiddleware.test.ts` (lança 500 sem segredo) e `autenticacao.test.ts` (login sem `JWT_SECRET` → 500, sem token no corpo). Os testes que precisam de token setam `process.env.JWT_SECRET = "segredo"` no `beforeEach`.
+
+5. **Rate limiting no login (Alto, Agosto/2026):**
+   - **Brecha:** `POST /api/autenticacao/login` aceitava tentativas ilimitadas → força bruta / password spraying. (Achado #2 da seção 34.)
+   - **Correção:** Middleware `criarLimitadorTaxa` em `backend/src/middlewares/limitadorTaxa.ts` — limitador in-memory por IP (`Map` no escopo do closure, com varredura oportunista de entradas expiradas). Aplicado ao `/login` com **10 tentativas / 15 min**; ao estourar, lança `AppError(429)`. É uma **factory** (`criarLimitadorTaxa({ janelaMs, maxTentativas, mensagem })`) reutilizável em outras rotas sensíveis.
+   - **Nota de escopo:** o estado é local ao processo — suficiente para o deploy single-container atual. Se um dia escalar para múltiplas instâncias, migrar a contagem para um store compartilhado (ex.: Redis).
+   - **Testes (TDD):** `limitadorTaxa.test.ts` — dentro do limite chama `next`; ao exceder lança 429; libera após a janela (via `vi.useFakeTimers`); isola por IP; usa chave de fallback quando `req.ip` é indefinido.
+
+6. **Dependências de produção com CVEs de DoS (Alto, Agosto/2026):**
+   - **Brecha:** `multer@2.0.2` (múltiplos DoS: cleanup incompleto, exaustão de recursos, recursão descontrolada, campos aninhados) e a cadeia do Express 5 (`path-to-regexp`, `qs`, `body-parser`) com DoS. Todas em dependências de **produção** (rotas de upload + runtime HTTP). (Achados #3 e #4 da seção 34.)
+   - **Correção:** bump de `multer` para `^2.2.0` e `express` para `^5.2.1` no `backend/package.json`. As transitivas do Express **não sobem sozinhas** (o pnpm mantém a resolução dentro do range mesmo após o bump), então foi adicionado um bloco `pnpm.overrides` forçando `path-to-regexp>=8.4.2`, `qs>=6.15.3` e `body-parser>=2.3.0`. Resultado: `pnpm audit --prod` **limpo**.
+   - **Validação:** `pnpm test:ci` (62 testes verdes, incluindo os de upload em `EventoRoutes`/`produtos`, provando compatibilidade da API do multer 2.2), `pnpm lint` (0 erros) e `pnpm build` OK.
+   - **Manutenção futura:** ao atualizar o Express, revalidar se os overrides ainda são necessários (removê-los quando as versões corrigidas virarem o default das transitivas). As ~27 vulnerabilidades restantes no `pnpm audit` completo são **só devDependencies** (não entram na imagem `install --prod`).
+
+7. **Cabeçalhos de segurança HTTP — `helmet` (Médio, Agosto/2026):**
+   - **Brecha:** a API não enviava cabeçalhos de segurança (o Nginx só cobre o front estático) e expunha `X-Powered-By: Express`. (Achado #6 da seção 34.)
+   - **Correção:** `app.use(helmet())` em `backend/src/app.ts`, **antes** das rotas. Config com `crossOriginResourcePolicy: { policy: "cross-origin" }` — necessário porque o SPA (outra origem em dev, `:5174` × `:3000`) carrega imagens/fontes de `/images` e `/fonts`; o default `same-origin` do CORP **bloquearia** essas mídias no navegador.
+   - **Testes (TDD):** `seguranca.test.ts` — `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN` e ausência de `X-Powered-By`.
+
+8. **Hardening de validação de entrada (Baixo, Agosto/2026):** (Achados #9, #10 e #11 da seção 34.)
+   - **`SELECT *` no login → colunas explícitas.** `AutenticacaoModel.buscarPorNickname` agora seleciona `id, nickname, senha` — não trafega colunas a mais.
+   - **Status de pedido validado por enum.** `PedidoController.atualizarStatus` valida `status` contra `STATUS_PEDIDO_VALIDOS` (zod `enum`: `Pendente`, `Pendente Whatsapp`, `Em Preparo`, `Saiu para entrega`, `Entregue`, `Cancelado`) e responde **400** para valor fora do conjunto, antes de tocar o banco. O conjunto espelha as opções do `AdminPedidos` + o default do `init.sql`.
+   - **Criação de campanha de cupom validada por zod.** `CupomController.criarCampanhaAdmin` deixou de passar `req.body` cru ao model — agora usa `campanhaSchema` (mesmo padrão do `resgatarCupom`). `CupomModel.criarCampanha` recebe `CriarCampanhaInput` e coalesce nulláveis (`?? null` / `?? true`).
+   - **Testes (TDD):** `pedidos.test.ts` (status inválido → 400 sem chamar o banco; status válido → 200) e `cupons.test.ts` (payload inválido → 400 sem tocar o banco; campanha válida → 201).
+
+9. **`react-router` com CVEs HIGH (Alto, Agosto/2026):**
+   - **Brecha:** `react-router-dom@7.9.6` na cadeia de **produção** do frontend, com múltiplos CVEs (XSS via open redirect / ScrollRestoration / RSC, DoS por path ilimitado, CSRF em actions). (Achado #8 da seção 34, parte de produção.)
+   - **Correção:** bump para `react-router-dom@^7.18.2` (patched ≥7.18.0). `pnpm audit --prod` do frontend **limpo**. Validação: `pnpm test:ci` (169 testes) e `pnpm build` verdes.
+   - **Pendente:** os CVEs restantes do frontend são **devDependencies** (vite/vitest/rollup/esbuild/eslint) — mitigar mantendo o dev server restrito a `localhost`.
+
+10. **Porta do Postgres publicada no host (Info, Agosto/2026):**
+    - **Brecha:** `docker-compose.yml` publicava `5432` no host, e ele é a **base de produção** (o override só soma em dev) — expunha o banco em produção. (Achado #12 da seção 34.)
+    - **Correção:** removida a publicação da base; movida **só para `docker-compose.override.yml`** (dev), amarrada a `127.0.0.1:${DB_PORT_LOCAL:-5433}`. Em produção (`docker compose -f docker-compose.yml`) o Postgres fica acessível **apenas** pela `maid_network`. Validado com `docker compose config` (dev publica 5433/localhost; prod só expõe 3000 e 5174).
 
 ## 21. Gerenciamento Dinâmico de Banners
 
@@ -1411,3 +1451,60 @@ Quatro testes existentes precisaram de ajuste, e **dois deles falhavam de forma 
 | `Inicio.test.tsx` | Sem mockar a seção nova, o componente real renderiza e o nome do teste ("todas as seções") passa a mentir |
 
 > **Lição geral:** ao adicionar campo ao retorno de um hook mockado em teste, procure **todos** os mocks dele. Os que ficam incompletos não falham no `test:ci` — falham no `build`, ou pior, passam verde testando menos do que dizem.
+
+---
+
+## 34. Auditoria de Segurança (Agosto/2026)
+
+Varredura defensiva completa (frontend + backend + infra), autorizada pelo dono do projeto. Estende a seção 20 ("Vulnerabilidades Corrigidas"). Ao corrigir um item, marque-o como ✅ resolvido aqui e registre a correção na seção 20.
+
+> **Status (Agosto/2026):** **10 dos 12 achados resolvidos** — itens **1, 2, 3, 4, 6, 9, 10, 11, 12** ✅ e **8** parcialmente (parte de produção feita) — ver seção 20, itens 4 a 10. `pnpm audit --prod` de **backend e frontend** está **limpo**. Restam: **item 7** (JWT em `localStorage` → cookie `HttpOnly`, adiado como projeto dedicado) e o resto do **item 8** (devDependencies).
+
+### 34.1. O que está SÓLIDO (não regredir)
+
+- **SQL 100% parametrizado.** Todos os models (`ProdutoModel`, `EventoModel`, `PedidoModel`, `CupomModel`, `InstagramModel`, `ConfiguracaoModel`, `BannerModel`, `AutenticacaoModel`) usam placeholders `$1..$n` do `pg`. Nenhuma concatenação de input em SQL, nem em nomes de coluna. **Regra:** manter assim — nunca interpolar `req.body`/`req.params` em string de query.
+- **Rotas admin protegidas.** Toda mutação (`POST`/`PUT`/`PATCH`/`DELETE`) e listagem `admin` tem `autenticacaoMiddleware` aplicado (conferido em Produto/Evento/Pedido/Cupom/Banner/Instagram/Configuracao Routes). Só permanecem públicas as rotas de leitura pública, `like/unlike`, criação de pedido, resgate/validação de cupom.
+- **Preço vem do banco, não do cliente.** `PedidoModel.criar` (linha ~36) recalcula o total buscando `preco` no banco por `produto_id` — o cliente não consegue forjar preço. Desconto de cupom também é resolvido server-side. **Não** aceitar `preco`/`total` do `req.body` no checkout.
+- **Upload com filtro duplo.** `config/upload.ts` valida mimetype **e** extensão, randomiza nome (`crypto.randomBytes(16)`), limite 50MB. `config/uploadFonte.ts` restringe a `.woff2`, 2MB. Sem path traversal (nome gerado, destino fixo).
+- **Segredos fora do git.** Nenhum `.env` versionado (`git ls-files` limpo); `.gitignore` cobre raiz, `backend/.env` e `frontend/.env`. Credencial do admin no `init.sql` é hash bcrypt custo 10, senha em claro não versionada (seção 20 / migration 10).
+- **Erros não vazam stack.** `gerenciadorErros` responde `AppError` com mensagem controlada e faz `500` genérico ("Erro interno do servidor") para o resto — stack só no `console.error` do servidor.
+- **Nginx com headers básicos.** `X-Frame-Options: SAMEORIGIN`, `X-Content-Type-Options: nosniff`, `X-XSS-Protection`.
+- **Backend Docker roda como `USER node`** (não-root) e produção usa `install --prod` (sem devDependencies vulneráveis na imagem final).
+
+### 34.2. Achados priorizados
+
+| # | Sev | Achado | Localização | Recomendação |
+| - | --- | ------ | ----------- | ------------ |
+| 1 | ✅ **RESOLVIDO** | ~~**Fallback inseguro de `JWT_SECRET`.**~~ Corrigido em Agosto/2026: fallback `\|\| "segredo"` removido, leitura centralizada em `config/jwt.ts` (`obterSegredoJwt()`) que lança `AppError` 500 se a env faltar. Ver seção 20, item 4. | `config/jwt.ts`; `middlewares/autenticacaoMiddleware.ts`; `controllers/AutenticacaoController.ts` | — |
+| 2 | ✅ **RESOLVIDO** | ~~**Sem rate limiting no login.**~~ Corrigido em Agosto/2026: middleware `criarLimitadorTaxa` (in-memory, por IP) aplicado ao `POST /login` — 10 tentativas / 15 min → `AppError` 429. Ver seção 20, item 5. | `middlewares/limitadorTaxa.ts`; `routes/AutenticacaoRoutes.ts` | — |
+| 3 | ✅ **RESOLVIDO** | ~~**`multer@2.0.2` com CVEs de DoS.**~~ Corrigido em Agosto/2026: bump para `multer@^2.2.0`. Ver seção 20, item 6. | `backend` deps | — |
+| 4 | ✅ **RESOLVIDO** | ~~**Runtime Express com CVEs de DoS.**~~ Corrigido em Agosto/2026: `express@^5.2.1` + `pnpm.overrides` forçando `path-to-regexp>=8.4.2`, `qs>=6.15.3`, `body-parser>=2.3.0`. `pnpm audit --prod` limpo. Ver seção 20, item 6. | `backend` deps | — |
+| 5 | **MÉDIO** | **Credencial do admin parcialmente exposta no repo.** `init.sql:130` versiona `nickname 'KrasnowAdm'` + hash bcrypt. O hash resiste, mas o nickname vazado + custo 10 + ausência de rate limit (item 2) viabilizam dicionário offline/online. | `database/init.sql:130` | Tratar o hash como sensível (mover para seed via env/secret na primeira subida) ou, no mínimo, garantir senha longa e aleatória + item 2. |
+| 6 | ✅ **RESOLVIDO** | ~~**Sem `helmet` no backend.**~~ Corrigido em Agosto/2026: `helmet()` em `app.ts` (CORP `cross-origin` p/ não bloquear `/images` e `/fonts`). Ver seção 20, item 7. | `app.ts` | — |
+| 7 | ⏸️ **ADIADO** | **Token JWT em `localStorage`.** Exposto a exfiltração via XSS. **Não corrigido de propósito:** virar cookie `HttpOnly` é mudança estrutural cross-stack e esbarra em cross-origin no dev (`:5174`×`:3000` exige `SameSite=None; Secure`, que não trafega em `localhost` sem HTTPS) + exige defesa CSRF. Requer projeto dedicado. Mitigação atual: JWT expira em `1d` e helmet (item 6) reduz superfície de XSS. | `frontend/src/services/api.ts` e `hooks/*` | Planejar migração para cookie `HttpOnly`+`SameSite` com proxy de dev e token anti-CSRF. |
+| 8 | 🟡 **PARCIAL** | **Dependências vulneráveis.** ✅ Parte de **produção** resolvida: `react-router-dom@^7.18.2` (ver item 9 abaixo). Restam **devDependencies** (vite/vitest/rollup/postcss/esbuild/eslint) — não entram na imagem de produção. | `frontend`/`backend` devDeps | Bump periódico via `pnpm audit`; **não** expor o dev server do Vite fora de `localhost`. |
+| 9 | ✅ **RESOLVIDO** | ~~**`SELECT *` no login.**~~ Corrigido em Agosto/2026: `SELECT id, nickname, senha`. Ver seção 20, item 8. | `models/AutenticacaoModel.ts` | — |
+| 10 | ✅ **RESOLVIDO** | ~~**`atualizarStatus` aceita status arbitrário.**~~ Corrigido em Agosto/2026: validação por enum zod (`STATUS_PEDIDO_VALIDOS`) → 400. Ver seção 20, item 8. | `controllers/PedidoController.ts` | — |
+| 11 | ✅ **RESOLVIDO** | ~~**`criarCampanhaAdmin` sem validação.**~~ Corrigido em Agosto/2026: `campanhaSchema` (zod). Ver seção 20, item 8. | `controllers/CupomController.ts` | — |
+| 12 | ✅ **RESOLVIDO** | ~~**Porta do Postgres publicada no host.**~~ Corrigido em Agosto/2026: publicação movida p/ `docker-compose.override.yml` (dev, `127.0.0.1`); produção não expõe. Ver seção 20, item 10. | `docker-compose.yml` / `.override.yml` | — |
+
+### 34.3. Resumo do `pnpm audit` (Agosto/2026)
+
+- **Backend (produção):** ✅ **`pnpm audit --prod` limpo** após os bumps de Agosto/2026 (multer + cadeia Express via overrides). O audit **completo** (`pnpm audit`) ainda aponta ~27 itens, **todos em devDependencies** (vitest/vite/esbuild/rollup/eslint/postcss) — não entram na imagem de produção (`Dockerfile` usa `install --prod`).
+- **Frontend (produção):** ✅ **`pnpm audit --prod` limpo** após bump de `react-router-dom` para `^7.18.2` (Agosto/2026). Restam apenas devtools (vite/vitest/rollup/eslint/postcss) no audit completo.
+
+> **Reexecução:** `cd backend && pnpm audit --prod` (deve ficar limpo) e `cd frontend && pnpm audit`. Os itens de devDependency mitigam-se mantendo dev server e Vitest UI restritos a `localhost`.
+>
+> **Nota sobre overrides:** as transitivas do Express não sobem sozinhas ao dar bump no Express (o pnpm mantém a resolução dentro do range). Foi necessário `pnpm.overrides` no `backend/package.json` forçando `path-to-regexp>=8.4.2`, `qs>=6.15.3` e `body-parser>=2.3.0`. Ao atualizar o Express no futuro, revalidar/remover esses overrides quando as versões corrigidas já forem o default.
+
+### 34.4. Ordem de correção recomendada (quando o dono autorizar)
+
+1. ~~Item 1 (JWT fallback)~~ — ✅ feito (Agosto/2026).
+2. ~~Item 2 (rate limit no login)~~ — ✅ feito (Agosto/2026).
+3. ~~Itens 3 e 4 (bump multer + express-chain)~~ — ✅ feito (Agosto/2026); `pnpm audit --prod` limpo, suíte backend verde.
+4. ~~Item 6 (helmet)~~ — ✅ feito (Agosto/2026).
+5. ~~Itens 9–11 (validações pontuais com zod)~~ — ✅ feito (Agosto/2026).
+6. ~~Item 12 (porta do Postgres)~~ — ✅ feito (Agosto/2026). ~~Item 8 (react-router prod)~~ — ✅ feito.
+7. **Item 7 (JWT `localStorage` → cookie `HttpOnly`)** — **← próximo**, mas é projeto dedicado: exige proxy de dev p/ evitar cross-origin, `SameSite`, defesa CSRF e mexe em `useAutenticacao`, `services/api.ts`, `LoginModal` e no backend (cookie + logout). Restante do item 8 (devDeps) é manutenção contínua.
+
+> Cada correção segue o fluxo TDD do projeto: teste primeiro (`seguranca.test.ts` p/ helmet; status inválido em `pedidos.test.ts`; payload inválido em `cupons.test.ts`; login sem `JWT_SECRET` em `autenticacao.test.ts`), depois implementação, `pnpm test:ci` + `pnpm lint` verdes.
