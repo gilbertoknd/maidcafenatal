@@ -1,4 +1,12 @@
 services:
+  # Banco de Dados Dev Override
+  # Publica a porta do Postgres SÓ em desenvolvimento e amarrada ao localhost,
+  # para ferramentas locais / backend rodando fora do Docker (localhost:5433).
+  # Em produção (docker compose -f docker-compose.yml) a porta não é exposta.
+  db:
+    ports:
+      - "127.0.0.1:${DB_PORT_LOCAL:-5433}:5432"
+
   # Backend Dev Override
   backend:
     build:
