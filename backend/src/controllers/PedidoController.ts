@@ -1,6 +1,20 @@
 import { Request, Response, NextFunction } from "express";
+import { z } from "zod";
 import { PedidoModel } from "../models/PedidoModel.js";
 import { AppError } from "../errors/AppError.js";
+
+// Conjunto canônico de status (espelha as opções do AdminPedidos + o default
+// 'Pendente' do init.sql). Evita gravar status arbitrário vindo do req.body.
+export const STATUS_PEDIDO_VALIDOS = [
+  "Pendente",
+  "Pendente Whatsapp",
+  "Em Preparo",
+  "Saiu para entrega",
+  "Entregue",
+  "Cancelado",
+] as const;
+
+const statusPedidoSchema = z.enum(STATUS_PEDIDO_VALIDOS);
 
 export const PedidoController = {
   criar: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -56,13 +70,16 @@ export const PedidoController = {
   atualizarStatus: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params;
-      const { status } = req.body;
 
-      if (!status) {
-        throw new AppError("Status é obrigatório", 400);
+      const parse = statusPedidoSchema.safeParse(req.body?.status);
+      if (!parse.success) {
+        throw new AppError(
+          `Status inválido. Valores aceitos: ${STATUS_PEDIDO_VALIDOS.join(", ")}`,
+          400,
+        );
       }
 
-      const pedidoAtualizado = await PedidoModel.atualizarStatus(Number(id), status);
+      const pedidoAtualizado = await PedidoModel.atualizarStatus(Number(id), parse.data);
 
       if (!pedidoAtualizado) {
         throw new AppError("Pedido não encontrado", 404);

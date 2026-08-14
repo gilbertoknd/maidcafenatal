@@ -1,24 +1,25 @@
 import { pool } from "../config/db.js";
 import { AppError } from "../errors/AppError.js";
 
-interface CampanhaCupom {
-  id: number;
-  nome: string;
-  descricao: string;
-  prefixo: string;
-  tipo_desconto: "percentual" | "fixo";
-  valor_desconto: number;
-  limite_total: number | null;
-  ativa: boolean;
-  validade: Date | null;
-}
-
 interface ResgateCupomDTO {
   campanha_id: number;
   cliente_nome: string;
   cliente_whatsapp: string;
   fingerprint_token: string;
   ip_cliente?: string;
+}
+
+// Entrada da criação de campanha (já validada no controller via zod).
+// `validade` chega como string ISO ou null; o pg aceita ambos no TIMESTAMP.
+interface CriarCampanhaInput {
+  nome: string;
+  descricao?: string | null;
+  prefixo: string;
+  tipo_desconto: "percentual" | "fixo";
+  valor_desconto: number;
+  limite_total?: number | null;
+  ativa?: boolean;
+  validade?: string | Date | null;
 }
 
 export class CupomModel {
@@ -140,11 +141,20 @@ export class CupomModel {
     return rows;
   }
 
-  static async criarCampanha(dados: Omit<CampanhaCupom, "id">) {
+  static async criarCampanha(dados: CriarCampanhaInput) {
     const { rows } = await pool.query(
       `INSERT INTO campanhas_cupom (nome, descricao, prefixo, tipo_desconto, valor_desconto, limite_total, ativa, validade)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
-      [dados.nome, dados.descricao, dados.prefixo, dados.tipo_desconto, dados.valor_desconto, dados.limite_total, dados.ativa, dados.validade]
+      [
+        dados.nome,
+        dados.descricao ?? null,
+        dados.prefixo,
+        dados.tipo_desconto,
+        dados.valor_desconto,
+        dados.limite_total ?? null,
+        dados.ativa ?? true,
+        dados.validade ?? null,
+      ]
     );
     return rows[0];
   }
