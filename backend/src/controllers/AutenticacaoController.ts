@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { AutenticacaoModel } from "../models/AutenticacaoModel.js";
 import { AppError } from "../errors/AppError.js";
+import { obterSegredoJwt } from "../config/jwt.js";
 import { Request, Response, NextFunction } from "express";
 
 export const AutenticacaoController = {
@@ -24,7 +25,7 @@ export const AutenticacaoController = {
       }
 
       //Se passar gera o token
-      const secret = process.env.JWT_SECRET || "segredo";
+      const secret = obterSegredoJwt();
       const token = jwt.sign({ id: user.id }, secret, { expiresIn: "1d" });
 
       return res.json({

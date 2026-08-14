@@ -1,9 +1,19 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { autenticacaoMiddleware } from "../middlewares/autenticacaoMiddleware.js";
 import { AppError } from "../errors/AppError.js";
 import jwt from "jsonwebtoken";
 
 describe("autenticacaoMiddleware", () => {
+  const segredoOriginal = process.env.JWT_SECRET;
+
+  beforeEach(() => {
+    process.env.JWT_SECRET = "segredo";
+  });
+
+  afterEach(() => {
+    process.env.JWT_SECRET = segredoOriginal;
+  });
+
   it("deve lançar erro se o token não for fornecido", () => {
     const req = { headers: {} } as any;
     const res = {} as any;
@@ -37,5 +47,23 @@ describe("autenticacaoMiddleware", () => {
 
     expect(req.userId).toBe(1);
     expect(next).toHaveBeenCalledOnce();
+  });
+
+  it("deve lançar erro 500 se JWT_SECRET não estiver configurado (sem fallback inseguro)", () => {
+    delete process.env.JWT_SECRET;
+    const req = { headers: { authorization: "Bearer qualquer_token" } } as any;
+    const res = {} as any;
+    const next = vi.fn();
+
+    let erroCapturado: unknown;
+    try {
+      autenticacaoMiddleware(req, res, next);
+    } catch (erro) {
+      erroCapturado = erro;
+    }
+
+    expect(erroCapturado).toBeInstanceOf(AppError);
+    expect((erroCapturado as AppError).statusCode).toBe(500);
+    expect(next).not.toHaveBeenCalled();
   });
 });
