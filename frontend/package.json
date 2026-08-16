@@ -30,8 +30,8 @@
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.1",
-    "@vitest/coverage-v8": "4.0.14",
+    "@vitejs/plugin-react": "^5.2.0",
+    "@vitest/coverage-v8": "^4.1.10",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
@@ -39,12 +39,24 @@
     "jsdom": "^27.2.0",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
-    "vite": "^7.2.4",
-    "vitest": "^4.0.14"
+    "vite": "^7.3.6",
+    "vitest": "^4.1.10"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild"
-    ]
+    ],
+    "overrides": {
+      "postcss": "^8.5.23",
+      "rollup": "^4.59.0",
+      "ws": "^8.21.0",
+      "js-yaml": "^4.3.1",
+      "flatted": "^3.4.2",
+      "picomatch": "^4.0.4",
+      "nanoid": "^3.3.18",
+      "minimatch": ">=9.0.7",
+      "ajv": "^6.14.0",
+      "@babel/core": "^7.29.6"
+    }
   }
 }

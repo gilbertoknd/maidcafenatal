@@ -1060,6 +1060,14 @@ Quando for realizar o deploy ou atualizar a aplicação em produção com novos 
     - **Brecha:** `docker-compose.yml` publicava `5432` no host, e ele é a **base de produção** (o override só soma em dev) — expunha o banco em produção. (Achado #12 da seção 34.)
     - **Correção:** removida a publicação da base; movida **só para `docker-compose.override.yml`** (dev), amarrada a `127.0.0.1:${DB_PORT_LOCAL:-5433}`. Em produção (`docker compose -f docker-compose.yml`) o Postgres fica acessível **apenas** pela `maid_network`. Validado com `docker compose config` (dev publica 5433/localhost; prod só expõe 3000 e 5174).
 
+11. **DevDependencies vulneráveis — bump + overrides (Agosto/2026):** (Restante do achado #8 da seção 34.)
+    - **Brecha:** dezenas de CVEs (incl. 1 CRÍTICO) na cadeia de ferramentas de dev de ambos os módulos (vite, vitest, rollup, esbuild, postcss, minimatch, brace-expansion, ajv, @babel/core etc.). Não entram na imagem de produção, mas atingem a máquina de dev/CI.
+    - **Correção — frontend:** bump direto de `vite@^7.3.6` (CVE do **dev server**, o que mais importa aqui), `vitest@^4.1.10`, `@vitejs/plugin-react@^5.2.0`, `@vitest/coverage-v8@^4.1.10` + `pnpm.overrides` (mesmo major) de `postcss`, `rollup`, `ws`, `js-yaml`, `flatted`, `picomatch`, `nanoid`, `minimatch`, `ajv`, `@babel/core`. Resultado: `pnpm audit` **totalmente limpo** (prod **e** dev).
+    - **Correção — backend:** bump cirúrgico de `vitest@^4.1.10` (CVE real) + overrides de `minimatch`, `picomatch`, `form-data`, `brace-expansion`. `pnpm audit --prod` **limpo**.
+    - **Resíduo aceito (backend):** restam ~5 achados de `vite` no audit completo — `vite` é **peer do vitest** travado em 7.2.4 (o override não o move) e o backend **nunca executa o dev server do vite** (usado só como engine de transform dos testes), então os CVEs (leitura arbitrária via dev server) são **inalcançáveis**. Mitigação: rodar testes só localmente.
+    - **Armadilha documentada:** um `pnpm update` amplo no backend sobe `@types/express-serve-static-core`, que retipa `req.params` para `string | string[]` e **quebra o `tsc`** em ~13 controllers — bump de tipo, zero valor de segurança. Por isso o backend usa bump **cirúrgico** (só vitest), não `pnpm update` geral. Ao atualizar devDeps no futuro, evite o update amplo do backend ou esteja pronto para reverter os `@types`.
+    - **Validação:** frontend 169 testes + build; backend 69 testes + tsc + build + lint, todos verdes.
+
 ## 21. Gerenciamento Dinâmico de Banners
 
 > ⚠️ **Status pós-redesign 2026:** o `Banner` foi removido de **Cardápio, Loja, Mangás e Eventos**. A **Home ainda o renderiza** como primeira seção do `main` (`<Banner pagina="home" />`), condicionado à chave `secao_home_banner`. A API, a tabela `banners` e a aba Admin → Banners seguem plenamente em uso.
@@ -1466,7 +1474,7 @@ Quatro testes existentes precisaram de ajuste, e **dois deles falhavam de forma 
 
 Varredura defensiva completa (frontend + backend + infra), autorizada pelo dono do projeto. Estende a seção 20 ("Vulnerabilidades Corrigidas"). Ao corrigir um item, marque-o como ✅ resolvido aqui e registre a correção na seção 20.
 
-> **Status (Agosto/2026):** **10 dos 12 achados resolvidos** — itens **1, 2, 3, 4, 6, 9, 10, 11, 12** ✅ e **8** parcialmente (parte de produção feita) — ver seção 20, itens 4 a 10. `pnpm audit --prod` de **backend e frontend** está **limpo**. Restam: **item 7** (JWT em `localStorage` → cookie `HttpOnly`, adiado como projeto dedicado) e o resto do **item 8** (devDependencies).
+> **Status (Agosto/2026):** **11 dos 12 achados resolvidos** — itens **1, 2, 3, 4, 6, 8, 9, 10, 11, 12** ✅ — ver seção 20, itens 4 a 11. `pnpm audit` do **frontend** está **totalmente limpo** (prod + dev); o **backend** tem `pnpm audit --prod` limpo e só um resíduo dev-only inalcançável de `vite` (peer do vitest). Resta apenas o **item 7** (JWT em `localStorage` → cookie `HttpOnly`), o único que exige mudança estrutural cross-stack e decisão de topologia.
 
 ### 34.1. O que está SÓLIDO (não regredir)
 
@@ -1490,7 +1498,7 @@ Varredura defensiva completa (frontend + backend + infra), autorizada pelo dono 
 | 5 | **MÉDIO** | **Credencial do admin parcialmente exposta no repo.** `init.sql:130` versiona `nickname 'KrasnowAdm'` + hash bcrypt. O hash resiste, mas o nickname vazado + custo 10 + ausência de rate limit (item 2) viabilizam dicionário offline/online. | `database/init.sql:130` | Tratar o hash como sensível (mover para seed via env/secret na primeira subida) ou, no mínimo, garantir senha longa e aleatória + item 2. |
 | 6 | ✅ **RESOLVIDO** | ~~**Sem `helmet` no backend.**~~ Corrigido em Agosto/2026: `helmet()` em `app.ts` (CORP `cross-origin` p/ não bloquear `/images` e `/fonts`). Ver seção 20, item 7. | `app.ts` | — |
 | 7 | ⏸️ **ADIADO** | **Token JWT em `localStorage`.** Exposto a exfiltração via XSS. **Não corrigido de propósito:** virar cookie `HttpOnly` é mudança estrutural cross-stack e esbarra em cross-origin no dev (`:5174`×`:3000` exige `SameSite=None; Secure`, que não trafega em `localhost` sem HTTPS) + exige defesa CSRF. Requer projeto dedicado. Mitigação atual: JWT expira em `1d` e helmet (item 6) reduz superfície de XSS. | `frontend/src/services/api.ts` e `hooks/*` | Planejar migração para cookie `HttpOnly`+`SameSite` com proxy de dev e token anti-CSRF. |
-| 8 | 🟡 **PARCIAL** | **Dependências vulneráveis.** ✅ Parte de **produção** resolvida: `react-router-dom@^7.18.2` (ver item 9 abaixo). Restam **devDependencies** (vite/vitest/rollup/postcss/esbuild/eslint) — não entram na imagem de produção. | `frontend`/`backend` devDeps | Bump periódico via `pnpm audit`; **não** expor o dev server do Vite fora de `localhost`. |
+| 8 | ✅ **RESOLVIDO** | ~~**Dependências vulneráveis.**~~ Produção: `react-router-dom@^7.18.2` (item 9 abaixo). DevDeps: bump de `vite`/`vitest` + overrides (Agosto/2026) — frontend `pnpm audit` **totalmente limpo**; backend `--prod` limpo, só resíduo dev-only inalcançável de `vite` (peer do vitest). Ver seção 20, item 11. | `frontend`/`backend` deps | — |
 | 9 | ✅ **RESOLVIDO** | ~~**`SELECT *` no login.**~~ Corrigido em Agosto/2026: `SELECT id, nickname, senha`. Ver seção 20, item 8. | `models/AutenticacaoModel.ts` | — |
 | 10 | ✅ **RESOLVIDO** | ~~**`atualizarStatus` aceita status arbitrário.**~~ Corrigido em Agosto/2026: validação por enum zod (`STATUS_PEDIDO_VALIDOS`) → 400. Ver seção 20, item 8. | `controllers/PedidoController.ts` | — |
 | 11 | ✅ **RESOLVIDO** | ~~**`criarCampanhaAdmin` sem validação.**~~ Corrigido em Agosto/2026: `campanhaSchema` (zod). Ver seção 20, item 8. | `controllers/CupomController.ts` | — |
@@ -1498,12 +1506,12 @@ Varredura defensiva completa (frontend + backend + infra), autorizada pelo dono 
 
 ### 34.3. Resumo do `pnpm audit` (Agosto/2026)
 
-- **Backend (produção):** ✅ **`pnpm audit --prod` limpo** após os bumps de Agosto/2026 (multer + cadeia Express via overrides). O audit **completo** (`pnpm audit`) ainda aponta ~27 itens, **todos em devDependencies** (vitest/vite/esbuild/rollup/eslint/postcss) — não entram na imagem de produção (`Dockerfile` usa `install --prod`).
-- **Frontend (produção):** ✅ **`pnpm audit --prod` limpo** após bump de `react-router-dom` para `^7.18.2` (Agosto/2026). Restam apenas devtools (vite/vitest/rollup/eslint/postcss) no audit completo.
+- **Backend:** ✅ **`pnpm audit --prod` limpo** (multer + cadeia Express via overrides). O audit **completo** caiu para **5 achados**, todos de `vite` — peer do vitest travado em 7.2.4 que **nunca roda dev server** no backend (transform de teste apenas), CVEs inalcançáveis. Demais devDeps corrigidas via bump cirúrgico do vitest + overrides (`minimatch`, `picomatch`, `form-data`, `brace-expansion`). Bump **amplo** do backend é proibido: sobe `@types/express-serve-static-core` e quebra o `tsc` (ver seção 20, item 11).
+- **Frontend:** ✅ **`pnpm audit` TOTALMENTE limpo** (produção **e** dev). Produção: `react-router-dom@^7.18.2`. DevDeps: bump de `vite@^7.3.6`/`vitest@^4.1.10`/`@vitejs/plugin-react`/`@vitest/coverage-v8` + overrides same-major (`postcss`, `rollup`, `ws`, `js-yaml`, `flatted`, `picomatch`, `nanoid`, `minimatch`, `ajv`, `@babel/core`).
 
-> **Reexecução:** `cd backend && pnpm audit --prod` (deve ficar limpo) e `cd frontend && pnpm audit`. Os itens de devDependency mitigam-se mantendo dev server e Vitest UI restritos a `localhost`.
+> **Reexecução:** `cd frontend && pnpm audit` (deve ficar **totalmente limpo**) e `cd backend && pnpm audit --prod` (limpo; o audit completo mantém só o resíduo de `vite` dev-only). Ainda assim, manter dev server e Vitest UI restritos a `localhost`.
 >
-> **Nota sobre overrides:** as transitivas do Express não sobem sozinhas ao dar bump no Express (o pnpm mantém a resolução dentro do range). Foi necessário `pnpm.overrides` no `backend/package.json` forçando `path-to-regexp>=8.4.2`, `qs>=6.15.3` e `body-parser>=2.3.0`. Ao atualizar o Express no futuro, revalidar/remover esses overrides quando as versões corrigidas já forem o default.
+> **Nota sobre overrides:** transitivas não sobem sozinhas ao dar bump no pai (o pnpm mantém a resolução dentro do range) — daí os `pnpm.overrides` nos dois `package.json`. Backend: `path-to-regexp`, `qs`, `body-parser` (cadeia Express) + `minimatch`, `picomatch`, `form-data`, `brace-expansion` (dev). Frontend: `postcss`, `rollup`, `ws`, `js-yaml`, `flatted`, `picomatch`, `nanoid`, `minimatch`, `ajv`, `@babel/core` (dev). Ao atualizar os pais no futuro, revalidar/remover overrides quando as versões corrigidas já forem o default.
 
 ### 34.4. Ordem de correção recomendada (quando o dono autorizar)
 
@@ -1512,7 +1520,7 @@ Varredura defensiva completa (frontend + backend + infra), autorizada pelo dono 
 3. ~~Itens 3 e 4 (bump multer + express-chain)~~ — ✅ feito (Agosto/2026); `pnpm audit --prod` limpo, suíte backend verde.
 4. ~~Item 6 (helmet)~~ — ✅ feito (Agosto/2026).
 5. ~~Itens 9–11 (validações pontuais com zod)~~ — ✅ feito (Agosto/2026).
-6. ~~Item 12 (porta do Postgres)~~ — ✅ feito (Agosto/2026). ~~Item 8 (react-router prod)~~ — ✅ feito.
-7. **Item 7 (JWT `localStorage` → cookie `HttpOnly`)** — **← próximo**, mas é projeto dedicado: exige proxy de dev p/ evitar cross-origin, `SameSite`, defesa CSRF e mexe em `useAutenticacao`, `services/api.ts`, `LoginModal` e no backend (cookie + logout). Restante do item 8 (devDeps) é manutenção contínua.
+6. ~~Item 12 (porta do Postgres)~~ — ✅ feito (Agosto/2026). ~~Item 8 (react-router prod + devDeps)~~ — ✅ feito.
+7. **Item 7 (JWT `localStorage` → cookie `HttpOnly`)** — **← único restante**. Projeto dedicado: exige proxy de dev p/ evitar cross-origin, `SameSite`, defesa CSRF e mexe em `useAutenticacao`, `services/api.ts` (~20 funções), `LoginModal` e no backend (cookie + logout). **Bloqueador de decisão:** depende de como o browser alcança o backend em produção (mesmo domínio via proxy vs. subdomínio separado) — a config do Cloudflare Tunnel não está no repo. Confirmar a topologia antes de implementar.
 
 > Cada correção segue o fluxo TDD do projeto: teste primeiro (`seguranca.test.ts` p/ helmet; status inválido em `pedidos.test.ts`; payload inválido em `cupons.test.ts`; login sem `JWT_SECRET` em `autenticacao.test.ts`), depois implementação, `pnpm test:ci` + `pnpm lint` verdes.
