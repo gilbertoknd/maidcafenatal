@@ -21,8 +21,12 @@ jobs:
           Write-Host "Puxando alteracoes da branch ${{ github.ref_name }}..."
           git pull origin ${{ github.ref_name }}
 
-          Write-Host "Reconstruindo containers..."
-          docker compose up -d --build --no-deps backend frontend
+          Write-Host "Reconstruindo containers (produção)..."
+          # -f docker-compose.yml explícito: NÃO mesclar o override.yml (dev),
+          # senão o deploy roda em modo dev (Vite dev server + tsx watch,
+          # NODE_ENV=development). Produção usa target 'runner' (nginx +
+          # código compilado) e NODE_ENV=production (necessário p/ o cookie Secure).
+          docker compose -f docker-compose.yml up -d --build --no-deps backend frontend
 
           Write-Host "Limpando imagens antigas..."
           docker image prune -f
