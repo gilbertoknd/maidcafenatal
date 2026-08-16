@@ -20,13 +20,13 @@ export default function LoginModal({ onSuccess }: LoginModalProps) {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          credentials: "include", // recebe o cookie HttpOnly de sessão
           body: JSON.stringify({ nickname, senha }),
         },
       );
 
       if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem("token", data.token); //Salva o crachá
+        // O token vem num cookie HttpOnly; nada é salvo no localStorage.
         onSuccess(); //Avisa o pai que deu certo
       } else {
         setErro("Credenciais incorretas");

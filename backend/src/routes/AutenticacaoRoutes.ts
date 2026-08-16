@@ -15,6 +15,9 @@ const limiteLogin = criarLimitadorTaxa({
 
 router.post("/login", limiteLogin, AutenticacaoController.login);
 
+// Encerra a sessão limpando o cookie HttpOnly.
+router.post("/logout", AutenticacaoController.logout);
+
 // Rota para validar se o token ainda é válido
 router.get("/verify", autenticacaoMiddleware, (req, res) => {
   res.json({ valid: true }); // Se passou pelo middleware, é válido

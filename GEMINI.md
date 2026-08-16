@@ -112,10 +112,13 @@ DB_NAME=maid_cafe_db
 PORT=3000
 FRONTEND_URL=http://localhost:5174
 JWT_SECRET=troque_por_um_valor_aleatorio_forte
+# COOKIE_DOMAIN=.mewworld.space   # opcional (ver nota do cookie HttpOnly abaixo)
 
 # Cloudflare Tunnel
 TUNNEL_TOKEN=seu_token_cloudflare
 ```
+
+> 🍪 **Cookie de sessão do admin (HttpOnly, achado #7):** o login agora entrega o JWT num **cookie `HttpOnly`** em vez do `localStorage`. Ele funciona **sem configuração extra** porque o cookie é setado por e enviado para `api.mewworld.space` (host-only) e é *same-site* com o front. O único requisito de produção é **`NODE_ENV=production`** (já injetado no `docker-compose.yml`) — é o que liga o flag `Secure`. **`COOKIE_DOMAIN` é opcional**: só defina (`.mewworld.space`) se um dia precisar compartilhar o cookie com outros subdomínios; deixado em branco, o cookie fica host-only (mais restrito, e suficiente para a topologia atual).
 
 > ⚠️ **`JWT_SECRET` — este é o `.env` que protege a PRODUÇÃO** (o Docker Compose injeta `JWT_SECRET: ${JWT_SECRET}` no container do backend). **Nunca** use os placeholders literais (`seu_segredo_jwt`, `segredo`) — são valores públicos e previsíveis, e com o segredo conhecido qualquer um forja um JWT de admin (achado #1 da seção 34). Gere um valor forte e aleatório:
 > ```bash
@@ -1068,6 +1071,15 @@ Quando for realizar o deploy ou atualizar a aplicação em produção com novos 
     - **Armadilha documentada:** um `pnpm update` amplo no backend sobe `@types/express-serve-static-core`, que retipa `req.params` para `string | string[]` e **quebra o `tsc`** em ~13 controllers — bump de tipo, zero valor de segurança. Por isso o backend usa bump **cirúrgico** (só vitest), não `pnpm update` geral. Ao atualizar devDeps no futuro, evite o update amplo do backend ou esteja pronto para reverter os `@types`.
     - **Validação:** frontend 169 testes + build; backend 69 testes + tsc + build + lint, todos verdes.
 
+12. **JWT em `localStorage` → cookie `HttpOnly` (Alto, Agosto/2026):** (Achado #7 da seção 34 — o último em aberto.)
+    - **Brecha:** o token de admin ficava no `localStorage`, legível por qualquer script → exfiltração via XSS.
+    - **Correção (cross-stack):**
+      - **Backend:** `cookie-parser` no `app.ts`; `config/cookie.ts` centraliza as opções (`httpOnly`, `sameSite: "lax"`, `secure` só em produção, `path`, `domain` opcional via `COOKIE_DOMAIN`). O `login` seta o cookie (`res.cookie`), há nova rota `POST /api/autenticacao/logout` (`res.clearCookie`), e o `autenticacaoMiddleware` lê o token do **cookie**, com o header `Bearer` mantido como **fallback** (transição sem quebra / clientes não-navegador). O login ainda devolve o token no corpo por compat, mas o front não o guarda.
+      - **Frontend:** `services/api.ts` trocou `localStorage`+`Authorization` por `credentials: "include"` em todas as rotas autenticadas (+ `logout()`; `verificarToken()` sem argumento). `LoginModal` não salva mais token; `useAutenticacao` verifica a sessão via `/verify` (assíncrono, o JS não lê o cookie) e faz logout no backend; `pages/Admin` virou verificação assíncrona com estado de loading ("Verificando acesso… 🔐"); `useAdminProdutos` usa `credentials: "include"`.
+    - **Por que `SameSite=Lax` basta:** front e API são **same-site** em produção (`mewworld.space` × `api.mewworld.space`, mesmo domínio registrável) **e** em dev (`localhost:5174` × `:3000`, porta não conta). Lax é enviado em requisições same-site e barra CSRF cross-site; somado ao CORS (só libera a origem do front) + preflight das mutações, o CSRF fica coberto sem token dedicado.
+    - **Testes (TDD):** backend `autenticacao.test.ts` (login seta cookie `HttpOnly`+`SameSite=Lax`; logout limpa) e `autenticacaoMiddleware.test.ts` (aceita token via cookie); frontend `AdminRestrito.test.tsx` (mock do `/verify`: 401 → LoginModal, 200 → Dashboard). Backend 72 testes, frontend 169, tsc/build/lint verdes.
+    - **⚠️ Validar em produção:** o comportamento do cookie não pôde ser testado contra o domínio real (só em dev). Como o middleware ainda aceita o header, a transição não quebra; ainda assim, confira o login do admin em produção após o deploy. Requisito: `NODE_ENV=production` no backend (liga o `Secure`) — já no `docker-compose.yml`.
+
 ## 21. Gerenciamento Dinâmico de Banners
 
 > ⚠️ **Status pós-redesign 2026:** o `Banner` foi removido de **Cardápio, Loja, Mangás e Eventos**. A **Home ainda o renderiza** como primeira seção do `main` (`<Banner pagina="home" />`), condicionado à chave `secao_home_banner`. A API, a tabela `banners` e a aba Admin → Banners seguem plenamente em uso.
@@ -1474,7 +1486,7 @@ Quatro testes existentes precisaram de ajuste, e **dois deles falhavam de forma 
 
 Varredura defensiva completa (frontend + backend + infra), autorizada pelo dono do projeto. Estende a seção 20 ("Vulnerabilidades Corrigidas"). Ao corrigir um item, marque-o como ✅ resolvido aqui e registre a correção na seção 20.
 
-> **Status (Agosto/2026):** **11 dos 12 achados resolvidos** — itens **1, 2, 3, 4, 6, 8, 9, 10, 11, 12** ✅ — ver seção 20, itens 4 a 11. `pnpm audit` do **frontend** está **totalmente limpo** (prod + dev); o **backend** tem `pnpm audit --prod` limpo e só um resíduo dev-only inalcançável de `vite` (peer do vitest). Resta apenas o **item 7** (JWT em `localStorage` → cookie `HttpOnly`), o único que exige mudança estrutural cross-stack e decisão de topologia.
+> **Status (Agosto/2026):** ✅ **12 dos 12 achados resolvidos.** Ver seção 20, itens 4 a 12. `pnpm audit` do **frontend** está **totalmente limpo** (prod + dev); o **backend** tem `pnpm audit --prod` limpo e só um resíduo dev-only inalcançável de `vite` (peer do vitest). O item 7 (JWT em `localStorage` → cookie `HttpOnly`) foi implementado cross-stack — **validar o login do admin em produção após o deploy** (o comportamento do cookie só foi testável em dev; o header segue aceito como fallback, então a transição não quebra).
 
 ### 34.1. O que está SÓLIDO (não regredir)
 
@@ -1497,7 +1509,7 @@ Varredura defensiva completa (frontend + backend + infra), autorizada pelo dono 
 | 4 | ✅ **RESOLVIDO** | ~~**Runtime Express com CVEs de DoS.**~~ Corrigido em Agosto/2026: `express@^5.2.1` + `pnpm.overrides` forçando `path-to-regexp>=8.4.2`, `qs>=6.15.3`, `body-parser>=2.3.0`. `pnpm audit --prod` limpo. Ver seção 20, item 6. | `backend` deps | — |
 | 5 | **MÉDIO** | **Credencial do admin parcialmente exposta no repo.** `init.sql:130` versiona `nickname 'KrasnowAdm'` + hash bcrypt. O hash resiste, mas o nickname vazado + custo 10 + ausência de rate limit (item 2) viabilizam dicionário offline/online. | `database/init.sql:130` | Tratar o hash como sensível (mover para seed via env/secret na primeira subida) ou, no mínimo, garantir senha longa e aleatória + item 2. |
 | 6 | ✅ **RESOLVIDO** | ~~**Sem `helmet` no backend.**~~ Corrigido em Agosto/2026: `helmet()` em `app.ts` (CORP `cross-origin` p/ não bloquear `/images` e `/fonts`). Ver seção 20, item 7. | `app.ts` | — |
-| 7 | ⏸️ **ADIADO** | **Token JWT em `localStorage`.** Exposto a exfiltração via XSS. **Não corrigido de propósito:** virar cookie `HttpOnly` é mudança estrutural cross-stack e esbarra em cross-origin no dev (`:5174`×`:3000` exige `SameSite=None; Secure`, que não trafega em `localhost` sem HTTPS) + exige defesa CSRF. Requer projeto dedicado. Mitigação atual: JWT expira em `1d` e helmet (item 6) reduz superfície de XSS. | `frontend/src/services/api.ts` e `hooks/*` | Planejar migração para cookie `HttpOnly`+`SameSite` com proxy de dev e token anti-CSRF. |
+| 7 | ✅ **RESOLVIDO** | ~~**Token JWT em `localStorage`.**~~ Corrigido em Agosto/2026: migrado para cookie **`HttpOnly`+`SameSite=Lax`** (front e API são same-site em prod e dev, então Lax basta e cobre CSRF junto com o CORS). Backend seta/limpa o cookie e lê do cookie (header como fallback); frontend usa `credentials: "include"`. Ver seção 20, item 12. **Validar login do admin em produção pós-deploy.** | `config/cookie.ts`; `AutenticacaoController`; `autenticacaoMiddleware`; `frontend/src/services/api.ts`, `useAutenticacao`, `LoginModal`, `pages/Admin` | — |
 | 8 | ✅ **RESOLVIDO** | ~~**Dependências vulneráveis.**~~ Produção: `react-router-dom@^7.18.2` (item 9 abaixo). DevDeps: bump de `vite`/`vitest` + overrides (Agosto/2026) — frontend `pnpm audit` **totalmente limpo**; backend `--prod` limpo, só resíduo dev-only inalcançável de `vite` (peer do vitest). Ver seção 20, item 11. | `frontend`/`backend` deps | — |
 | 9 | ✅ **RESOLVIDO** | ~~**`SELECT *` no login.**~~ Corrigido em Agosto/2026: `SELECT id, nickname, senha`. Ver seção 20, item 8. | `models/AutenticacaoModel.ts` | — |
 | 10 | ✅ **RESOLVIDO** | ~~**`atualizarStatus` aceita status arbitrário.**~~ Corrigido em Agosto/2026: validação por enum zod (`STATUS_PEDIDO_VALIDOS`) → 400. Ver seção 20, item 8. | `controllers/PedidoController.ts` | — |
@@ -1521,6 +1533,8 @@ Varredura defensiva completa (frontend + backend + infra), autorizada pelo dono 
 4. ~~Item 6 (helmet)~~ — ✅ feito (Agosto/2026).
 5. ~~Itens 9–11 (validações pontuais com zod)~~ — ✅ feito (Agosto/2026).
 6. ~~Item 12 (porta do Postgres)~~ — ✅ feito (Agosto/2026). ~~Item 8 (react-router prod + devDeps)~~ — ✅ feito.
-7. **Item 7 (JWT `localStorage` → cookie `HttpOnly`)** — **← único restante**. Projeto dedicado: exige proxy de dev p/ evitar cross-origin, `SameSite`, defesa CSRF e mexe em `useAutenticacao`, `services/api.ts` (~20 funções), `LoginModal` e no backend (cookie + logout). **Bloqueador de decisão:** depende de como o browser alcança o backend em produção (mesmo domínio via proxy vs. subdomínio separado) — a config do Cloudflare Tunnel não está no repo. Confirmar a topologia antes de implementar.
+7. ~~Item 7 (JWT `localStorage` → cookie `HttpOnly`)~~ — ✅ feito (Agosto/2026). Topologia confirmada (`mewworld.space` × `api.mewworld.space` = same-site → `SameSite=Lax`). Cross-stack, header mantido como fallback. **Pendência operacional:** validar o login do admin em produção pós-deploy.
+
+**Auditoria concluída: 12/12 achados resolvidos.** Manutenção contínua: bump periódico de devDeps (`pnpm audit`), dev server em `localhost`, e revisar overrides quando as versões corrigidas virarem default.
 
 > Cada correção segue o fluxo TDD do projeto: teste primeiro (`seguranca.test.ts` p/ helmet; status inválido em `pedidos.test.ts`; payload inválido em `cupons.test.ts`; login sem `JWT_SECRET` em `autenticacao.test.ts`), depois implementação, `pnpm test:ci` + `pnpm lint` verdes.

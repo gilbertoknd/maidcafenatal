@@ -1,45 +1,35 @@
 import { useState, useEffect } from "react";
+import { verificarToken, logout as logoutRequest } from "../services/api";
 
 export const useAutenticacao = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
-  function logout() {
-    localStorage.removeItem("token");
-    setIsAuthenticated(false);
+  async function logout() {
+    // Limpa o cookie HttpOnly no backend (o JS não consegue apagá-lo sozinho).
+    try {
+      await logoutRequest();
+    } finally {
+      setIsAuthenticated(false);
+    }
   }
 
   //Helper para verificar resposta 401 em requisições
   function verifyTokenExpiration(res: Response) {
     if (res.status === 401) {
       alert("Sessão expirada. Faça login novamente.");
-      logout();
-      return false; //Token inválido
+      setIsAuthenticated(false);
+      return false; //Sessão inválida
     }
-    return true; //Token ok
+    return true; //Sessão ok
   }
 
   useEffect(() => {
     async function checkAuth() {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        setIsAuthenticated(false);
-        setIsLoading(false);
-        return;
-      }
-
       try {
-        const res = await fetch(`${apiUrl}/api/autenticacao/verify`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (res.ok) {
-          setIsAuthenticated(true);
-        } else {
-          logout();
-        }
+        // A verificação é feita no servidor: ele lê o cookie HttpOnly.
+        const ok = await verificarToken();
+        setIsAuthenticated(ok);
       } catch {
         setIsAuthenticated(false);
       } finally {
@@ -48,7 +38,7 @@ export const useAutenticacao = () => {
     }
 
     checkAuth();
-  }, [apiUrl]);
+  }, []);
 
   return {
     isAuthenticated,
