@@ -39,6 +39,36 @@ describe("Rotas de Autenticação", () => {
     expect(response.body.user).toEqual({ id: 1, nickname: "admin" });
   });
 
+  it("deve setar o token em cookie HttpOnly no login", async () => {
+    const hashedPassword = await bcrypt.hash("senha123", 10);
+    const mockUser = { id: 1, nickname: "admin", senha: hashedPassword };
+
+    (pool.query as any).mockResolvedValue({ rows: [mockUser] });
+
+    const response = await request(app)
+      .post("/api/autenticacao/login")
+      .send({ nickname: "admin", senha: "senha123" });
+
+    const cookies = response.headers["set-cookie"] as unknown as string[];
+    expect(cookies).toBeDefined();
+    const tokenCookie = cookies.find((c) => c.startsWith("token="));
+    expect(tokenCookie).toBeDefined();
+    expect(tokenCookie).toMatch(/HttpOnly/i);
+    expect(tokenCookie).toMatch(/SameSite=Lax/i);
+  });
+
+  it("deve limpar o cookie no logout", async () => {
+    const response = await request(app).post("/api/autenticacao/logout");
+
+    expect(response.status).toBe(200);
+    const cookies = response.headers["set-cookie"] as unknown as string[];
+    expect(cookies).toBeDefined();
+    const tokenCookie = cookies.find((c) => c.startsWith("token="));
+    expect(tokenCookie).toBeDefined();
+    // clearCookie devolve o cookie vazio e já expirado
+    expect(tokenCookie).toMatch(/Expires=Thu, 01 Jan 1970/i);
+  });
+
   it("should return 401 on invalid nickname", async () => {
     (pool.query as any).mockResolvedValue({ rows: [] });
 

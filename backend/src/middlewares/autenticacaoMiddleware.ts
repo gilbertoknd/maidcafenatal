@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { AppError } from "../errors/AppError.js";
 import { obterSegredoJwt } from "../config/jwt.js";
+import { COOKIE_TOKEN } from "../config/cookie.js";
 import { TokenPayload } from "../types/AutenticacaoTypes.js";
 
 export function autenticacaoMiddleware(
@@ -9,14 +10,21 @@ export function autenticacaoMiddleware(
   res: Response,
   next: NextFunction,
 ) {
+  // Preferimos o cookie HttpOnly; o header Bearer segue aceito como fallback
+  // (compatibilidade durante a transição e para clientes não-navegador).
+  const tokenCookie = req.cookies?.[COOKIE_TOKEN] as string | undefined;
   const { authorization } = req.headers;
 
-  if (!authorization) {
-    throw new AppError("Token não fornecido", 401);
+  let token = tokenCookie;
+  if (!token && authorization) {
+    // O header vem como "Bearer eyJhbGci..."
+    const [esquema, tokenHeader] = authorization.split(" ");
+    if (esquema === "Bearer") token = tokenHeader;
   }
 
-  // O header vem como "Bearer eyJhbGci..."
-  const [, token] = authorization.split(" ");
+  if (!token) {
+    throw new AppError("Token não fornecido", 401);
+  }
 
   // Obtido FORA do try: se o segredo não estiver configurado, o 500 deve
   // propagar como erro de servidor — não ser mascarado como "Token inválido".

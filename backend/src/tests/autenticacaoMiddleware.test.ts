@@ -49,6 +49,19 @@ describe("autenticacaoMiddleware", () => {
     expect(next).toHaveBeenCalledOnce();
   });
 
+  it("deve aceitar o token via cookie HttpOnly (não só pelo header)", () => {
+    const req = { headers: {}, cookies: { token: "valid_cookie_token" } } as any;
+    const res = {} as any;
+    const next = vi.fn();
+
+    vi.spyOn(jwt, "verify").mockReturnValueOnce({ id: 7 } as any);
+
+    autenticacaoMiddleware(req, res, next);
+
+    expect(req.userId).toBe(7);
+    expect(next).toHaveBeenCalledOnce();
+  });
+
   it("deve lançar erro 500 se JWT_SECRET não estiver configurado (sem fallback inseguro)", () => {
     delete process.env.JWT_SECRET;
     const req = { headers: { authorization: "Bearer qualquer_token" } } as any;

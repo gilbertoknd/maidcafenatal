@@ -4,6 +4,10 @@ import type { ConfiguracoesFontes, FonteCustomizada } from "../types/Configuraca
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
+// Rotas autenticadas usam o cookie HttpOnly de sessão: o token não fica mais no
+// localStorage (imune a XSS). Basta enviar `credentials: "include"` para o
+// navegador anexar o cookie automaticamente. Ver GEMINI.md seção 34 (achado #7).
+
 export async function buscarProdutos(): Promise<Produto[]> {
   const response = await fetch(`${BASE_URL}/api/produtos`);
   if (!response.ok) {
@@ -13,11 +17,8 @@ export async function buscarProdutos(): Promise<Produto[]> {
 }
 
 export async function buscarProdutosAdmin(): Promise<Produto[]> {
-  const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/produtos/admin`, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
+    credentials: "include",
   });
   if (!response.ok) {
     throw new Error("Erro ao buscar catálogo completo");
@@ -79,35 +80,38 @@ export async function enviarPedido(orderData: {
 }
 
 export const buscarPedidos = async () => {
-  const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/pedidos`, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
+    credentials: "include"
   });
   if (!response.ok) throw new Error("Erro ao buscar pedidos");
   return response.json();
 };
 
 export const atualizarStatusPedido = async (id: number, status: string) => {
-  const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/pedidos/${id}/status`, {
     method: "PUT",
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`
+      "Content-Type": "application/json"
     },
+    credentials: "include",
     body: JSON.stringify({ status })
   });
   if (!response.ok) throw new Error("Erro ao atualizar status");
   return response.json();
 };
 
-export async function verificarToken(token: string): Promise<boolean> {
+export async function verificarToken(): Promise<boolean> {
   const response = await fetch(`${BASE_URL}/api/autenticacao/verify`, {
-    headers: { Authorization: `Bearer ${token}` }
+    credentials: "include"
   });
   return response.ok;
+}
+
+export async function logout(): Promise<void> {
+  await fetch(`${BASE_URL}/api/autenticacao/logout`, {
+    method: "POST",
+    credentials: "include"
+  });
 }
 
 // --- EVENTOS ---
@@ -124,19 +128,17 @@ export async function buscarEventoPorId(id: string | number): Promise<Evento> {
 }
 
 export async function buscarEventosAdmin(): Promise<Evento[]> {
-  const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/eventos/admin`, {
-    headers: { Authorization: `Bearer ${token}` }
+    credentials: "include"
   });
   if (!response.ok) throw new Error("Erro ao buscar eventos no modo admin");
   return response.json();
 }
 
 export async function criarEvento(data: FormData): Promise<Evento> {
-  const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/eventos`, {
     method: "POST",
-    headers: { Authorization: `Bearer ${token}` },
+    credentials: "include",
     body: data
   });
   if (!response.ok) throw new Error("Erro ao criar evento");
@@ -144,10 +146,9 @@ export async function criarEvento(data: FormData): Promise<Evento> {
 }
 
 export async function atualizarEvento(id: number, data: FormData): Promise<Evento> {
-  const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/eventos/${id}`, {
     method: "PUT",
-    headers: { Authorization: `Bearer ${token}` },
+    credentials: "include",
     body: data
   });
   if (!response.ok) throw new Error("Erro ao atualizar evento");
@@ -155,30 +156,27 @@ export async function atualizarEvento(id: number, data: FormData): Promise<Event
 }
 
 export async function deletarEvento(id: number): Promise<{ message: string; evento: Evento }> {
-  const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/eventos/${id}`, {
     method: "DELETE",
-    headers: { Authorization: `Bearer ${token}` }
+    credentials: "include"
   });
   if (!response.ok) throw new Error("Erro ao deletar evento");
   return response.json();
 }
 
 export async function alterarVisibilidadeEvento(id: number): Promise<Evento> {
-  const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/eventos/${id}/visibilidade`, {
     method: "PATCH",
-    headers: { Authorization: `Bearer ${token}` }
+    credentials: "include"
   });
   if (!response.ok) throw new Error("Erro ao alterar visibilidade do evento");
   return response.json();
 }
 
 export async function alterarVisibilidadeProduto(id: number): Promise<Produto> {
-  const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/produtos/${id}/visibilidade`, {
     method: "PATCH",
-    headers: { Authorization: `Bearer ${token}` }
+    credentials: "include"
   });
   if (!response.ok) throw new Error("Erro ao alterar visibilidade do produto");
   return response.json();
@@ -194,13 +192,12 @@ export async function buscarBanners(): Promise<Banner[]> {
 }
 
 export async function atualizarBanner(pagina: string, data: FormData): Promise<Banner> {
-  const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/banners/${pagina}`, {
     method: "PUT",
-    headers: { Authorization: `Bearer ${token}` },
+    credentials: "include",
     body: data
   });
-  
+
   if (!response.ok) throw new Error("Erro ao atualizar banner");
   return response.json();
 }
@@ -215,39 +212,36 @@ export async function buscarConfiguracoes(): Promise<ConfiguracoesFontes> {
 export async function atualizarConfiguracoes(
   dados: Record<string, string>
 ): Promise<{ message: string; configuracoes: Record<string, string> }> {
-  const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/configuracoes`, {
     method: "PUT",
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`
+      "Content-Type": "application/json"
     },
+    credentials: "include",
     body: JSON.stringify(dados)
   });
-  
+
   if (!response.ok) throw new Error("Erro ao atualizar configurações");
   return response.json();
 }
 
 export async function uploadFonteCustomizada(data: FormData): Promise<FonteCustomizada> {
-  const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/configuracoes/fontes`, {
     method: "POST",
-    headers: { Authorization: `Bearer ${token}` },
+    credentials: "include",
     body: data
   });
-  
+
   if (!response.ok) throw new Error("Erro ao fazer upload da fonte");
   return response.json();
 }
 
 export async function deletarFonteCustomizada(id: number): Promise<{ message: string }> {
-  const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/configuracoes/fontes/${id}`, {
     method: "DELETE",
-    headers: { Authorization: `Bearer ${token}` }
+    credentials: "include"
   });
-  
+
   if (!response.ok) throw new Error("Erro ao deletar fonte");
   return response.json();
 }
@@ -262,19 +256,17 @@ export async function buscarInstagramPosts(): Promise<InstagramPost[]> {
 }
 
 export async function buscarInstagramPostsAdmin(): Promise<InstagramPost[]> {
-  const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/instagram/admin`, {
-    headers: { Authorization: `Bearer ${token}` }
+    credentials: "include"
   });
   if (!response.ok) throw new Error("Erro ao buscar posts do Instagram (Admin)");
   return response.json();
 }
 
 export async function criarInstagramPost(data: FormData): Promise<InstagramPost> {
-  const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/instagram`, {
     method: "POST",
-    headers: { Authorization: `Bearer ${token}` },
+    credentials: "include",
     body: data
   });
   if (!response.ok) throw new Error("Erro ao criar post do Instagram");
@@ -282,10 +274,9 @@ export async function criarInstagramPost(data: FormData): Promise<InstagramPost>
 }
 
 export async function atualizarInstagramPost(id: number, data: FormData): Promise<InstagramPost> {
-  const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/instagram/${id}`, {
     method: "PUT",
-    headers: { Authorization: `Bearer ${token}` },
+    credentials: "include",
     body: data
   });
   if (!response.ok) throw new Error("Erro ao atualizar post do Instagram");
@@ -293,10 +284,9 @@ export async function atualizarInstagramPost(id: number, data: FormData): Promis
 }
 
 export async function deletarInstagramPost(id: number): Promise<{ message: string }> {
-  const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/instagram/${id}`, {
     method: "DELETE",
-    headers: { Authorization: `Bearer ${token}` }
+    credentials: "include"
   });
   if (!response.ok) throw new Error("Erro ao deletar post do Instagram");
   return response.json();
@@ -322,7 +312,7 @@ export async function resgatarCupom(data: {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data)
   });
-  
+
   if (!response.ok) {
     const err = await response.json();
     throw new Error(err.error || "Erro ao resgatar cupom");
@@ -346,22 +336,20 @@ export async function validarCupom(codigo: string): Promise<CupomValido> {
 
 // --- CUPONS ADMIN ---
 export async function buscarCampanhasAdmin(): Promise<CampanhaCupom[]> {
-  const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/cupons/admin/campanhas`, {
-    headers: { Authorization: `Bearer ${token}` }
+    credentials: "include"
   });
   if (!response.ok) throw new Error("Erro ao buscar campanhas (Admin)");
   return response.json();
 }
 
 export async function criarCampanhaAdmin(data: Record<string, unknown>): Promise<CampanhaCupom> {
-  const token = localStorage.getItem("token");
   const response = await fetch(`${BASE_URL}/api/cupons/admin/campanhas`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`
+      "Content-Type": "application/json"
     },
+    credentials: "include",
     body: JSON.stringify(data)
   });
   if (!response.ok) throw new Error("Erro ao criar campanha");
@@ -369,10 +357,9 @@ export async function criarCampanhaAdmin(data: Record<string, unknown>): Promise
 }
 
 export async function buscarCuponsAdmin(campanhaId?: number): Promise<CupomResgatado[]> {
-  const token = localStorage.getItem("token");
   const query = campanhaId ? `?campanha_id=${campanhaId}` : "";
   const response = await fetch(`${BASE_URL}/api/cupons/admin/cupons${query}`, {
-    headers: { Authorization: `Bearer ${token}` }
+    credentials: "include"
   });
   if (!response.ok) throw new Error("Erro ao buscar cupons (Admin)");
   return response.json();

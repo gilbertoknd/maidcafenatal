@@ -30,7 +30,6 @@ export function useAdminProdutos() {
     isUpdate: boolean,
     id?: number,
   ) => {
-    const token = localStorage.getItem("token");
     try {
       let url = `${apiUrl}/api/produtos`;
       let method = "POST";
@@ -42,7 +41,7 @@ export function useAdminProdutos() {
 
       const res = await fetch(url, {
         method,
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: "include",
         body: formData,
       });
 
@@ -63,11 +62,10 @@ export function useAdminProdutos() {
 
   // DELETE
   const deletarProduto = async (id: number) => {
-    const token = localStorage.getItem("token");
     try {
       const res = await fetch(`${apiUrl}/api/produtos/${id}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: "include",
       });
 
       if (!verifyTokenExpiration(res)) return false;

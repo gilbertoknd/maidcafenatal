@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
+import cookieParser from "cookie-parser";
 import produtoRoutes from "./routes/ProdutoRoutes.js";
 import pedidoRoutes from "./routes/PedidoRoutes.js";
 import { gerenciadorErros } from "./middlewares/gerenciadorErros.js";
@@ -28,6 +29,7 @@ app.use(
 );
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cookieParser());
 app.use("/images", express.static(publicPath));
 app.use("/fonts", express.static(fontsPath));
 

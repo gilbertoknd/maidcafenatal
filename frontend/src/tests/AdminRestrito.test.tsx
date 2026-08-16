@@ -1,6 +1,6 @@
 import "../setupTests";
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { Admin } from "../pages/Admin";
 import { BrowserRouter } from "react-router-dom";
 
@@ -15,33 +15,34 @@ vi.mock("../components/LoginModal", () => ({
 }));
 
 describe("Admin Route Protection", () => {
-  beforeEach(() => {
-    window.localStorage.clear();
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
-  it("deve renderizar o Login Modal se não existir token", () => {
-    // Sem setar localStorage
+  it("deve renderizar o Login Modal se a sessão não for válida (verify 401)", async () => {
+    // O cookie HttpOnly não é lido pelo JS: a auth é verificada no servidor.
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 401 }));
+
     render(
       <BrowserRouter>
         <Admin />
       </BrowserRouter>
     );
 
-    expect(screen.getByTestId("login-modal")).toBeInTheDocument();
+    expect(await screen.findByTestId("login-modal")).toBeInTheDocument();
     expect(screen.queryByTestId("admin-dashboard")).not.toBeInTheDocument();
   });
 
-  it("deve renderizar o Dashboard se o token estiver presente", () => {
-    // Setando o token para bypass
-    window.localStorage.setItem("token", "fake-jwt-token");
-    
+  it("deve renderizar o Dashboard se a sessão for válida (verify 200)", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, status: 200 }));
+
     render(
       <BrowserRouter>
         <Admin />
       </BrowserRouter>
     );
 
-    expect(screen.getByTestId("admin-dashboard")).toBeInTheDocument();
+    expect(await screen.findByTestId("admin-dashboard")).toBeInTheDocument();
     expect(screen.queryByTestId("login-modal")).not.toBeInTheDocument();
   });
 });
