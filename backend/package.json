@@ -12,7 +12,8 @@
     "test:ci": "vitest run",
     "lint": "eslint src/ && tsc --noEmit",
     "db:reset": "tsx scripts/reset_db.ts",
-    "db:migrate": "tsx migrate_db.ts"
+    "db:migrate": "tsx src/migrate_db.ts",
+    "db:migrate:prod": "node dist/migrate_db.js"
   },
   "keywords": [],
   "author": "",

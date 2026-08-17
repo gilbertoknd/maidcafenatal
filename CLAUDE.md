@@ -31,7 +31,7 @@ pnpm test        # vitest watch
 pnpm test:ci     # vitest run (uma vez)
 pnpm lint        # eslint src/ && tsc --noEmit
 pnpm build       # rimraf dist && tsc -p tsconfig.build.json
-pnpm db:migrate  # tsx migrate_db.ts
+pnpm db:migrate  # tsx src/migrate_db.ts (prod: node dist/migrate_db.js; auto no boot)
 pnpm db:reset    # tsx scripts/reset_db.ts (reseta o banco — só em dev)
 ```
 
@@ -143,7 +143,7 @@ O café **não opera mais presencialmente**. O negócio é: eventos personalizad
 - [ ] `pnpm lint` limpo.
 - [ ] Tokens CSS no `:root`, sem hard-code.
 - [ ] Funciona local **e** via Docker.
-- [ ] Nova tabela/coluna → `database/init.sql` atualizado + migration em `backend/migrations/`.
+- [ ] Nova tabela/coluna → `database/init.sql` atualizado + migration em `backend/src/migrations/` (aplicada no boot).
 - [ ] Nova rota → padrão Model → Controller → Route; se for admin, `autenticacaoMiddleware` aplicado.
 - [ ] Loading e error states tratados na UI.
 - [ ] Responsivo no celular, respeitando a tabela de densidade da seção 5.

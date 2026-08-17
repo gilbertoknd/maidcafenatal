@@ -94,19 +94,21 @@ Website para o **Mew Mew Café** (Maid Café) localizado em Natal/RN. O sistema 
 
 ## 3. Variáveis de Ambiente (Template)
 
+> ⚠️ **Tudo entre `<...>` é placeholder** — substitua pelos seus valores reais nos `.env` (que **não** são versionados). Nunca commite valores reais nesta doc nem use os literais de exemplo.
+
 ### Raiz (`/.env`) — Usada pelo Docker Compose
 
 ```env
-# Database
-POSTGRES_USER=admin_maid
-POSTGRES_PASSWORD=sua_senha_segura
-POSTGRES_DB=maid_cafe_db
+# Database  (troque TODOS os valores <...> pelos seus — não use os literais abaixo)
+POSTGRES_USER=<USUARIO_DB>
+POSTGRES_PASSWORD=<SENHA_DB_FORTE>
+POSTGRES_DB=<NOME_DO_BANCO>
 DB_HOST=db
 DB_PORT=5432
 DB_PORT_LOCAL=5433
-DB_USER=admin_maid
-DB_PASSWORD=sua_senha_segura
-DB_NAME=maid_cafe_db
+DB_USER=<USUARIO_DB>
+DB_PASSWORD=<SENHA_DB_FORTE>
+DB_NAME=<NOME_DO_BANCO>
 
 # Backend
 PORT=3000
@@ -137,11 +139,11 @@ VITE_BACKEND_URL=http://localhost:3000
 ```env
 DB_HOST=localhost
 DB_PORT=5433
-DB_USER=admin_maid
-DB_PASSWORD=sua_senha_segura
-DB_NAME=maid_cafe_db
+DB_USER=<USUARIO_DB>
+DB_PASSWORD=<SENHA_DB_FORTE>
+DB_NAME=<NOME_DO_BANCO>
 PORT=3000
-JWT_SECRET=troque_por_um_valor_aleatorio_forte
+JWT_SECRET=<valor_aleatorio_qualquer_para_dev>
 FRONTEND_URL=http://localhost:5174
 ```
 
@@ -170,16 +172,20 @@ FRONTEND_URL=http://localhost:5174
 │   ├── package.json
 │   ├── tsconfig.json / tsconfig.build.json
 │   ├── vitest.config.ts
-│   ├── migrate_db.ts             # Runner das migrations (`pnpm db:migrate`)
-│   ├── migrations/               # Migrations incrementais (.ts, prefixadas 01_, 02_, ...)
 │   ├── scripts/reset_db.ts       # Reset do banco em dev (`pnpm db:reset`)
 │   ├── public/images/            # Imagens dos produtos/eventos (serving estático)
 │   ├── public/fonts/             # Fontes customizadas .woff2 (serving estático)
 │   └── src/
-│       ├── server.ts             # Entry point (listen)
+│       ├── server.ts             # Entry point (listen + auto-migração no boot)
 │       ├── app.ts                # Express app (middlewares + rotas)
+│       ├── migrate_db.ts         # CLI de migrations (`pnpm db:migrate` / `node dist/migrate_db.js`)
+│       ├── migrations/           # Migrations incrementais (.ts, prefixadas 01_, 02_, ...)
+│       ├── database/
+│       │   └── migrator.ts       # `executarMigrations(pool)` — usado pela CLI e pelo boot
 │       ├── config/
 │       │   ├── db.ts             # Pool de conexão PostgreSQL (pg)
+│       │   ├── cookie.ts         # Opções do cookie HttpOnly de sessão
+│       │   ├── jwt.ts            # obterSegredoJwt() — segredo sem fallback
 │       │   ├── corsOptions.ts    # Configuração de CORS
 │       │   ├── upload.ts         # Multer para imagens/vídeos (disco, 50MB)
 │       │   └── uploadFonte.ts    # Multer para fontes .woff2
@@ -398,7 +404,7 @@ O esquema é definido em `database/init.sql` via SQL puro (sem ORM).
 
 > **Credenciais do admin (Agosto/2026):** o seed legado `admin`/`admin` foi
 > substituído. O `database/init.sql` traz o usuário novo com hash bcrypt custo 10,
-> e `backend/migrations/10_credenciais_admin.ts` atualiza bancos **já existentes**
+> e `backend/src/migrations/10_credenciais_admin.ts` atualiza bancos **já existentes**
 > — o `init.sql` só roda em volume novo, então **sem rodar a migration a produção
 > continua com a credencial antiga**. A senha em claro não é versionada em lugar
 > nenhum: para trocar, gere o hash com `bcryptjs` (custo 10), atualize o `init.sql`
@@ -843,7 +849,7 @@ pnpm lint        # eslint
 
 **Hurdle:** `init.sql` reseta o banco a cada restart do container.
 
-**Solução:** O arquivo `init.sql` anteriormente continha `TRUNCATE TABLE ... CASCADE`. Para evitar perda de dados em produção e persistir dados em dev, essas linhas foram comentadas. Se precisar resetar o banco manualmente em desenvolvimento, utilize o comando `pnpm db:reset` na pasta /backend. Em produção, use sempre migrations (`backend/migrations/`).
+**Solução:** O arquivo `init.sql` anteriormente continha `TRUNCATE TABLE ... CASCADE`. Para evitar perda de dados em produção e persistir dados em dev, essas linhas foram comentadas. Se precisar resetar o banco manualmente em desenvolvimento, utilize o comando `pnpm db:reset` na pasta /backend. Em produção, use sempre migrations (`backend/src/migrations/`, aplicadas no boot — ver seção 18.1).
 
 ---
 
@@ -996,14 +1002,25 @@ Ao longo das otimizações dos testes e padronização contínua do Maid Café, 
 Quando for realizar o deploy ou atualizar a aplicação em produção com novos códigos, utilize a seguinte sequência:
 
 1. Faça pull das alterações do repositório no servidor.
-2. Certifique-se de que o arquivo `.env` da raiz está configurado (especialmente o `TUNNEL_TOKEN` e as senhas de banco).
-3. Execute o build limpo forçado das imagens multi-stage:
-   `docker compose build --no-cache`
-4. Recrie e suba os containers sem afetar os volumes persistentes:
-   `docker compose up -d`
-5. (Apenas em primeira execução ou grandes mudanças no schema) Rode as migrations dentro do container do backend:
-   `docker exec -it maid_backend pnpm db:migrate`
-   > O script real é `backend/migrate_db.ts` (raiz do backend, **não** em `scripts/`). Já `backend/scripts/reset_db.ts` é o `pnpm db:reset` — nunca rode em produção.
+2. Certifique-se de que o arquivo `.env` da raiz está configurado (especialmente o `TUNNEL_TOKEN`, `JWT_SECRET` forte e as senhas de banco).
+3. **Sempre com `-f docker-compose.yml`** (produção — nunca mesclar o `override.yml` de dev). Build limpo e subida:
+   `docker compose -f docker-compose.yml up -d --build`
+   > ⚠️ Rodar `docker compose up` **sem `-f`** mescla o `docker-compose.override.yml` e sobe a aplicação em **modo dev** (Vite dev server + `tsx watch`, `NODE_ENV=development`) — errado e inseguro em produção. O CI/CD (`.github/workflows/ci-cd.yml`) já usa o `-f`.
+4. **Migrations rodam sozinhas.** Desde Agosto/2026 o backend aplica as migrations pendentes **no boot** (`server.ts` → `executarMigrations`), então todo deploy sincroniza o schema automaticamente. Uma falha de migration é logada mas **não derruba** o servidor.
+   - Para rodar manualmente em produção (imagem `runner`, compilada): `docker exec maid_backend node dist/migrate_db.js` — **NÃO** use `pnpm db:migrate` em produção (o `tsx` é devDependency e não está na imagem `runner`).
+   - Em dev local: `pnpm db:migrate` (= `tsx src/migrate_db.ts`).
+   > Ver seção 18.1 para o mecanismo. `backend/scripts/reset_db.ts` é o `pnpm db:reset` — nunca rode em produção.
+
+### 18.1. Mecanismo de migrations (Agosto/2026)
+
+Reescrito para funcionar em produção (a versão antiga rodava `tsx migrate_db.ts` da raiz do backend, o que quebrava na imagem `runner`, sem `tsx` nem os `.ts`).
+
+- **Migrations ficam em `backend/src/migrations/`** (movidas da raiz), então são compiladas para `dist/migrations/*.js` e existem na imagem de produção.
+- **`backend/src/database/migrator.ts`** exporta `executarMigrations(pool)`: cria a tabela de controle `migrations`, resolve a pasta de migrations **relativa ao próprio módulo** (`import.meta.url`, nunca `process.cwd()`) — funciona em dev (`src/migrations/*.ts` via tsx) e em prod (`dist/migrations/*.js` via node) — e aplica só as pendentes.
+- **Reconhecimento por nome normalizado:** o nome é gravado sem extensão (`10_credenciais_admin`), e a comparação normaliza registros legados (gravados com `.ts` pelo runner antigo) — então migrations já aplicadas **não** reexecutam ao trocar dev↔prod.
+- **Reusado em dois pontos:** a CLI (`src/migrate_db.ts`, com `pool.end()` + exit code) e a **auto-migração no boot** (`server.ts`, envolta em try/catch que loga sem derrubar).
+- **Idempotência:** todas as migrations são seguras de reexecutar (DDL com `IF NOT EXISTS`; seeds com `ON CONFLICT`/`COUNT==0`/`WHERE NOT EXISTS`; a #10 é guardada). Isso torna a auto-migração no boot segura mesmo se a tabela `migrations` estiver vazia.
+- **Testes:** `backend/src/tests/migrator.test.ts` — cria a tabela, reconhece migrations legadas (não reaplica), aplica pendente registrando pelo nome normalizado.
 
 ## 19. Padrões de Variáveis em Build de Frontend
 
