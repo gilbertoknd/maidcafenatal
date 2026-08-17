@@ -26,6 +26,12 @@ RUN pnpm install --prod --frozen-lockfile
 # Copia os binários compilados
 COPY --from=builder /app/dist ./dist
 
+# Cria as pastas de upload já existentes e com dono `node`. Sem isso, o processo
+# (que roda como USER node) não consegue criá-las dentro de /app/public (root) e
+# o backend crasha no boot (mkdir EACCES em public/fonts). Os volumes do
+# docker-compose montam por cima para persistir os arquivos.
+RUN mkdir -p /app/public/images /app/public/fonts && chown -R node:node /app/public
+
 # Rodar com usuário sem privilégios
 USER node
 

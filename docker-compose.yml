@@ -42,8 +42,9 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       NODE_ENV: production
     volumes:
-      # Apenas uploads persistem
+      # Uploads persistem no host (imagens e fontes customizadas)
       - ./backend/public/images/:/app/public/images/
+      - ./backend/public/fonts/:/app/public/fonts/
     networks:
       - maid_network
     depends_on:

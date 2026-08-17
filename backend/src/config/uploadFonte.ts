@@ -5,9 +5,19 @@ import fs from "fs";
 
 const fontsDir = path.join(process.cwd(), "public", "fonts");
 
-// Garante que o diretório de fontes existe
-if (!fs.existsSync(fontsDir)) {
-  fs.mkdirSync(fontsDir, { recursive: true });
+// Garante que o diretório de fontes existe — SEM derrubar o servidor se falhar.
+// Em produção o processo roda como `USER node` (não-root); se a pasta não puder
+// ser criada (permissão), apenas registramos: o upload de fontes falha depois de
+// forma controlada, mas a API inteira não pode cair no boot por causa disso.
+// (O ideal é a pasta já existir via Dockerfile/volume — ver docker-compose.yml.)
+try {
+  if (!fs.existsSync(fontsDir)) {
+    fs.mkdirSync(fontsDir, { recursive: true });
+  }
+} catch (err) {
+  console.warn(
+    `[uploadFonte] não foi possível garantir o diretório ${fontsDir}: ${(err as Error).message}`,
+  );
 }
 
 const storage = multer.diskStorage({
